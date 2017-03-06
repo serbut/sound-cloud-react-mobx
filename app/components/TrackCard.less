@@ -1,0 +1,51 @@
+.track-card__media {
+  padding-top: 100%;
+  background-image: linear-gradient(135deg,#e6846e,#70929c);
+
+  img {
+    position: absolute;
+    top: 0;
+
+    display: block;
+    max-width: 100%;
+    height: auto;
+  }
+}
+
+.track-card__overlay {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 1;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  background: hsla(0, 0%, 6.7%, .8);
+  transition: .3s;
+
+  .track-card:not(:hover):not(.active) & {
+    opacity: 0;
+    visibility: hidden;
+  }
+}
+
+.track-card__play {
+  font-size: 38px;
+  color: #fff;
+}
+
+.track-card__overlay2 {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 16px;
+
+  color: rgba(255, 255, 255, 0.8);
+  text-align: right;
+  background: hsla(0, 0%, 6.7%, .8);
+}
