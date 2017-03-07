@@ -1,4 +1,5 @@
 import React from 'react';
+import { autorun } from 'mobx';
 import { observer, inject } from 'mobx-react';
 import { Link } from 'react-router';
 import Button from 'material-ui/Button';
@@ -15,7 +16,6 @@ import { IMAGE_SIZES } from '../constants';
 import { getImageUrl, formatDuration } from '../utils';
 import { formatStreamUrl } from '../api';
 
-
 @inject('sessionStore', 'viewStore', 'playerStore') @observer
 export default class Player extends React.Component {
   componentDidMount() {
@@ -28,28 +28,35 @@ export default class Player extends React.Component {
     // this.audio.addEventListener('progress',
     // e => store.setBuffered(Math.round(e.target.buffered.end(e.target.buffered.length - 1))));
     this.audio.addEventListener('ended', e => store.playNext());
+
+    this.dispose = autorun(() => {
+      if (!store.track)
+        return;
+
+      // update src if needed
+      const src = formatStreamUrl(store.track.stream_url);
+      if (this.audio.currentSrc !== src)
+        this.audio.src = src;
+
+      // update progress if difference more then 1s
+      if (Math.abs(Math.round(this.audio.currentTime) - store.progress) > 1)
+        this.audio.currentTime = store.progress;
+
+      // update pause/play
+      const playPromise = store.isPlaying ? this.audio.play() : this.audio.pause();
+      if (playPromise !== undefined && typeof playPromise.then === 'function') {
+        playPromise.then(null, (e) => { });
+      }
+
+      this.audio.muted = store.muted;
+      this.audio.loop = store.loop;
+      this.audio.volume = store.volume;
+    });
   }
 
-  componentDidUpdate() {
-    const store = this.props.playerStore;
-    if (!store.track)
-      return;
-
-    const src = formatStreamUrl(store.track.stream_url);
-    if (this.audio.currentSrc != src)
-      this.audio.src = src;
-
-    // update progress if difference more then 1s
-    if (Math.abs(Math.round(this.audio.currentTime) - store.progress) > 1)
-      this.audio.currentTime = store.progress;
-
-    const playPromise = store.isPlaying ? this.audio.play() : this.audio.pause();
-    if (playPromise !== undefined && typeof playPromise.then === 'function') {
-      playPromise.then(null, (e) => { });
-    }
-    this.audio.muted = store.muted;
-    this.audio.loop = store.loop;
-    this.audio.volume = store.volume;
+  componentWillUnmount() {
+    this.dispose();
+    this.audio.pause();
   }
 
   onQueueClick = e => {

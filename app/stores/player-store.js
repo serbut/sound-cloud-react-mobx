@@ -150,10 +150,8 @@ class PlayerStore {
   }
 
   setVolume(value) {
+    this.muted = false;
     this.volume = value;
-
-    if (value !== 0)
-      this.muted = false;
   }
 
   stepForward(offset = TIME_STEP) {
@@ -174,13 +172,15 @@ class PlayerStore {
   }
 
   increaseVolume(offset = VOLUME_STEP) {
-    if (this.volume + offset <= 1)
-      this.volume += offset;
+    if (this.muted)
+      this.toggleMuted();
+    this.setVolume(Math.min(this.volume + offset, 1));
   }
 
   decreaseVolume(offset = VOLUME_STEP) {
-    if (this.volume >= offset)
-      this.volume -= offset;
+    if (this.muted)
+      this.toggleMuted();
+    this.setVolume(Math.max(this.volume - offset, 0));
   }
 
   toggleSkipPreviews() {

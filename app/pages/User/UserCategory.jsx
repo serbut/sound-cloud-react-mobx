@@ -1,11 +1,8 @@
 import React, { Component } from 'react';
 import { observer, inject } from 'mobx-react';
 
-import GridList from '../../components/GridList';
-import infiniteScrollify from '../../hoc/InfiniteScrollify';
+import DataGrid from '../../components/DataGrid';
 import DataLoader from '../../hoc/DataLoader';
-
-const InfiniteScrollGridList = infiniteScrollify(GridList);
 
 @inject('sessionStore') @observer
 class UserCategory extends Component {
@@ -49,10 +46,10 @@ class UserCategory extends Component {
   }
 
   render() {
-    const { params, data, isLoading, loadMore } = this.props;
+    const { data, isLoading, isLastPage, loadMore } = this.props;
 
     return (
-      <InfiniteScrollGridList data={this.filterData(data)} loadMore={loadMore} isLoading={isLoading} />
+      <DataGrid data={this.filterData(data)} isLoading={isLoading} isLastPage={isLastPage} loadMore={loadMore} />
     );
   }
 }

@@ -13,10 +13,6 @@ class ViewState {
     window.addEventListener('click', () => this.playlistOpen = false);
   }
 
-  setVolumeControlOpen(value) {
-    this.volumeControlOpen = value;
-  }
-
   togglePlaylist() {
     this.playlistOpen = !this.playlistOpen;
   }

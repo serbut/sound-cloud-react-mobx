@@ -11,14 +11,22 @@ import { LabelSwitch } from 'material-ui/Switch';
 import './PlayerQueue.less';
 import TrackCard from './TrackCard';
 import { isElementInViewport, getImageUrl } from '../utils';
+
 const PER_PAGE = 30;
 
 @inject('viewStore', 'playerStore') @observer
 class PlayerQueue extends React.Component {
   componentDidUpdate(prevProps, prevState) {
-    if (!prevProps.viewStore.playlistOpen)
-      return;
+    const { style } = document.body;
 
+    if (!prevProps.viewStore.playlistOpen) {
+      style.overflow = null;
+      style.paddingRight = null;
+      return;
+    }
+
+    style.overflow = 'hidden';
+    style.paddingRight = '17px';
     const el = document.querySelector(`.player-queue [data-id='${this.props.playerStore.track.id}']`);
     el && !isElementInViewport(el) && el.scrollIntoView();
   }
@@ -32,7 +40,6 @@ class PlayerQueue extends React.Component {
     const { items, trackIndex } = playerStore.queue;
     const from = Math.max(0, trackIndex - PER_PAGE / 2);
     const to = Math.min(from + PER_PAGE, items.length);
-    const data = items.slice(from, to);
     const loading = playerStore.queue.isLoading ? 'loading...' : '';
 
     return (
@@ -42,8 +49,8 @@ class PlayerQueue extends React.Component {
           <Divider />
           <div className='player-queue__inner'>
             <List>
-              {data.map(track =>
-                <ListItem key={track.id} button divider dense data-id={track.id}
+              {items.slice(from, to).map((track, i) =>
+                <ListItem key={track.id + i} button divider dense data-id={track.id}
                   onTouchTap={() => playerStore.playTrack(track)}
                 >
                   <Avatar src={getImageUrl(track.artwork_url)} className='list-avatar' />
@@ -55,7 +62,7 @@ class PlayerQueue extends React.Component {
               )}
             </List>
           </div>
-          <CardActions style={{justifyContent: 'center'}}>
+          <CardActions style={{ justifyContent: 'center' }}>
             <LabelSwitch
               checked={playerStore.skipPreviews}
               onChange={(event, checked) => playerStore.toggleSkipPreviews()}

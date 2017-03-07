@@ -9,18 +9,22 @@ import { formatDuration, fromNow, formatNumber, getImageUrl } from '../utils';
 import { IMAGE_SIZES } from '../constants';
 
 const PlaylistCard = ({ playlist }) => {
+  const link = `/${playlist.user.permalink}/playlists/${playlist.permalink}`;
+
   return (
     <Card className='playlist-card'>
       <CardMedia>
-        <img src={getImageUrl(playlist.artwork_url, IMAGE_SIZES.t200x200)} alt={playlist.title} width='200' height='200' />
-        <div className="playlist-card__overlay">
-          <Text type='subheading' colorInherit style={{marginRight: 4}}>{playlist.track_count}</Text>
-          <Icon>playlist_play</Icon>
-        </div>
+        <Link to={link}>
+          <img src={getImageUrl(playlist.artwork_url, IMAGE_SIZES.t200x200)} alt={playlist.title} width='200' height='200' />
+          <div className="playlist-card__overlay">
+            <Text type='subheading' colorInherit style={{ marginRight: 4 }}>{playlist.track_count}</Text>
+            <Icon>playlist_play</Icon>
+          </div>
+        </Link>
       </CardMedia>
       <CardContent>
         <Text type="subheading" noWrap title={playlist.title}>
-          <Link to={`/${playlist.user.permalink}/playlists/${playlist.permalink}`} className='link'>{playlist.title}</Link>
+          <Link to={link} className='link'>{playlist.title}</Link>
         </Text>
       </CardContent>
     </Card>

@@ -8,8 +8,8 @@ import './VolumeControl.less';
 const VolumeContol = ({ playerStore: store, viewStore }) => {
   return (
     <div className='volume-slider-wrap'
-      onMouseOver={() => viewStore.setVolumeControlOpen(true)}
-      onMouseOut={() => viewStore.setVolumeControlOpen(false)}
+      onMouseOver={() => viewStore.volumeControlOpen = true}
+      onMouseOut={() => viewStore.volumeControlOpen = false}
     >
       <Card className={`volume-slider ${viewStore.volumeControlOpen ? 'visible' : ''}`}>
         <CardContent>{store.volume}</CardContent>

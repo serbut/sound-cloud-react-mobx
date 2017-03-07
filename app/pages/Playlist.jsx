@@ -6,13 +6,10 @@ import Text from 'material-ui/Text';
 
 import './Playlist.less';
 import UserCard from '../components/UserCard';
-import GridList from '../components/GridList';
-import infiniteScrollify from '../hoc/InfiniteScrollify';
+import DataGrid from '../components/DataGrid';
 import { loadPlaylist } from '../api';
 import { formatDuration, fromNow, getImageUrl } from '../utils';
 import { IMAGE_SIZES } from '../constants';
-
-const InfiniteScrollGridList = infiniteScrollify(GridList);
 
 @inject('sessionStore', 'viewStore', 'playerStore') @observer
 export default class Playlist extends Component {
@@ -62,8 +59,8 @@ export default class Playlist extends Component {
           </div>
         </div>
 
-        <div className='container' >
-          <GridList data={playlist.tracks} />
+        <div className='container'>
+          <DataGrid data={playlist.tracks} isLastPage={true} />
         </div>
       </div>
     );

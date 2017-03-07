@@ -36,12 +36,12 @@ export function formatDuration(ms) {
 export function formatNumber(value) {
   if (!value)
     return '-';
-  if (value / 10000 < 1)
+  if (value / 1000 < 1)
     return value.toLocaleString();
   if (value / 1000000 < 1)
-    return Math.round(value / 1000) + 'k';
+    return Math.round(value / 1000) + 'K';
 
-  return Math.round(value / 1000000 * 10) / 10 + 'm';
+  return Math.round(value / 1000000 * 10) / 10 + 'M';
 }
 
 export function fromNow(createdAt) {

@@ -7,6 +7,7 @@ import injectTapEventPlugin from 'react-tap-event-plugin';
 
 import AppBar from './AppBar';
 import Player from './Player';
+import ScrollToTopBtn from './ScrollToTopBtn';
 
 import viewStore from '../stores/view-store';
 import playerStore from '../stores/player-store';
@@ -34,11 +35,9 @@ class App extends React.Component {
   }
 
   showVolumeControl() {
-    if (!viewStore.volumeControlOpen)
-      viewStore.setVolumeControlOpen(true);
-
+    viewStore.volumeControlOpen = true;
     clearTimeout(this._timerId);
-    this._timerId = setTimeout(() => viewStore.setVolumeControlOpen(false), 1000);
+    this._timerId = setTimeout(() => viewStore.volumeControlOpen = false, 1000);
   }
 
   render() {
@@ -49,6 +48,7 @@ class App extends React.Component {
             <AppBar router={this.props.router} />
             {this.props.children}
             <Player />
+            <ScrollToTopBtn />
             {isDev ? <DevTools /> : null}
           </div>
         </Provider>

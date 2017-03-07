@@ -4,10 +4,8 @@ import { observer, inject } from 'mobx-react';
 import { browserHistory } from 'react-router';
 import Text from 'material-ui/Text';
 
-import GridList from '../components/GridList';
-import infiniteScrollify from '../hoc/InfiniteScrollify';
+import DataGrid from '../components/DataGrid';
 import DataLoader from '../hoc/DataLoader';
-const InfiniteScrollGridList = infiniteScrollify(GridList);
 
 @inject('viewStore') @observer
 class Search extends Component {
@@ -33,24 +31,13 @@ class Search extends Component {
   }
 
   render() {
-    const { params: { cat }, location: { query: {q} }, data, isLoading, loadMore} = this.props;
+    const { params: { cat }, location: { query: {q} }, data, isLoading, isLastPage, loadMore} = this.props;
     const hash = q.charAt(0) === '#';
 
     return (
-      <div className="container" >
+      <div className="container">
         <Text type='display2' style={{ padding: '70px 0' }}>Results for <span style={{ color: '#3f51b5' }}>{q}</span></Text>
-        <InfiniteScrollGridList data={data} loadMore={loadMore} isLoading={isLoading} />
-
-        {/*<DropDownMenu
-          value={cat}
-          onChange={(e, index, value) => browserHistory.push(`/search/${value}?q=${q}`)}
-          style={{ width: 200 }}
-          autoWidth={false}
-          >
-          <MenuItem value='tracks' primaryText='Tracks' />
-          {!hash ? <MenuItem value='people' primaryText='People' /> : null}
-          {!hash ? <MenuItem value='playlists' primaryText='Playlists' /> : null}
-        </DropDownMenu>*/}
+        <DataGrid data={data} isLoading={isLoading} isLastPage={isLastPage} loadMore={loadMore} />
       </div>
     );
   }

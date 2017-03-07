@@ -2,12 +2,9 @@ import React from 'react';
 import { observable } from 'mobx';
 import { observer, inject } from 'mobx-react';
 
-import GridList from '../components/GridList';
-import infiniteScrollify from '../hoc/InfiniteScrollify';
+import DataGrid from '../components/DataGrid';
 import DataLoader from '../hoc/DataLoader';
 import RequireAuth from '../hoc/RequireAuth';
-
-const InfiniteScrollGridList = infiniteScrollify(GridList);
 
 @inject('viewStore') @observer
 class Stream extends React.Component {
@@ -24,11 +21,11 @@ class Stream extends React.Component {
   }
 
   render() {
-    const { data, isLoading, loadMore } = this.props;
+    const { data, isLoading, isLastPage, loadMore } = this.props;
 
     return (
       <div className="container" style={{ paddingTop: 48 }}>
-        <InfiniteScrollGridList data={this.formatData(data)} loadMore={loadMore} isLoading={isLoading} />
+        <DataGrid data={this.formatData(data)} isLoading={isLoading} isLastPage={isLastPage} loadMore={loadMore} />
       </div>
     );
   }

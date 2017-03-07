@@ -5,11 +5,8 @@ import Paper from 'material-ui/Paper';
 import Tabs from 'material-ui/Tabs';
 import Tab from 'material-ui/Tabs/Tab';
 
-import GridList from '../components/GridList';
-import infiniteScrollify from '../hoc/InfiniteScrollify';
+import DataGrid from '../components/DataGrid';
 import DataLoader from '../hoc/DataLoader';
-
-const InfiniteScrollGridList = infiniteScrollify(GridList);
 
 export const GENRES_MAP = {
   ambient: 'Ambient',
@@ -24,6 +21,7 @@ const GENRES_LIST = [];
 for (var key in GENRES_MAP) {
   GENRES_LIST.push(key);
 };
+
 
 @inject('viewStore') @observer
 class Explore extends Component {
@@ -52,20 +50,20 @@ class Explore extends Component {
   }
 
   render() {
-    const { params, data, loadMore, isLoading } = this.props;
+    const { params, data, isLoading, isLastPage, loadMore } = this.props;
     let index = GENRES_LIST.indexOf(params.genre);
     index = index === -1 ? 0 : index;
 
     return (
       <div>
         <div className='app-toolbar'>
-          <Tabs textColor="accent" index={index} onChange={this.handleChange}>
+          <Tabs textColor='accent' index={index} onChange={this.handleChange}>
             {GENRES_LIST.map((el, i) => <Tab key={i} label={GENRES_MAP[el]} />)}
           </Tabs>
         </div>
 
-        <div className="container" style={{ paddingTop: 48 + 48 }} >
-          <InfiniteScrollGridList loadMore={loadMore} data={data} isLoading={isLoading} />
+        <div className='container' style={{ paddingTop: 48 + 48 }}>
+          <DataGrid data={data} isLoading={isLoading} isLastPage={isLastPage} loadMore={loadMore} />
         </div>
       </div>
     );

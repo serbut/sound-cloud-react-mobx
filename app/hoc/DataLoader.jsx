@@ -10,6 +10,7 @@ export default function (InnerComponent) {
   class DataLoader extends Component {
     @observable.shallow data = [];
     @observable isLoading;
+    @observable nextHref;
 
     @computed get isLastPage() {
       return !this.nextHref;
@@ -22,7 +23,7 @@ export default function (InnerComponent) {
 
     loadMore = () => {
       if (this.isLoading || this.isLastPage)
-        return
+        return;
       this.isLoading = true;
       loadMore(this.nextHref).then(this.callback.bind(this));
     }
@@ -51,6 +52,8 @@ export default function (InnerComponent) {
       return <InnerComponent {...this.props}
         data={this.data}
         isLoading={this.isLoading}
+        isLastPage={this.isLastPage}
+
         loadData={this.loadData}
         loadMore={this.loadMore}
         clearData={this.clearData.bind(this)} />;
