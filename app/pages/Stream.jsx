@@ -14,9 +14,10 @@ class Stream extends React.Component {
     this.props.loadData('me/activities/tracks/affiliated');
   }
 
-  formatData(data) {
+  filterData(data) {
     return data
-      .filter(el => el.origin && (el.type === 'track' || el.type === 'track-repost'))
+      .filter(el => el.hasOwnProperty('origin') && el.origin)
+      .filter(el => el.type === 'track' || el.type === 'track-repost')
       .map(el => el.origin);
   }
 
@@ -25,7 +26,7 @@ class Stream extends React.Component {
 
     return (
       <div className="container" style={{ paddingTop: 48 }}>
-        <DataGrid data={this.formatData(data)} isLoading={isLoading} isLastPage={isLastPage} loadMore={loadMore} />
+        <DataGrid data={this.filterData(data)} isLoading={isLoading} isLastPage={isLastPage} loadMore={loadMore} />
       </div>
     );
   }

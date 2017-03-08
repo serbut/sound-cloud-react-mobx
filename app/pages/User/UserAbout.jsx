@@ -18,7 +18,7 @@ const UserAbout = ({user, userWebProfiles}) =>
     <Text type='headline' gutterBottom>Links</Text>
     <ul className='user-links'>
       {userWebProfiles.map((el, i) =>
-        <li key={i}><a href={el.url} target='_blank' className='link'>{el.title}</a></li>
+        <li key={i}><a href={el.url} target='_blank' className='link link--blue'>{el.title}</a></li>
       )}
     </ul>
   </div>

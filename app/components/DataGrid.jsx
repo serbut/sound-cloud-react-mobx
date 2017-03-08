@@ -26,6 +26,7 @@ const DataGrid = ({ data, isLoading, isLastPage, loadMore }) => {
   const initialRowCount = Math.ceil(data.length / COLUMN_COUNT);
   const rowCount = isLastPage ? initialRowCount : initialRowCount + 1;
   const width = CELL_WIDTH * COLUMN_COUNT;
+  const rowHeight = CELL_HEIGHT;
 
   function isRowLoaded({ index }) {
     return initialRowCount > index;
@@ -64,7 +65,7 @@ const DataGrid = ({ data, isLoading, isLastPage, loadMore }) => {
               autoHeight
               height={height}
               rowCount={rowCount}
-              rowHeight={CELL_HEIGHT}
+              rowHeight={rowHeight}
               rowRenderer={rowRenderer}
               scrollTop={scrollTop}
               width={width}

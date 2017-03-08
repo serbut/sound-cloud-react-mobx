@@ -91,6 +91,18 @@ export function removeLike(trackId) {
     .catch(handleError);
 }
 
+export function addComment(trackId, body, timestamp) {
+  return SC.post(`/tracks/${trackId}/comments`, {
+    comment: { body, timestamp }
+  })
+    .catch(handleError);
+}
+
+export function removeComment(trackId, commentId) {
+  return SC.delete(`/tracks/${trackId}/comments/${commentId}`)
+    .catch(handleError);
+}
+
 export function getMeLikesIds() {
   return axios.get(`${BASE_URL}e1/me/track_likes/ids`, {
     params: { limit: 5000, linked_partitioning: 1, oauth_token: TOKEN() }

@@ -7,12 +7,8 @@ const VOLUME_STEP = 0.25;
 
 const filterData = (data) => {
   return data
-    .filter(el => {
-      if (el.hasOwnProperty('origin'))
-        return el.origin && (el.type === 'track' || el.type === 'track-repost');
-      else
-        return el;
-    })
+    .filter(el => el.hasOwnProperty('origin') && el.origin || true)
+    .filter(el => el.type === 'track' || el.type === 'track-repost')
     .map(el => el.origin || el);
 }
 
@@ -57,7 +53,6 @@ class Queue {
     loadMore(this.nextHref)
       .then(action(data => {
         filterData(data.collection).forEach(el => this.originItems.push(el));
-        console.log(data);
         this.nextHref = data.next_href;
         this.isLoading = false;
       }))

@@ -1,42 +1,74 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router';
-import { observer } from 'mobx-react';
-import { List, ListItem, ListItemText, ListItemSecondaryAction, ListSubheader } from 'material-ui/List';
-import Avatar from 'material-ui/Avatar';
-import IconButton from 'material-ui/IconButton';
+import { observer, inject } from 'mobx-react';
+import { List, ListSubheader } from 'material-ui/List';
+import TextField from 'material-ui/TextField';
 import { CircularProgress } from 'material-ui/Progress';
 
-import { fromNow, getImageUrl, formatDuration } from '../utils';
-import { IMAGE_SIZES } from '../constants';
+import Comment from './SingleComment';
+import InfiniteScrollify from '../hoc/InfiniteScrollify';
+import { addComment, removeComment } from '../api';
 
-const Comments = ({ comments, isLoading }) => {
-  return (
-    <div>
-      <List subheader={<ListSubheader>Comments</ListSubheader>}>
-        {comments.map((comment, i) =>
-          <ListItem key={i} divider dense>
-            <Avatar
-              src={getImageUrl(comment.user.avatar_url, IMAGE_SIZES.badge)}
-              alt={comment.user.username}
-              className='list-avatar' />
-            <ListItemText
-              primary={
-                <span>
-                  <Link to={`/${comment.user.permalink}`} className='link'>{comment.user.username}</Link>
-                  <small> at {formatDuration(comment.timestamp)}</small>
-                </span>
-              }
-              secondary={comment.body} />
-            {/*<ListItemSecondaryAction>
-              <IconButton>reply</IconButton>
-            </ListItemSecondaryAction>*/}
-          </ListItem>
-        )}
-      </List>
+@inject('sessionStore', 'playerStore') @observer
+class Comments extends Component {
+  state = {
+    commentBody: ''
+  }
 
-      {isLoading ? <div className="loader-wrap"><CircularProgress /></div> : null}
-    </div>
-  )
+  addComment() {
+    const { playerStore } = this.props;
+    const trackId = this.props.comments[0].track_id;
+    const timestamp = playerStore.track.id === trackId ? playerStore.progress * 1000 : null;
+
+    addComment(trackId, this.state.commentBody, timestamp)
+      .then(res => this.props.comments.unshift(res));
+  }
+
+  removeComment = (comment) => {
+    removeComment(comment.track_id, comment.id)
+      .then(res => this.props.comments.remove(comment));
+  }
+
+  handleFormSubmit = (e) => {
+    e.preventDefault();
+    const { sessionStore } = this.props;
+
+    if (!this.state.commentBody)
+      return;
+
+    if (sessionStore.isLoggedIn)
+      this.addComment();
+    else
+      sessionStore.login()
+        .then(() => this.addComment());
+
+    this.setState({ commentBody: '' });
+  }
+
+  render() {
+    const { comments, isLoading } = this.props;
+
+    return (
+      <div>
+        <form action='' onSubmit={this.handleFormSubmit}>
+          <TextField
+            label='Write a comment'
+            value={this.state.commentBody}
+            onChange={(e) => this.setState({ commentBody: e.target.value })}
+          />
+        </form>
+
+        <List subheader={<ListSubheader>Comments</ListSubheader>}>
+          {comments.map((comment, i) =>
+            <Comment key={comment.id} comment={comment} removeComment={this.removeComment} />
+          )}
+        </List>
+
+        {isLoading &&
+          <div className='loader-wrap'><CircularProgress /></div>
+        }
+      </div>
+    )
+  }
 }
 
-export default observer(Comments);
+export default InfiniteScrollify(Comments);

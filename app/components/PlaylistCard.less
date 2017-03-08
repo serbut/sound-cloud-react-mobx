@@ -1,6 +1,13 @@
-.playlist-card {
+@import '../styles/vars.less';
+
+.playlist-card__media {
+  padding-top: 100%;
+  background-image: @gradient-1;
 
   img {
+    position: absolute;
+    top: 0;
+
     display: block;
     max-width: 100%;
     height: auto;
@@ -19,6 +26,5 @@
   align-items: center;
 
   color: rgba(255, 255, 255, 0.8);
-
   background: hsla(0, 0%, 6.7%, .8);
 }

@@ -12,12 +12,9 @@ import './Track.less';
 import Comments from '../components/Comments';
 import TrackCard from '../components/TrackCard';
 import UserCard from '../components/UserCard';
-import InfiniteScrollify from '../hoc/InfiniteScrollify';
 import DataLoader from '../hoc/DataLoader';
 import { formatDuration, fromNow, formatNumber, getTags } from '../utils';
 import { loadTrack } from '../api';
-
-const InfiniteScrollComments = InfiniteScrollify(Comments);
 
 // const URL = 'https://wis.sndcdn.com/';
 // const NEW_URL = 'https://w1.sndcdn.com/';
@@ -52,20 +49,20 @@ class Track extends React.Component {
   }
 
   render() {
-    const { sessionStore, data, isLoading, loadMore } = this.props;
+    const { sessionStore, data, isLoading, loadMore, isLastPage } = this.props;
     const { track } = this;
 
     if (!track)
-      return <div className="loader-wrap"><CircularProgress /></div>
+      return <div className='loader-wrap'><CircularProgress /></div>
 
     return (
       <div className='animated fadeIn'>
-        <div className="track-header">
-          <div className="track-header__row container">
-            <div className="track-header__artwork">
+        <div className='track-header'>
+          <div className='track-header__row container'>
+            <div className='track-header__artwork'>
               <TrackCard track={track} tracks={[track]} compact />
             </div>
-            <div className="track-header__details">
+            <div className='track-header__details'>
               <Text type='display1'>{track.title}</Text>
               <Text type='subheading' gutterBottom>
                 {formatDuration(track.duration)} <span className='bullet'>&bull;</span>
@@ -86,21 +83,24 @@ class Track extends React.Component {
           </div>
         </div>
 
-        <div className="container" style={{ display: 'flex' }}>
+        <div className='container' style={{ display: 'flex' }}>
           <div className='track-user'>
             <UserCard user={track.user} />
           </div>
 
           <div>
-            {track.description ? <Text className="track-description"> <pre> {track.description} </pre> </Text> : null}
-            {track.tag_list ?
-              <div className="track-tags">
+            {track.description &&
+              <Text className='track-description'> <pre> {track.description} </pre> </Text>
+            }
+            {track.tag_list &&
+              <div className='track-tags'>
                 {getTags(track.tag_list).map((el, i) =>
                   <Chip key={i} label={el} style={{ margin: 4 }} onClick={e => this.handleTagClick(el)} />)
                 }
               </div>
-              : null}
-            <InfiniteScrollComments comments={data} loadMore={loadMore} isLoading={isLoading} />
+            }
+
+            <Comments comments={data} loadMore={loadMore} isLoading={isLoading} isLastPage={isLastPage} />
           </div>
         </div>
       </div >

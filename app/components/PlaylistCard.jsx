@@ -13,7 +13,7 @@ const PlaylistCard = ({ playlist }) => {
 
   return (
     <Card className='playlist-card'>
-      <CardMedia>
+      <CardMedia className='playlist-card__media'>
         <Link to={link}>
           <img src={getImageUrl(playlist.artwork_url, IMAGE_SIZES.t200x200)} alt={playlist.title} width='200' height='200' />
           <div className="playlist-card__overlay">

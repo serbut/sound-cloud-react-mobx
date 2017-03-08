@@ -50,7 +50,7 @@ class PlayerQueue extends React.Component {
           <div className='player-queue__inner'>
             <List>
               {items.slice(from, to).map((track, i) =>
-                <ListItem key={track.id + i} button divider dense data-id={track.id}
+                <ListItem key={track.permalink} button divider dense data-id={track.id}
                   onTouchTap={() => playerStore.playTrack(track)}
                 >
                   <Avatar src={getImageUrl(track.artwork_url)} className='list-avatar' />
