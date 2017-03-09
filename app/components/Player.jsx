@@ -45,7 +45,11 @@ export default class Player extends React.Component {
       // update pause/play
       const playPromise = store.isPlaying ? this.audio.play() : this.audio.pause();
       if (playPromise !== undefined && typeof playPromise.then === 'function') {
-        playPromise.then(null, (e) => { });
+        playPromise.then(null, (e) => {
+          store.isLoading = false;
+          console.error(e);
+          // store.playNext();
+        });
       }
 
       this.audio.muted = store.muted;
