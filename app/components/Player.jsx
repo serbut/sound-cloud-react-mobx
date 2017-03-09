@@ -28,6 +28,7 @@ export default class Player extends React.Component {
     // this.audio.addEventListener('progress',
     // e => store.setBuffered(Math.round(e.target.buffered.end(e.target.buffered.length - 1))));
     this.audio.addEventListener('ended', e => store.playNext());
+    this.audio.addEventListener('error', this.handeMediaError.bind(this));
 
     this.dispose = autorun(() => {
       if (!store.track)
@@ -45,17 +46,35 @@ export default class Player extends React.Component {
       // update pause/play
       const playPromise = store.isPlaying ? this.audio.play() : this.audio.pause();
       if (playPromise !== undefined && typeof playPromise.then === 'function') {
-        playPromise.then(null, (e) => {
-          store.isLoading = false;
-          console.error(e);
-          // store.playNext();
-        });
+        playPromise.then(null, (e) => { });
       }
 
       this.audio.muted = store.muted;
       this.audio.loop = store.loop;
       this.audio.volume = store.volume;
     });
+  }
+
+  handeMediaError(e) {
+    this.props.playerStore.isLoading = false;
+
+    switch (e.target.error.code) {
+     case e.target.error.MEDIA_ERR_ABORTED:
+       console.error('You aborted the video playback.');
+       break;
+     case e.target.error.MEDIA_ERR_NETWORK:
+       console.error('A network error caused the audio download to fail.');
+       break;
+     case e.target.error.MEDIA_ERR_DECODE:
+       console.error('The audio playback was aborted due to a corruption problem or because the video used features your browser did not support.');
+       break;
+     case e.target.error.MEDIA_ERR_SRC_NOT_SUPPORTED:
+       console.error('The video audio not be loaded, either because the server or network failed or because the format is not supported.');
+       break;
+     default:
+       console.error('An unknown error occurred.');
+       break;
+   }
   }
 
   componentWillUnmount() {

@@ -21,6 +21,8 @@ class Comments extends Component {
 
     addComment(trackId, this.state.commentBody, timestamp)
       .then(res => this.props.comments.unshift(res));
+
+    this.setState({ commentBody: '' });
   }
 
   removeComment = (comment) => {
@@ -40,8 +42,6 @@ class Comments extends Component {
     else
       sessionStore.login()
         .then(() => this.addComment());
-
-    this.setState({ commentBody: '' });
   }
 
   render() {

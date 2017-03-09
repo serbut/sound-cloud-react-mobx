@@ -26,6 +26,7 @@ const Comment = ({ comment, removeComment, sessionStore }) => {
           </span>
         }
         secondary={comment.body}
+        className='list-item-text'
       />
       {sessionStore.isLoggedIn && sessionStore.user.id === comment.user.id &&
         <ListItemSecondaryAction>
