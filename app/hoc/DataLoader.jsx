@@ -24,8 +24,14 @@ export default function (InnerComponent) {
     loadMore = () => {
       if (this.isLoading || this.isLastPage)
         return;
+
+      const nextHref = this.nextHref;
       this.isLoading = true;
-      loadMore(this.nextHref).then(this.callback.bind(this));
+
+      loadMore(nextHref).then(data => {
+        if (nextHref === this.nextHref)
+          this.callback(data);
+      });
     }
 
     @action callback(data, replace) {

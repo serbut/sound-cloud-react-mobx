@@ -17,7 +17,7 @@ class Comments extends Component {
   addComment() {
     const { playerStore } = this.props;
     const trackId = this.props.comments[0].track_id;
-    const timestamp = playerStore.track.id === trackId ? playerStore.progress * 1000 : null;
+    const timestamp = playerStore.track && playerStore.track.id === trackId ? playerStore.progress * 1000 : null;
 
     addComment(trackId, this.state.commentBody, timestamp)
       .then(res => this.props.comments.unshift(res));
