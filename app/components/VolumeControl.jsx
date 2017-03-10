@@ -1,7 +1,7 @@
 import React from 'react';
 import { inject, observer } from 'mobx-react';
 import IconButton from 'material-ui/IconButton';
-import { Card, CardHeader, CardContent } from 'material-ui/Card';
+import { Card, CardContent } from 'material-ui/Card';
 
 import './VolumeControl.less';
 

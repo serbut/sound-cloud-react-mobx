@@ -59,22 +59,22 @@ export default class Player extends React.Component {
     this.props.playerStore.isLoading = false;
 
     switch (e.target.error.code) {
-     case e.target.error.MEDIA_ERR_ABORTED:
-       console.error('You aborted the video playback.');
-       break;
-     case e.target.error.MEDIA_ERR_NETWORK:
-       console.error('A network error caused the audio download to fail.');
-       break;
-     case e.target.error.MEDIA_ERR_DECODE:
-       console.error('The audio playback was aborted due to a corruption problem or because the video used features your browser did not support.');
-       break;
-     case e.target.error.MEDIA_ERR_SRC_NOT_SUPPORTED:
-       console.error('The video audio not be loaded, either because the server or network failed or because the format is not supported.');
-       break;
-     default:
-       console.error('An unknown error occurred.');
-       break;
-   }
+      case e.target.error.MEDIA_ERR_ABORTED:
+        console.error('You aborted the video playback.');
+        break;
+      case e.target.error.MEDIA_ERR_NETWORK:
+        console.error('A network error caused the audio download to fail.');
+        break;
+      case e.target.error.MEDIA_ERR_DECODE:
+        console.error('The audio playback was aborted due to a corruption problem or because the video used features your browser did not support.');
+        break;
+      case e.target.error.MEDIA_ERR_SRC_NOT_SUPPORTED:
+        console.error('The video audio not be loaded, either because the server or network failed or because the format is not supported.');
+        break;
+      default:
+        console.error('An unknown error occurred.');
+        break;
+    }
   }
 
   componentWillUnmount() {

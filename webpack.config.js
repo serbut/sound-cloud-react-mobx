@@ -85,7 +85,7 @@ if (process.env.NODE_ENV === 'production') {
     new ExtractTextPlugin('styles.css')
   ])
   module.exports.module.rules[1] = {
-    test: /\.less$/,
+    test: /\.(css|less)$/,
     use: ExtractTextPlugin.extract({
       fallback: 'style-loader',
       use: [
