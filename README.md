@@ -1,5 +1,7 @@
 # SoundConnect
-Soundcloud client built with React / Mobx / Material UI
+[Soundcloud](http://soundcloud.com) client built with [React](https://github.com/facebook/react) / [MobX](https://github.com/mobxjs/mobx) / [Material UI](https://github.com/callemall/material-ui)
+
+Demo: https://serjp.github.io
 
 ## Features
 
@@ -12,18 +14,32 @@ Soundcloud client built with React / Mobx / Material UI
 - Keyboard shortcuts
 - Infinite smooth scrolling
 
+## Hotkeys
+- space - Play or pause 
+- ↓⇧ - Decrease volume 
+- ↑⇧ - Increase volume
+- → - Seek forward 
+- ← - Seek backward
+- →⇧ - Play next track  
+- ←⇧ - Play previous track
+- L⇧ - Repeat playing track 
+- M - Mute volume
+- L - Like playing track
+- S - Toggle shuffle
+- P - Show player queue
+
 ## Technologies
 
-- React
-- MobX
-- Material UI
-- React Router
-- React Virtualized
-- Axios
-- Keymaster
+- [React](https://github.com/facebook/react)
+- [MobX](https://github.com/mobxjs/mobx)
+- [Material UI](https://github.com/callemall/material-ui)
+- [React Router](https://github.com/ReactTraining/react-router)
+- [React Virtualized](https://github.com/bvaughn/react-virtualized)
+- [Axios](https://github.com/mzabriskie/axios)
+- [Keymaster](https://github.com/madrobby/keymaster)
 
 
 ## Known issues
 
 - some tracks are not visible due to SC Api restrictions
-- tracks plays count are different from the original SC site
+- tracks play count are different from the original on SC site
