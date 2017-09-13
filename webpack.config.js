@@ -54,8 +54,17 @@ module.exports = {
   },
   devServer: {
     historyApiFallback: true,
-    noInfo: true,
+    // noInfo: true,
     port: 3000,
+    stats: {
+      colors: true,
+      hash: false,
+      timings: true,
+      chunks: false,
+      chunkModules: false,
+      modules: false,
+      // cached: false
+    },
     contentBase: 'dist'
   },
   performance: {

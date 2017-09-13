@@ -88,7 +88,7 @@ class Track extends React.Component {
             <UserCard user={track.user} />
           </div>
 
-          <div>
+          <div style={{flex: 1}}>
             {track.description &&
               <Text className='track-description'> <pre> {track.description} </pre> </Text>
             }
