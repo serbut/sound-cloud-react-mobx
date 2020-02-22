@@ -88,6 +88,13 @@ class User extends React.Component {
                 <Text type='display1' gutterBottom>{user.username}</Text>
                 <Text type='headline' gutterBottom>{getUserLocation(user)}</Text>
                 <Text type='subheading' gutterBottom>{formatNumber(user.followers_count)} followers</Text>
+                <Text type='body1' gutterBottom>
+                  {user.followings_count} followings <span className='bullet'>&bull;</span>
+                  {user.playlist_count} playlists <span className='bullet'>&bull;</span>
+                  {user.public_favorites_count} likes <span className='bullet'>&bull;</span>
+                  {user.reposts_count} reposts <span className='bullet'>&bull;</span>
+                  {user.track_count} tracks
+                </Text>
                 {sessionStore.isAuthedUser(user) ? null :
                   sessionStore.isFollowing(user) ?
                     <Button raised primary onTouchTap={() => sessionStore.toggleFollowing(user)}>Unfollow</Button> :
@@ -106,8 +113,8 @@ class User extends React.Component {
 
         <div className='container'>
           {children && React.cloneElement(children, {
-            user: user,
-            userWebProfiles: userWebProfiles
+            user,
+            userWebProfiles
           })}
         </div>
 

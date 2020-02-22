@@ -19,7 +19,7 @@ export default function (InnerComponent) {
     loadData = (href, opts) => {
       this.isLoading = true;
       loadData(href, opts).then(data => this.callback(data, true));
-    }
+    };
 
     loadMore = () => {
       if (this.isLoading || this.isLastPage)

@@ -35,7 +35,7 @@ export function formatDuration(ms) {
 
 export function formatNumber(value) {
   if (!value)
-    return '-';
+    return '0';
   if (value / 1000 < 1)
     return value.toLocaleString();
   if (value / 1000000 < 1)

@@ -13,7 +13,7 @@ import {Link} from "react-router";
 @inject('sessionStore', 'viewStore', 'playerStore') @observer
 export default class Playlist extends Component {
   @observable playlist;
-  @observable isLoading = true;
+  @observable isLoading;
 
   componentDidMount() {
     this.loadData(this.props);
@@ -40,13 +40,13 @@ export default class Playlist extends Component {
   }
 
   render() {
-    const { playlist, isLoading } = this;
+    const { playlist = {}, isLoading = true } = this;
+    const { user } = playlist;
 
     if (isLoading) {
       return <div className='loader-wrap'><CircularProgress /></div>;
     }
 
-    const { user } = playlist;
 
     return (
       <div>

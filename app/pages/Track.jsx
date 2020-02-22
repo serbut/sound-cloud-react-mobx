@@ -8,7 +8,6 @@ import Button from 'material-ui/Button';
 import './Track.less';
 import Comments from '../components/Comments';
 import TrackCard from '../components/TrackCard';
-import DataLoader from '../hoc/DataLoader';
 import {formatDuration, formatNumber, fromNow, getTags} from '../utils';
 import {loadTrack} from '../api';
 import {Link} from "react-router";
@@ -16,6 +15,7 @@ import {Link} from "react-router";
 @inject('sessionStore', 'viewStore') @observer
 class Track extends React.Component {
   @observable track;
+  @observable isLoading;
 
   componentDidMount() {
     this.loadTrack(this.props);
@@ -31,11 +31,13 @@ class Track extends React.Component {
   }
 
   loadTrack({params: {user, track}, viewStore}) {
-    loadTrack.call(this, user, track)
+    this.isLoading = true;
+
+    loadTrack(user, track)
       .then(track => {
         this.track = track;
+        this.isLoading = false;
         viewStore.title = track.title;
-        this.props.loadData(`tracks/${this.track.id}/comments`);
       });
   }
 
@@ -44,10 +46,10 @@ class Track extends React.Component {
   }
 
   render() {
-    const { sessionStore, data, isLoading, loadMore, isLastPage } = this.props;
-    const { track } = this;
+    const { sessionStore } = this.props;
+    const { track, isLoading = true } = this;
 
-    if (!track) {
+    if (isLoading) {
       return <div className='loader-wrap'><CircularProgress/></div>;
     }
 
@@ -94,11 +96,11 @@ class Track extends React.Component {
             </div>
           }
 
-          <Comments comments={data} loadMore={loadMore} isLoading={isLoading} isLastPage={isLastPage} />
+          <Comments trackId={track.id} />
         </div>
       </div >
     )
   }
 }
 
-export default DataLoader(Track);
+export default Track;
