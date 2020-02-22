@@ -1,8 +1,7 @@
-import React, { Component } from 'react';
-import { observable, computed, action } from 'mobx';
-import { observer } from 'mobx-react';
-
-import { loadData, loadMore } from '../api';
+import React, {Component} from 'react';
+import {action, computed, observable} from 'mobx';
+import {observer} from 'mobx-react';
+import {loadData, loadMore} from '../api';
 
 export default function (InnerComponent) {
 
@@ -32,7 +31,7 @@ export default function (InnerComponent) {
         if (nextHref === this.nextHref)
           this.callback(data);
       });
-    }
+    };
 
     @action callback(data, replace) {
       if (!data.collection.length) {
@@ -59,7 +58,6 @@ export default function (InnerComponent) {
         data={this.data}
         isLoading={this.isLoading}
         isLastPage={this.isLastPage}
-
         loadData={this.loadData}
         loadMore={this.loadMore}
         clearData={this.clearData.bind(this)} />;

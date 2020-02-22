@@ -1,5 +1,6 @@
 import moment from 'moment';
 const BAD_URL = '//a1.sndcdn.com/images/';
+const PREVIEW_DURATION = 30000;
 
 export function isElementInViewport(el) {
   //special bonus for those using jQuery
@@ -49,6 +50,8 @@ export function fromNow(createdAt) {
 }
 
 export function getUserLocation(user) {
+  if (!user)
+    return;
   if (user.city && user.country)
     return `${user.city}, ${user.country}`;
   if (user.city)
@@ -66,7 +69,7 @@ export function getTags(text) {
     .map(tag => '#' + tag.replace(/"/g, ''));
 }
 
-export const isPreview = (track) => track.duration === 30000;
+export const isPreview = (track) => track.duration === PREVIEW_DURATION;
 
 // split by rows & remove extraneous new lines
 export function formatText(text) {

@@ -70,6 +70,7 @@ class User extends React.Component {
     const { user, userWebProfiles, isLoading, handleChange } = this;
     let index = CAT_LIST.indexOf(params.cat);
     index = index === -1 ? 4 : index;
+    const location = getUserLocation(user);
 
     if (isLoading) {
       return <div className='loader-wrap'><CircularProgress /></div>;
@@ -86,7 +87,6 @@ class User extends React.Component {
               />
               <div className='user-header__details'>
                 <Text type='display1' gutterBottom>{user.username}</Text>
-                <Text type='headline' gutterBottom>{getUserLocation(user)}</Text>
                 <Text type='subheading' gutterBottom>{formatNumber(user.followers_count)} followers</Text>
                 <Text type='body1' gutterBottom>
                   {user.followings_count} followings <span className='bullet'>&bull;</span>
@@ -95,6 +95,7 @@ class User extends React.Component {
                   {user.reposts_count} reposts <span className='bullet'>&bull;</span>
                   {user.track_count} tracks
                 </Text>
+                {location && <Text type='body1' gutterBottom>from {location}</Text>}
                 {sessionStore.isAuthedUser(user) ? null :
                   sessionStore.isFollowing(user) ?
                     <Button raised primary onTouchTap={() => sessionStore.toggleFollowing(user)}>Unfollow</Button> :

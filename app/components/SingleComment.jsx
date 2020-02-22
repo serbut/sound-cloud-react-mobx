@@ -19,7 +19,6 @@ const Comment = ({ comment, removeComment, sessionStore }) => {
         primary={
           <span>
             <Link to={`/${comment.user.permalink}`} className='link link--blue'>{comment.user.username}</Link>
-            <span className='bullet'>&bull;</span>
             <small> at {formatDuration(comment.timestamp)}</small>
             <span className='bullet'>&bull;</span>
             <small>{fromNow(comment.created_at)}</small>
