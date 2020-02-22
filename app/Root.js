@@ -1,5 +1,5 @@
 import React from 'react';
-import { Router, Route, IndexRedirect, browserHistory } from 'react-router';
+import { Router, Route, IndexRedirect, hashHistory } from 'react-router';
 
 import App from './components/App';
 import Explore from './pages/Explore';
@@ -14,7 +14,7 @@ import Callback from './pages/Callback';
 
 
 const Root = (props) => (
-  <Router history={browserHistory}>
+  <Router history={hashHistory}>
     <Route path='/' component={App} test='test'>
       <IndexRedirect to='explore'/>
       <Route path='callback' component={Callback} />

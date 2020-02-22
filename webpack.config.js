@@ -1,8 +1,8 @@
-const { resolve } = require('path')
-const webpack = require('webpack')
-const HtmlWebpackPlugin = require('html-webpack-plugin')
-const ExtractTextPlugin = require('extract-text-webpack-plugin')
-
+const path = require('path');
+const webpack = require('webpack');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const AddAssetHtmlPlugin = require('add-asset-html-webpack-plugin');
+const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 module.exports = {
   entry: [
@@ -10,8 +10,8 @@ module.exports = {
     './app/main.js'
   ],
   output: {
-    path: __dirname + '/dist',
-    publicPath: '/',
+    path: path.resolve(__dirname, 'dist'),
+    publicPath: '',
     filename: 'bundle.js'
   },
   module: {
@@ -40,13 +40,21 @@ module.exports = {
   },
   plugins: [
     new webpack.NamedModulesPlugin(),
-    // new webpack.DllReferencePlugin({
-    //   context: __dirname,
-    //   manifest: require('./dist/vendor-manifest.json')
-    // }),
+    new webpack.DllReferencePlugin({
+      context: __dirname,
+      manifest: require('./dist/vendor-manifest.json')
+    }),
     new HtmlWebpackPlugin({
       inject: true,
-      template: 'app/index.html'
+      template: 'app/index.html',
+      baseUrl: process.env.NODE_ENV === 'production' ? process.env.npm_package_homepage : '/'
+    }),
+    new AddAssetHtmlPlugin({ filepath: path.resolve(__dirname, 'dist/dll.vendor.js') }),
+    new webpack.DefinePlugin({
+      'process.env': {
+        NODE_ENV: JSON.stringify(process.env.NODE_ENV),
+        HOMEPAGE: JSON.stringify(process.env.NODE_ENV === 'production' ? process.env.npm_package_homepage : '/')
+      }
     })
   ],
   resolve: {
@@ -54,7 +62,6 @@ module.exports = {
   },
   devServer: {
     historyApiFallback: true,
-    // noInfo: true,
     port: 3000,
     stats: {
       colors: true,
@@ -63,7 +70,6 @@ module.exports = {
       chunks: false,
       chunkModules: false,
       modules: false,
-      // cached: false
     },
     contentBase: 'dist'
   },
@@ -71,17 +77,12 @@ module.exports = {
     hints: false
   },
   devtool: '#eval-source-map'
-}
+};
 
 
 if (process.env.NODE_ENV === 'production') {
-  module.exports.devtool = '#source-map'
+  module.exports.devtool = '#source-map';
   module.exports.plugins = (module.exports.plugins || []).concat([
-    new webpack.DefinePlugin({
-      'process.env': {
-        NODE_ENV: '"production"'
-      }
-    }),
     new webpack.optimize.UglifyJsPlugin({
       sourceMap: true,
       compress: {
@@ -92,7 +93,7 @@ if (process.env.NODE_ENV === 'production') {
       minimize: true
     }),
     new ExtractTextPlugin('styles.css')
-  ])
+  ]);
   module.exports.module.rules[1] = {
     test: /\.(css|less)$/,
     use: ExtractTextPlugin.extract({
