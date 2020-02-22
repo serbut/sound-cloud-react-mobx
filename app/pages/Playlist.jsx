@@ -13,27 +13,36 @@ import {Link} from "react-router";
 @inject('sessionStore', 'viewStore', 'playerStore') @observer
 export default class Playlist extends Component {
   @observable playlist;
+  @observable isLoading = true;
 
   componentDidMount() {
     this.loadData(this.props);
   }
 
   componentWillReceiveProps(nextProps) {
-    this.loadData(nextProps);
+    const {user: nextUser, playlist: nextPlaylist} = nextProps.params;
+    const {user, playlist} = this.props.params;
+
+    if (nextUser !== user || nextPlaylist !== playlist) {
+      this.loadData(nextProps);
+    }
   }
 
   loadData({params: { user, playlist }, viewStore }) {
+    this.isLoading = true;
+
     loadPlaylist(user, playlist)
       .then(playlist => {
         this.playlist = playlist;
+        this.isLoading = false;
         viewStore.title = `${playlist.user.username} - ${playlist.title}`;
       });
   }
 
   render() {
-    const { playlist } = this;
+    const { playlist, isLoading } = this;
 
-    if (!playlist) {
+    if (isLoading) {
       return <div className='loader-wrap'><CircularProgress /></div>;
     }
 

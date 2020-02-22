@@ -21,8 +21,13 @@ class Track extends React.Component {
     this.loadTrack(this.props);
   }
 
-  componentWillReceieveProps(nextProps, nextState) {
-    this.loadTrack(nextProps);
+  componentWillReceiveProps (nextProps, nextState) {
+    const {user: nextUser, track: nextTrack} = nextProps.params;
+    const {user, track} = this.props.params;
+
+    if (nextUser !== user || nextTrack !== track) {
+      this.loadTrack(nextProps);
+    }
   }
 
   loadTrack({params: {user, track}, viewStore}) {

@@ -12,7 +12,7 @@ import './User.less';
 
 import { formatNumber, getImageUrl, getUserLocation } from '../../utils';
 import { IMAGE_SIZES } from '../../constants';
-import { loadUser, loadUserWebProfiles, loadUserVisuals } from '../../api';
+import { loadUser, loadUserWebProfiles } from '../../api';
 
 const CAT_LIST = ['tracks', 'playlists', 'likes', 'followings', 'about'];
 
@@ -20,8 +20,7 @@ const CAT_LIST = ['tracks', 'playlists', 'likes', 'followings', 'about'];
 class User extends React.Component {
   @observable user;
   @observable.shallow userWebProfiles = [];
-  @observable profilesLoaded;
-  @observable visuals;  // sizes: original, t1240x260
+  @observable isLoading = true;
 
   componentDidMount() {
     window.addEventListener('scroll', this.onScroll, false);
@@ -40,10 +39,7 @@ class User extends React.Component {
   }
 
   loadUser({ params: {user}, viewStore }) {
-    this.user = null;
-    this.userWebProfiles = [];
-    this.profilesLoaded = false;
-    this.visuals = null;
+    this.isLoading = true;
 
     loadUser(user)
       .then(user => {
@@ -51,13 +47,8 @@ class User extends React.Component {
         viewStore.title = user.username;
 
         loadUserWebProfiles(user.id)
-          .then(profiles => {
-            this.userWebProfiles = profiles;
-            this.profilesLoaded = true;
-          });
-
-        loadUserVisuals(user.id)
-          .then(visuals => this.visuals = visuals);
+          .then(profiles => this.userWebProfiles = profiles)
+          .then(() => this.isLoading = false);
       });
   }
 
@@ -75,20 +66,18 @@ class User extends React.Component {
   };
 
   render() {
-    const { sessionStore, params } = this.props;
-    const { user, userWebProfiles, profilesLoaded } = this;
+    const { sessionStore, params, children } = this.props;
+    const { user, userWebProfiles, isLoading, handleChange } = this;
     let index = CAT_LIST.indexOf(params.cat);
     index = index === -1 ? 4 : index;
 
-    if (!user || !profilesLoaded)
+    if (isLoading) {
       return <div className='loader-wrap'><CircularProgress /></div>;
+    }
 
     return (
       <div className='animated fadeIn'>
         <div className='user-header'>
-
-          {false && this.visuals && this.visuals.enabled ?
-            <img src={this.visuals.visuals[0].visual_url} className='user-header__visual' /> : null}
 
           <div className='container'>
             <div className='user-header__row'>
@@ -107,7 +96,7 @@ class User extends React.Component {
               </div>
             </div>
 
-            <Tabs textColor="accent" index={index} onChange={this.handleChange}>
+            <Tabs textColor="accent" index={index} onChange={handleChange}>
               {CAT_LIST.map((el, i) =>
                 <Tab key={i} label={el} />
               )}
@@ -116,9 +105,9 @@ class User extends React.Component {
         </div>
 
         <div className='container'>
-          {this.props.children && React.cloneElement(this.props.children, {
-            user: this.user,
-            userWebProfiles: this.userWebProfiles
+          {children && React.cloneElement(children, {
+            user: user,
+            userWebProfiles: userWebProfiles
           })}
         </div>
 
