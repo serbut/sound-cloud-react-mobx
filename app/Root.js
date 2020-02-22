@@ -4,7 +4,7 @@ import { Router, Route, IndexRedirect, hashHistory } from 'react-router';
 import App from './components/App';
 import Explore from './pages/Explore';
 import Search from './pages/Search';
-import User from './pages/User/index';
+import User from './pages/User/User';
 import UserCategory from './pages/User/UserCategory';
 import UserAbout from './pages/User/UserAbout';
 import Track from './pages/Track';
