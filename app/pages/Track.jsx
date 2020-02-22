@@ -1,27 +1,17 @@
 import React from 'react';
-import { Link } from 'react-router';
-import { observable } from 'mobx';
-import { observer, inject } from 'mobx-react';
+import {observable} from 'mobx';
+import {inject, observer} from 'mobx-react';
 import Chip from 'material-ui/Chip';
-import Divider from 'material-ui/Divider';
 import Text from 'material-ui/Text';
-import { CircularProgress } from 'material-ui/Progress';
+import {CircularProgress} from 'material-ui/Progress';
 import Button from 'material-ui/Button';
-
 import './Track.less';
 import Comments from '../components/Comments';
 import TrackCard from '../components/TrackCard';
-import UserCard from '../components/UserCard';
 import DataLoader from '../hoc/DataLoader';
-import { formatDuration, fromNow, formatNumber, getTags } from '../utils';
-import { loadTrack } from '../api';
-
-// const URL = 'https://wis.sndcdn.com/';
-// const NEW_URL = 'https://w1.sndcdn.com/';
-
-// this.waveform_url = this.waveform_url
-//       .replace(URL, NEW_URL)
-//       .replace('.json', '.png');
+import {formatDuration, formatNumber, fromNow, getTags} from '../utils';
+import {loadTrack} from '../api';
+import {Link} from "react-router";
 
 @inject('sessionStore', 'viewStore') @observer
 class Track extends React.Component {
@@ -52,8 +42,11 @@ class Track extends React.Component {
     const { sessionStore, data, isLoading, loadMore, isLastPage } = this.props;
     const { track } = this;
 
-    if (!track)
-      return <div className='loader-wrap'><CircularProgress /></div>
+    if (!track) {
+      return <div className='loader-wrap'><CircularProgress/></div>;
+    }
+
+    const { user } = track;
 
     return (
       <div className='animated fadeIn'>
@@ -63,45 +56,40 @@ class Track extends React.Component {
               <TrackCard track={track} tracks={[track]} compact />
             </div>
             <div className='track-header__details'>
-              <Text type='display1'>{track.title}</Text>
+              <Text type='display1' gutterBottom>{track.title}</Text>
+              <Text type="subheading" gutterBottom>by <Link to={`/${user.permalink}`} className='link link--blue'>{user.username}</Link></Text>
               <Text type='subheading' gutterBottom>
-                {formatDuration(track.duration)} <span className='bullet'>&bull;</span>
                 {fromNow(track.created_at)} <span className='bullet'>&bull;</span>
+                {formatDuration(track.duration)} <span className='bullet'>&bull;</span>
                 {track.genre}
               </Text>
-              <Text type='subheading'>
+              <Text type='subheading' gutterBottom>
                 {formatNumber(track.playback_count)} plays <span className='bullet'>&bull;</span>
                 {formatNumber(track.favoritings_count || track.likes_count)} likes <span className='bullet'>&bull;</span>
                 {formatNumber(track.reposts_count)} reposts <span className='bullet'>&bull;</span>
                 {formatNumber(track.comment_count)} comments
               </Text>
+              {sessionStore.isLiked(track) ?
+                <Button raised primary onTouchTap={() => sessionStore.toggleLike(track)}>Liked</Button> :
+                <Button raised accent onTouchTap={() => sessionStore.toggleLike(track)}>Like</Button>
+              }
             </div>
-            {sessionStore.isLiked(track) ?
-              <Button raised primary onTouchTap={() => sessionStore.toggleLike(track)}>Liked</Button> :
-              <Button raised accent onTouchTap={() => sessionStore.toggleLike(track)}>Like</Button>
-            }
           </div>
         </div>
 
-        <div className='container' style={{ display: 'flex' }}>
-          <div className='track-user'>
-            <UserCard user={track.user} />
-          </div>
+        <div className='container'>
+          {track.description &&
+            <Text className='track-description'> <pre> {track.description} </pre> </Text>
+          }
+          {track.tag_list &&
+            <div className='track-tags'>
+              {getTags(track.tag_list).map((el, i) =>
+                <Chip key={i} label={el} style={{ margin: 4 }} onClick={e => this.handleTagClick(el)} />)
+              }
+            </div>
+          }
 
-          <div style={{flex: 1}}>
-            {track.description &&
-              <Text className='track-description'> <pre> {track.description} </pre> </Text>
-            }
-            {track.tag_list &&
-              <div className='track-tags'>
-                {getTags(track.tag_list).map((el, i) =>
-                  <Chip key={i} label={el} style={{ margin: 4 }} onClick={e => this.handleTagClick(el)} />)
-                }
-              </div>
-            }
-
-            <Comments comments={data} loadMore={loadMore} isLoading={isLoading} isLastPage={isLastPage} />
-          </div>
+          <Comments comments={data} loadMore={loadMore} isLoading={isLoading} isLastPage={isLastPage} />
         </div>
       </div >
     )

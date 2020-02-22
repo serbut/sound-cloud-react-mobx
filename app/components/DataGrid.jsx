@@ -71,6 +71,7 @@ const DataGrid = ({ data, isLoading, isLastPage, loadMore }) => {
               width={width}
               overscanRowCount={5}
               overscanIndicesGetter={overscanIndicesGetter}
+              style={{ outline: 'none' }}
             />
           )}
         </InfiniteLoader>

@@ -68,11 +68,11 @@ class User extends React.Component {
       viewStore.appbarTransparent = false;
     else
       viewStore.appbarTransparent = true;
-  }
+  };
 
   handleChange = (e, i) => {
     this.props.router.push(`/${this.user.permalink}/${CAT_LIST[i]}`);
-  }
+  };
 
   render() {
     const { sessionStore, params } = this.props;
@@ -96,15 +96,15 @@ class User extends React.Component {
                 style={{ width: 184, height: 184 }}
               />
               <div className='user-header__details'>
-                <Text type='display1'>{user.username}</Text>
-                <Text type='headline'>{getUserLocation(user)}</Text>
-                <Text type='subheading'>{formatNumber(user.followers_count)} followers</Text>
+                <Text type='display1' gutterBottom>{user.username}</Text>
+                <Text type='headline' gutterBottom>{getUserLocation(user)}</Text>
+                <Text type='subheading' gutterBottom>{formatNumber(user.followers_count)} followers</Text>
+                {sessionStore.isAuthedUser(user) ? null :
+                  sessionStore.isFollowing(user) ?
+                    <Button raised primary onTouchTap={() => sessionStore.toggleFollowing(user)}>Unfollow</Button> :
+                    <Button raised accent onTouchTap={() => sessionStore.toggleFollowing(user)}>Follow</Button>
+                }
               </div>
-              {sessionStore.isAuthedUser(user) ? null :
-                sessionStore.isFollowing(user) ?
-                  <Button raised primary onTouchTap={() => sessionStore.toggleFollowing(user)}>Unfollow</Button> :
-                  <Button raised accent onTouchTap={() => sessionStore.toggleFollowing(user)}>Follow</Button>
-              }
             </div>
 
             <Tabs textColor="accent" index={index} onChange={this.handleChange}>

@@ -1,15 +1,14 @@
-import React, { Component } from 'react';
-import { observable } from 'mobx';
-import { observer, inject } from 'mobx-react';
-import { CircularProgress } from 'material-ui/Progress';
+import React, {Component} from 'react';
+import {observable} from 'mobx';
+import {inject, observer} from 'mobx-react';
+import {CircularProgress} from 'material-ui/Progress';
 import Text from 'material-ui/Text';
-
 import './Playlist.less';
-import UserCard from '../components/UserCard';
 import DataGrid from '../components/DataGrid';
-import { loadPlaylist } from '../api';
-import { formatDuration, fromNow, getImageUrl } from '../utils';
-import { IMAGE_SIZES } from '../constants';
+import {loadPlaylist} from '../api';
+import {formatDuration, fromNow, getImageUrl} from '../utils';
+import {IMAGE_SIZES} from '../constants';
+import {Link} from "react-router";
 
 @inject('sessionStore', 'viewStore', 'playerStore') @observer
 export default class Playlist extends Component {
@@ -27,7 +26,7 @@ export default class Playlist extends Component {
     loadPlaylist(user, playlist)
       .then(playlist => {
         this.playlist = playlist;
-        viewStore.title = playlist.title;
+        viewStore.title = `${playlist.user.username} - ${playlist.title}`;
       });
   }
 
@@ -38,6 +37,8 @@ export default class Playlist extends Component {
       return <div className='loader-wrap'><CircularProgress /></div>;
     }
 
+    const { user } = playlist;
+
     return (
       <div>
         <div className='playlist-header'>
@@ -45,16 +46,15 @@ export default class Playlist extends Component {
             <img src={getImageUrl(playlist.artwork_url, IMAGE_SIZES.t200x200)}
               alt="playlsit.title" width='184' height= '184' />
             <div className='playlist-header__details'>
-              <Text type='display1'>{playlist.title}</Text>
-              <Text type='subheading' gutterBottom>
-                {playlist.track_count} tracks <span className='bullet'>&bull;</span>
-                {formatDuration(playlist.duration)} <span className='bullet'>&bull;</span>
+              <Text type="headline">PLAYLIST</Text>
+              <Text type='display1' gutterBottom>{playlist.title}</Text>
+              <Text type="subheading" gutterBottom>by <Link to={`/${user.permalink}`} className='link link--blue'>{user.username}</Link></Text>
+              <Text type='subheading'>
                 {fromNow(playlist.created_at)} <span className='bullet'>&bull;</span>
+                {playlist.track_count} tracks, &nbsp;
+                {formatDuration(playlist.duration)} <span className='bullet'>&bull;</span>
                 {playlist.genre}
               </Text>
-            </div>
-            <div className='playlist-user'>
-              <UserCard user={playlist.user} />
             </div>
           </div>
         </div>
