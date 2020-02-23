@@ -47,13 +47,11 @@ export default class Playlist extends Component {
       return <div className='loader-wrap'><CircularProgress /></div>;
     }
 
-
     return (
       <div>
         <div className='playlist-header'>
           <div className='container playlist-header__row'>
-            <img src={getImageUrl(playlist.artwork_url, IMAGE_SIZES.t200x200)}
-              alt="playlsit.title" width='184' height= '184' />
+            <img src={getImageUrl(playlist.artwork_url, IMAGE_SIZES.t500x500)} alt="playlsit.title" width={250} height={250}/>
             <div className='playlist-header__details'>
               <Text type="headline">PLAYLIST</Text>
               <Text type='display1' gutterBottom>{playlist.title}</Text>

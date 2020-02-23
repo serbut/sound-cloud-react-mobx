@@ -1,4 +1,5 @@
 import moment from 'moment';
+import {IMAGE_SIZES} from "./constants";
 const BAD_URL = '//a1.sndcdn.com/images/';
 const PREVIEW_DURATION = 30000;
 
@@ -18,11 +19,12 @@ export function isElementInViewport(el) {
   );
 }
 
-export function getImageUrl(url, size = 'large') {
-  if (!url || url.includes(BAD_URL))
-    return '//placehold.it/300x300?text=no+image';
+export function getImageUrl(url, size = IMAGE_SIZES.large) {
+  if (!url || url.includes(BAD_URL)) {
+    return '//placehold.it/1x1';
+  }
 
-  return url.replace('large', size);
+  return url.replace(IMAGE_SIZES.large, size);
 }
 
 export function formatDuration(ms) {

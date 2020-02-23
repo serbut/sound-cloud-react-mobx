@@ -9,4 +9,4 @@ export const IMAGE_SIZES = {
   small: 'small',       // 32×32,
   tiny: 'tiny',         // 20×20, (on artworks) | 18×18, (on avatars)
   mini: 'mini'          // 16×16,
-}
+};

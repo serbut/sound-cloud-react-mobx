@@ -1,12 +1,11 @@
 import React from 'react';
-import { Link } from 'react-router';
-import { observer } from 'mobx-react';
+import {Link} from 'react-router';
+import {observer} from 'mobx-react';
 import Avatar from 'material-ui/Avatar';
 import Text from 'material-ui/Text';
-
 import './UserCard.less';
-import { formatNumber, getImageUrl } from '../utils';
-import { IMAGE_SIZES } from '../constants';
+import {formatNumber, getImageUrl} from '../utils';
+import {IMAGE_SIZES} from '../constants';
 
 const UserCard = ({ user }) => {
   const link = `/${user.permalink}`;

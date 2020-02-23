@@ -60,7 +60,7 @@ class Track extends React.Component {
         <div className='track-header'>
           <div className='track-header__row container'>
             <div className='track-header__artwork'>
-              <TrackCard track={track} tracks={[track]} compact />
+              <TrackCard track={track} compact />
             </div>
             <div className='track-header__details'>
               <Text type='display1' gutterBottom>{track.title}</Text>
@@ -68,9 +68,7 @@ class Track extends React.Component {
               <Text type='subheading' gutterBottom>
                 {fromNow(track.created_at)} <span className='bullet'>&bull;</span>
                 {formatDuration(track.duration)} <span className='bullet'>&bull;</span>
-                {track.genre}
-              </Text>
-              <Text type='subheading' gutterBottom>
+                {track.genre} <span className='bullet'>&bull;</span>
                 {formatNumber(track.playback_count)} plays <span className='bullet'>&bull;</span>
                 {formatNumber(track.favoritings_count || track.likes_count)} likes <span className='bullet'>&bull;</span>
                 {formatNumber(track.reposts_count)} reposts <span className='bullet'>&bull;</span>

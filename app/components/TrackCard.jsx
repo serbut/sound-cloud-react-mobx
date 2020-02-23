@@ -1,19 +1,17 @@
 import React from 'react';
-import { Link } from 'react-router';
-import { observer,inject } from 'mobx-react';
-import { Card, CardMedia, CardContent } from 'material-ui/Card';
+import {Link} from 'react-router';
+import {inject, observer} from 'mobx-react';
+import {Card, CardContent, CardMedia} from 'material-ui/Card';
 import Text from 'material-ui/Text';
 import IconButton from 'material-ui/IconButton';
-
-import { formatDuration, fromNow, formatNumber, getImageUrl, isPreview } from '../utils';
-import { IMAGE_SIZES } from '../constants';
-
+import {formatNumber, fromNow, getImageUrl, isPreview} from '../utils';
+import {IMAGE_SIZES} from '../constants';
 import './TrackCard.less';
 
-const TrackCard = ({ track, compact, playerStore, tracks }) =>
+const TrackCard = ({ track, compact, playerStore, tracks = [track] }) =>
   <Card className={'track-card' + (!compact && playerStore.isSelected(track) ? ' active' : '')}>
     <CardMedia className='track-card__media'>
-      <img src={getImageUrl(track.artwork_url, IMAGE_SIZES.t200x200)} alt={track.title} />
+      <img src={getImageUrl(track.artwork_url, IMAGE_SIZES.t500x500, track.title)} alt={track.title} />
       <div className='track-card__overlay'>
         <IconButton iconClassName='track-card__play'
           onTouchTap={() => playerStore.playTrack(track, tracks.slice())}>
@@ -28,7 +26,7 @@ const TrackCard = ({ track, compact, playerStore, tracks }) =>
       }
     </CardMedia>
 
-    {compact ? null :
+    {!compact &&
       <CardContent>
         <Text type='subheading' noWrap title={track.title}>
           <Link to={`/${track.user.permalink}/tracks/${track.permalink}`} className='link'>{track.title}</Link>
@@ -43,6 +41,6 @@ const TrackCard = ({ track, compact, playerStore, tracks }) =>
         </Text>
       </CardContent>
     }
-  </Card>
+  </Card>;
 
 export default inject('playerStore')(observer(TrackCard));

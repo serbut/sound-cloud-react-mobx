@@ -1,27 +1,25 @@
-import React, { Component } from 'react';
-import { observer, inject } from 'mobx-react';
-import Layout from 'material-ui/Layout';
-import { CircularProgress } from 'material-ui/Progress';
+import React from 'react';
+import {observer} from 'mobx-react';
+import {CircularProgress} from 'material-ui/Progress';
 import Text from 'material-ui/Text';
-import { List, WindowScroller, InfiniteLoader } from 'react-virtualized';
+import {InfiniteLoader, List, WindowScroller} from 'react-virtualized';
 import 'react-virtualized/styles.css';
 import overscanIndicesGetter from '../defaultOverscanIndicesGetter.js';
-
 import './DataGrid.less';
 import TrackCard from './TrackCard';
 import PlaylistCard from './PlaylistCard';
 import UserCard from './UserCard';
 
 const COLUMN_COUNT = 5;
-const CELL_HEIGHT = 300;
-const CELL_WIDTH = 200;
+const CELL_HEIGHT = 316;
+const CELL_WIDTH = 216;
 
 const DataGrid = ({ data, isLoading, isLastPage, loadMore }) => {
   if (!data.length && isLoading)
-    return <div className="loader-wrap"><CircularProgress /></div>
+    return <div className="loader-wrap"><CircularProgress /></div>;
 
   if (!data.length && isLastPage)
-    return <Text type='display2' align='center'>Nothing to show :(</Text>
+    return <Text type='display2' align='center'>Nothing to show :(</Text>;
 
   const initialRowCount = Math.ceil(data.length / COLUMN_COUNT);
   const rowCount = isLastPage ? initialRowCount : initialRowCount + 1;
@@ -78,6 +76,6 @@ const DataGrid = ({ data, isLoading, isLastPage, loadMore }) => {
       )}
     </WindowScroller>
   );
-}
+};
 
 export default observer(DataGrid);

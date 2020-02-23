@@ -1,12 +1,11 @@
 import React from 'react';
-import { Link } from 'react-router';
-import { Card, CardMedia, CardContent } from 'material-ui/Card';
+import {Link} from 'react-router';
+import {Card, CardContent, CardMedia} from 'material-ui/Card';
 import Text from 'material-ui/Text';
 import Icon from 'material-ui/Icon';
-
 import './PlaylistCard.less';
-import { formatDuration, fromNow, formatNumber, getImageUrl } from '../utils';
-import { IMAGE_SIZES } from '../constants';
+import {getImageUrl} from '../utils';
+import {IMAGE_SIZES} from '../constants';
 
 const PlaylistCard = ({ playlist }) => {
   const link = `/${playlist.user.permalink}/playlists/${playlist.permalink}`;
@@ -15,7 +14,7 @@ const PlaylistCard = ({ playlist }) => {
     <Card className='playlist-card'>
       <CardMedia className='playlist-card__media'>
         <Link to={link}>
-          <img src={getImageUrl(playlist.artwork_url, IMAGE_SIZES.t200x200)} alt={playlist.title} width='200' height='200' />
+          <img src={getImageUrl(playlist.artwork_url, IMAGE_SIZES.t500x500)} alt={playlist.title} />
           <div className="playlist-card__overlay">
             <Text type='subheading' colorInherit style={{ marginRight: 4 }}>{playlist.track_count}</Text>
             <Icon>playlist_play</Icon>
