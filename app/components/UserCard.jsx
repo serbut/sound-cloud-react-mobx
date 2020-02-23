@@ -15,7 +15,7 @@ const UserCard = ({ user }) => {
       <Link to={link} className='link'>
         <Avatar
           alt={user.username}
-          src={getImageUrl(user.avatar_url, IMAGE_SIZES.t200x200)}
+          src={getImageUrl(user.avatar_url, IMAGE_SIZES.t500x500)}
           className='user-card__avatar'
         />
       </Link>

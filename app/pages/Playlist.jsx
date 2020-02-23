@@ -35,7 +35,7 @@ export default class Playlist extends Component {
       .then(playlist => {
         this.playlist = playlist;
         this.isLoading = false;
-        viewStore.title = `${playlist.user.username} - ${playlist.title}`;
+        viewStore.title = `${playlist.user.username} - ${playlist.title} (Playlist)`;
       });
   }
 
@@ -53,7 +53,7 @@ export default class Playlist extends Component {
           <div className='container playlist-header__row'>
             <img src={getImageUrl(playlist.artwork_url, IMAGE_SIZES.t500x500)} alt="playlsit.title" width={250} height={250}/>
             <div className='playlist-header__details'>
-              <Text type="headline">PLAYLIST</Text>
+              <Text type="subheading">Playlist</Text>
               <Text type='display1' gutterBottom>{playlist.title}</Text>
               <Text type="subheading" gutterBottom>by <Link to={`/${user.permalink}`} className='link link--blue'>{user.username}</Link></Text>
               <Text type='subheading'>

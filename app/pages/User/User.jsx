@@ -93,10 +93,11 @@ class User extends React.Component {
 
           <div className='container'>
             <div className='user-header__row'>
-              <Avatar alt={user.username} src={getImageUrl(user.avatar_url, IMAGE_SIZES.t200x200)}
-                style={{ width: 184, height: 184 }}
+              <Avatar alt={user.username} src={getImageUrl(user.avatar_url, IMAGE_SIZES.t500x500)}
+                style={{ width: 250, height: 250 }}
               />
               <div className='user-header__details'>
+                <Text type='subheading'>Artist</Text>
                 <Text type='display1' gutterBottom>{user.username}</Text>
                 <Text type='subheading' gutterBottom>{formatNumber(user.followers_count)} followers</Text>
                 <Text type='body1' gutterBottom>

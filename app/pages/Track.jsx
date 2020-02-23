@@ -37,7 +37,7 @@ class Track extends React.Component {
       .then(track => {
         this.track = track;
         this.isLoading = false;
-        viewStore.title = track.title;
+        viewStore.title = `${track.user.username} - ${track.title} (Single)`;
       });
   }
 
@@ -63,6 +63,7 @@ class Track extends React.Component {
               <TrackCard track={track} compact />
             </div>
             <div className='track-header__details'>
+              <Text type='subheading'>Single</Text>
               <Text type='display1' gutterBottom>{track.title}</Text>
               <Text type="subheading" gutterBottom>by <Link to={`/${user.permalink}`} className='link link--blue'>{user.username}</Link></Text>
               <Text type='subheading' gutterBottom>
