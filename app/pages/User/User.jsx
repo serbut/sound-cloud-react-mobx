@@ -23,14 +23,10 @@ class User extends React.Component {
   @observable isLoading = true;
 
   componentDidMount() {
-    window.addEventListener('scroll', this.onScroll, false);
-    this.props.viewStore.appbarTransparent = true;
     this.loadUser(this.props);
   }
 
   componentWillUnmount() {
-    window.removeEventListener('scroll', this.onScroll, false);
-    this.props.viewStore.appbarTransparent = false;
   }
 
   componentWillReceiveProps(nextProps) {
@@ -51,15 +47,6 @@ class User extends React.Component {
           .then(() => this.isLoading = false);
       });
   }
-
-  onScroll = () => {
-    const { viewStore } = this.props;
-
-    if (scrollY > 20)
-      viewStore.appbarTransparent = false;
-    else
-      viewStore.appbarTransparent = true;
-  };
 
   handleChange = (e, i) => {
     this.props.router.push(`/${this.user.permalink}/${CAT_LIST[i]}`);

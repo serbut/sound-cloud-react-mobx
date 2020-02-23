@@ -1,16 +1,15 @@
 import React from 'react';
-import { Link } from 'react-router';
-import { observer, inject } from 'mobx-react';
+import {Link} from 'react-router';
+import {inject, observer} from 'mobx-react';
 import AppBar from 'material-ui/AppBar';
 import Toolbar from 'material-ui/Toolbar';
 import Text from 'material-ui/Text';
 import Button from 'material-ui/Button';
 import IconButton from 'material-ui/IconButton';
-import { Menu, MenuItem } from 'material-ui/Menu';
-
+import {Menu, MenuItem} from 'material-ui/Menu';
 import './AppBar.less';
 import SearchWidget from './SearchWidget';
-import { APP_TITLE } from '../config';
+import {APP_TITLE} from '../config';
 
 @inject('sessionStore', 'viewStore') @observer
 export default class MyAppBar extends React.Component {
@@ -26,39 +25,39 @@ export default class MyAppBar extends React.Component {
   handleLoginClick = e => {
     this.props.sessionStore.login()
       .then(() => this.props.router.push('/stream'))
-  }
+  };
 
   handleLogoutClick = e => {
     this.handleRequestClose();
     this.props.sessionStore.logout();
-  }
+  };
 
   handleProfileClick = e => {
     const { router, sessionStore } = this.props;
     this.handleRequestClose();
     router.push(`/${sessionStore.user.permalink}`);
-  }
+  };
 
   handleLikesClick = e => {
     const { router, sessionStore } = this.props;
     this.handleRequestClose();
     router.push(`/${sessionStore.user.permalink}/likes`);
-  }
+  };
 
   handleStreamClick = e => {
     this.handleRequestClose();
     this.props.router.push('/stream');
-  }
+  };
 
   handleSearch = q => {
     this.props.router.push({ pathname: `/search/tracks`, query: { q } });
-  }
+  };
 
   render() {
     const { sessionStore, viewStore } = this.props;
 
     return (
-      <AppBar className={'app-header' + (viewStore.appbarTransparent ? ' transparent' : '')}>
+      <AppBar className={'app-header'}>
         <Toolbar>
           {/*<IconButton contrast onTouchTap={() => viewStore.toggleDrawer()}>menu</IconButton>*/}
           <Text type="title" colorInherit className='header-title'>

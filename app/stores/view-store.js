@@ -7,7 +7,6 @@ class ViewState {
       playlistOpen: false,
       volumeControlOpen: false,
       drawerOpen: false,
-      appbarTransparent: false
     });
 
     window.addEventListener('click', () => this.playlistOpen = false);
