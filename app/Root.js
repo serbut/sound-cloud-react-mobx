@@ -3,9 +3,8 @@ import {hashHistory, IndexRedirect, Route, Router} from 'react-router';
 import App from './components/App';
 import Explore from './pages/Explore';
 import Search from './pages/Search';
-import User from './pages/User/User';
-import UserCategory from './pages/User/UserCategory';
-import UserAbout from './pages/User/UserAbout';
+import User from './pages/User';
+import UserContent from './pages/UserContent';
 import Track from './pages/Track';
 import Playlist from './pages/Playlist';
 import Stream from './pages/Stream';
@@ -21,8 +20,7 @@ const Root = (props) => (
       <Route path='explore(/:genre)' component={Explore} />
       <Route path='search/:cat' component={Search} />
       <Route path=':user' component={User}>
-        <Route path='about' component={UserAbout} />
-        <Route path=':cat' component={UserCategory} />
+        <Route path=':section' component={UserContent} />
       </Route>
       <Route path=':user/tracks/:track' component={Track} />
       <Route path=':user/playlists/:playlist' component={Playlist} />

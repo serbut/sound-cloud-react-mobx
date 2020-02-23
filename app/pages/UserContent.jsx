@@ -1,26 +1,26 @@
-import React, { Component } from 'react';
-import { observer, inject } from 'mobx-react';
-
-import DataGrid from '../../components/DataGrid';
-import DataLoader from '../../hoc/DataLoader';
+import React, {Component} from 'react';
+import {inject, observer} from 'mobx-react';
+import DataGrid from '../components/DataGrid';
+import DataLoader from '../hoc/DataLoader';
+import UserAbout from "../components/UserAbout";
 
 @inject('sessionStore') @observer
-class UserCategory extends Component {
+class UserContent extends Component {
 
   componentDidMount() {
     this.load(this.props);
   }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.params.cat !== this.props.params.cat)
+    if (nextProps.params.section !== this.props.params.section)
       this.load(nextProps);
   }
 
-  load({params: {cat}}) {
+  load({ params: { section } }) {
     const baseUrl = `/users/${this.props.user.id}`;
     this.props.clearData();
 
-    switch (cat) {
+    switch (section) {
       case 'tracks':
         this.props.loadData(`${baseUrl}/tracks`);
         break;
@@ -39,14 +39,18 @@ class UserCategory extends Component {
 
   filterData(data) {
     const { params, sessionStore, user } = this.props;
-    if (params.cat === 'likes' && sessionStore.isLoggedIn && user.id === sessionStore.user.id && sessionStore.userLikesIds.length)
+    if (params.section === 'likes' && sessionStore.isLoggedIn && user.id === sessionStore.user.id && sessionStore.userLikesIds.length)
       return data.filter(el => sessionStore.userLikesIds.includes(el.id));
     else
       return data;
   }
 
   render() {
-    const { data, isLoading, isLastPage, loadMore } = this.props;
+    const { data, isLoading, isLastPage, loadMore, params: { section }, user } = this.props;
+
+    if (section && section === 'about') {
+      return <UserAbout user={user}></UserAbout>
+    }
 
     return (
       <DataGrid data={this.filterData(data)} isLoading={isLoading} isLastPage={isLastPage} loadMore={loadMore} />
@@ -54,4 +58,4 @@ class UserCategory extends Component {
   }
 }
 
-export default DataLoader(UserCategory);
+export default DataLoader(UserContent);

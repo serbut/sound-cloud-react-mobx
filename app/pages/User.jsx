@@ -1,32 +1,27 @@
 import React from 'react';
-import { observable } from 'mobx';
-import { observer, inject } from 'mobx-react';
+import {observable} from 'mobx';
+import {inject, observer} from 'mobx-react';
 import Button from 'material-ui/Button';
-import { CircularProgress } from 'material-ui/Progress';
+import {CircularProgress} from 'material-ui/Progress';
 import Text from 'material-ui/Text';
 import Tabs from 'material-ui/Tabs';
 import Tab from 'material-ui/Tabs/Tab';
 import Avatar from 'material-ui/Avatar';
-
 import './User.less';
-
-import { formatNumber, getImageUrl, getUserLocation } from '../../utils';
-import { IMAGE_SIZES } from '../../constants';
-import { loadUser, loadUserWebProfiles } from '../../api';
+import {formatNumber, getImageUrl, getUserLocation} from '../utils';
+import {IMAGE_SIZES} from '../constants';
+import {loadUser, loadUserWebProfiles} from '../api';
 
 const TABS = ['tracks', 'playlists', 'likes', 'followings', 'about'];
 
 @inject('sessionStore', 'viewStore') @observer
 class User extends React.Component {
   @observable user;
-  @observable isLoading = true;
+  @observable isLoading = false;
   @observable tabs = [];
 
   componentDidMount() {
     this.loadUser(this.props);
-  }
-
-  componentWillUnmount() {
   }
 
   componentWillReceiveProps(nextProps) {
@@ -34,7 +29,7 @@ class User extends React.Component {
       this.loadUser(nextProps);
   }
 
-  loadUser({ params: {user}, viewStore }) {
+  loadUser({ params: { user, section }, viewStore }) {
     this.isLoading = true;
 
     loadUser(user)
@@ -46,7 +41,7 @@ class User extends React.Component {
           .then(profiles => {
             this.user.webProfiles = profiles;
             this.tabs = this.getTabs(this.user);
-            if (this.tabs.length > 0) {
+            if (!section && this.tabs.length > 0) {
               this.props.router.replace(`/${this.user.permalink}/${this.tabs[0]}`);
             }
             this.isLoading = false;
@@ -80,11 +75,15 @@ class User extends React.Component {
   render() {
     const { sessionStore, params, children } = this.props;
     const { user, isLoading, handleTabChange, tabs } = this;
-    const index = this.tabs.indexOf(params.cat || 'about');
+    const selectedTabIndex = this.tabs.indexOf(params.section);
     const location = getUserLocation(user);
 
     if (isLoading) {
       return <div className='loader-wrap'><CircularProgress /></div>;
+    }
+
+    if (!user) {
+      return <div></div>;
     }
 
     return (
@@ -116,7 +115,7 @@ class User extends React.Component {
               </div>
             </div>
 
-            <Tabs textColor="accent" index={index} onChange={handleTabChange}>
+            <Tabs textColor="accent" index={selectedTabIndex} onChange={handleTabChange}>
               {tabs.map((el, i) => <Tab key={i} label={el} />)}
             </Tabs>
           </div>
