@@ -1,10 +1,7 @@
-import React, { Component } from 'react';
-import { observable } from 'mobx';
-import { observer, inject } from 'mobx-react';
-import Paper from 'material-ui/Paper';
+import React, {Component} from 'react';
+import {inject, observer} from 'mobx-react';
 import Tabs from 'material-ui/Tabs';
 import Tab from 'material-ui/Tabs/Tab';
-
 import DataGrid from '../components/DataGrid';
 import DataLoader from '../hoc/DataLoader';
 
@@ -15,13 +12,17 @@ export const GENRES_MAP = {
   house: 'House',
   techno: 'Techno',
   trap: 'Trap',
+  'hiphop': 'Hip Hop',
+  dance: 'Dance',
+  pop: 'Pop',
+  'drum&bass': 'Drum & Bass'
 };
 
 const GENRES_LIST = [];
+
 for (var key in GENRES_MAP) {
   GENRES_LIST.push(key);
-};
-
+}
 
 @inject('viewStore') @observer
 class Explore extends Component {
@@ -38,7 +39,7 @@ class Explore extends Component {
 
   load({params, router}) {
     if (!params.genre)
-      router.replace(`/explore/${GENRES_LIST[0]}`)
+      router.replace(`/explore/${GENRES_LIST[0]}`);
     else {
       this.props.clearData();
       this.props.loadData('/tracks', { tags: params.genre });
@@ -47,7 +48,7 @@ class Explore extends Component {
 
   handleChange = (e, i) => {
     this.props.router.push(`/explore/${GENRES_LIST[i]}`);
-  }
+  };
 
   render() {
     const { params, data, isLoading, isLastPage, loadMore } = this.props;
