@@ -21,7 +21,6 @@ const Root = (props) => (
       <Route path='explore(/:genre)' component={Explore} />
       <Route path='search/:cat' component={Search} />
       <Route path=':user' component={User}>
-        <IndexRedirect to='tracks'/>
         <Route path='about' component={UserAbout} />
         <Route path=':cat' component={UserCategory} />
       </Route>

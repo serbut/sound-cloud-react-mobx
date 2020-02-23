@@ -29,10 +29,10 @@ const renderLinks = (links) => {
     </div>
 };
 
-const UserAbout = ({user, userWebProfiles}) =>
+const UserAbout = ({user}) =>
   <div>
     {renderDescription(user.description)}
-    {renderLinks(userWebProfiles)}
+    {renderLinks(user.webProfiles)}
   </div>;
 
 export default UserAbout;

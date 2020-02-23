@@ -14,13 +14,13 @@ import { formatNumber, getImageUrl, getUserLocation } from '../../utils';
 import { IMAGE_SIZES } from '../../constants';
 import { loadUser, loadUserWebProfiles } from '../../api';
 
-const CAT_LIST = ['tracks', 'playlists', 'likes', 'followings', 'about'];
+const TABS = ['tracks', 'playlists', 'likes', 'followings', 'about'];
 
 @inject('sessionStore', 'viewStore') @observer
 class User extends React.Component {
   @observable user;
-  @observable.shallow userWebProfiles = [];
   @observable isLoading = true;
+  @observable tabs = [];
 
   componentDidMount() {
     this.loadUser(this.props);
@@ -43,20 +43,44 @@ class User extends React.Component {
         viewStore.title = user.username;
 
         loadUserWebProfiles(user.id)
-          .then(profiles => this.userWebProfiles = profiles)
-          .then(() => this.isLoading = false);
+          .then(profiles => {
+            this.user.webProfiles = profiles;
+            this.tabs = this.getTabs(this.user);
+            if (this.tabs.length > 0) {
+              this.props.router.replace(`/${this.user.permalink}/${this.tabs[0]}`);
+            }
+            this.isLoading = false;
+          });
       });
   }
 
-  handleChange = (e, i) => {
-    this.props.router.push(`/${this.user.permalink}/${CAT_LIST[i]}`);
+  getTabs(user) {
+    return TABS.filter(tab => {
+      switch (tab) {
+        case 'tracks':
+          return user.track_count > 0;
+        case 'playlists':
+          return user.playlist_count > 0;
+        case 'likes':
+          return user.public_favorites_count > 0;
+        case 'followings':
+          return user.followings_count > 0;
+        case 'about':
+          return user.description || user.webProfiles.length > 0;
+        default:
+          return true;
+      }
+    });
+  }
+
+  handleTabChange = (e, i) => {
+    this.props.router.push(`/${this.user.permalink}/${this.tabs[i]}`);
   };
 
   render() {
     const { sessionStore, params, children } = this.props;
-    const { user, userWebProfiles, isLoading, handleChange } = this;
-    let index = CAT_LIST.indexOf(params.cat);
-    index = index === -1 ? 4 : index;
+    const { user, isLoading, handleTabChange, tabs } = this;
+    const index = this.tabs.indexOf(params.cat || 'about');
     const location = getUserLocation(user);
 
     if (isLoading) {
@@ -91,18 +115,15 @@ class User extends React.Component {
               </div>
             </div>
 
-            <Tabs textColor="accent" index={index} onChange={handleChange}>
-              {CAT_LIST.map((el, i) =>
-                <Tab key={i} label={el} />
-              )}
+            <Tabs textColor="accent" index={index} onChange={handleTabChange}>
+              {tabs.map((el, i) => <Tab key={i} label={el} />)}
             </Tabs>
           </div>
         </div>
 
         <div className='container'>
           {children && React.cloneElement(children, {
-            user,
-            userWebProfiles
+            user
           })}
         </div>
 
