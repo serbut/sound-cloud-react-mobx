@@ -1,17 +1,16 @@
 import React from 'react';
-import { observable } from 'mobx';
-import { observer, inject } from 'mobx-react';
-
+import {inject, observer} from 'mobx-react';
 import DataGrid from '../components/DataGrid';
-import DataLoader from '../hoc/DataLoader';
+import DataLoaderFunc from '../hoc/DataLoader';
 import RequireAuth from '../hoc/RequireAuth';
+
+const DataLoader = DataLoaderFunc();
 
 @inject('viewStore') @observer
 class Stream extends React.Component {
 
   componentDidMount() {
     this.props.viewStore.title = 'Your Stream';
-    this.props.loadData('me/activities/tracks/affiliated');
   }
 
   filterData(data) {
@@ -22,14 +21,17 @@ class Stream extends React.Component {
   }
 
   render() {
-    const { data, isLoading, isLastPage, loadMore } = this.props;
-
     return (
       <div className="container" style={{ paddingTop: 48 }}>
-        <DataGrid data={this.filterData(data)} isLoading={isLoading} isLastPage={isLastPage} loadMore={loadMore} />
+        <DataLoader
+          url={'me/activities/tracks/affiliated'}
+          render={(props) =>
+            <DataGrid {...props} />
+          }
+        />
       </div>
     );
   }
 }
 
-export default RequireAuth(DataLoader(Stream));
+export default RequireAuth(Stream);
