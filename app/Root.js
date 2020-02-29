@@ -18,7 +18,7 @@ const Root = (props) => (
       <Route path='callback' component={Callback} />
       <Route path='stream' component={Stream} />
       <Route path='explore(/:genre)' component={Explore} />
-      <Route path='search/:cat' component={Search} />
+      <Route path='search/:type' component={Search} />
       <Route path=':user' component={User}>
         <Route path=':section' component={UserContent} />
       </Route>
