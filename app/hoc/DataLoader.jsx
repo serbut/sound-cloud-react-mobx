@@ -8,11 +8,26 @@ export default function (InnerComponent) {
   @observer
   class DataLoader extends Component {
     @observable.shallow data = [];
-    @observable isLoading;
+    @observable isLoading = false;
     @observable nextHref;
 
     @computed get isLastPage() {
       return !this.nextHref;
+    }
+
+    componentDidMount() {
+      const { url, options } = this.props;
+      this.loadData(url, options);
+    }
+
+    componentWillReceiveProps(nextProps) {
+      const { url, options } = this.props;
+      const {url: nextUrl, options: nextOptions} = nextProps;
+
+      if (url !== nextUrl || JSON.stringify(options) !== JSON.stringify(nextOptions)) {
+        this.clearData();
+        this.loadData(nextUrl, nextOptions);
+      }
     }
 
     loadData = (href, opts) => {
@@ -21,16 +36,24 @@ export default function (InnerComponent) {
     };
 
     loadMore = () => {
-      if (this.isLoading || this.isLastPage)
+      if (this.isLoading || this.isLastPage) {
         return;
+      }
 
       const nextHref = this.nextHref;
       this.isLoading = true;
 
       loadMore(nextHref).then(data => {
-        if (nextHref === this.nextHref)
+        // TODO: why we need this check ?
+        if (nextHref === this.nextHref) {
           this.callback(data);
+        }
       });
+    };
+
+    clearData = () => {
+      this.data = [];
+      this.nextHref = null;
     };
 
     @action callback(data, replace) {
@@ -40,27 +63,37 @@ export default function (InnerComponent) {
         return;
       }
 
-      if (replace)
+      if (replace) {
         this.data = data.collection;
-      else
-        data.collection.forEach(i => this.data.push(i));
+      } else {
+        data.collection.forEach(el => this.data.push(el));
+      }
+
       this.nextHref = data.next_href;
       this.isLoading = false;
     }
 
-    clearData() {
-      this.data = [];
-      this.nextHref = null;
-    }
-
     render() {
+      const {data, isLoading, isLastPage, loadData, loadMore, clearData} = this;
+
+      if (this.props.render) {
+        return this.props.render({
+          data,
+          isLoading,
+          isLastPage,
+          loadData,
+          loadMore,
+          clearData
+        })
+      }
+
       return <InnerComponent {...this.props}
-        data={this.data}
-        isLoading={this.isLoading}
-        isLastPage={this.isLastPage}
-        loadData={this.loadData}
-        loadMore={this.loadMore}
-        clearData={this.clearData.bind(this)} />;
+        data={data}
+        isLoading={isLoading}
+        isLastPage={isLastPage}
+        loadData={loadData}
+        loadMore={loadMore}
+        clearData={clearData} />;
     }
   }
 
