@@ -2,10 +2,8 @@ import React, {Component} from 'react';
 import {inject, observer} from 'mobx-react';
 import Text from 'material-ui/Text';
 import DataGrid from '../components/DataGrid';
-import DataLoaderFunc from '../hoc/DataLoader';
+import DataLoader from '../hoc/DataLoader';
 import {observable} from 'mobx';
-
-const DataLoader = DataLoaderFunc();
 
 @inject('viewStore')
 @observer
@@ -15,18 +13,18 @@ class Search extends Component {
   componentDidMount() {
     const { viewStore, location, params} = this.props;
     viewStore.title = 'Search';
-    this.search(location.query.q, params.type);
+    this.handlePropsChange(location.query.q, params.type);
   }
 
   componentWillReceiveProps({ params: nextParams, location: nextLocation }) {
     const { location, params } = this.props;
 
     if (location.query.q !== nextLocation.query.q || params.type !== nextParams.type) {
-      this.search(nextLocation.query.q, nextParams.type);
+      this.handlePropsChange(nextLocation.query.q, nextParams.type);
     }
   }
 
-  search(query, type) {
+  handlePropsChange(query, type) {
     if (query.charAt(0) === '#') {
       this.request = {
         url: '/tracks',
@@ -67,7 +65,7 @@ class Search extends Component {
 
         <DataLoader
           url={this.request.url}
-          options={this.request.params}
+          params={this.request.params}
           render={(props) =>
             <DataGrid {...props} />
           }

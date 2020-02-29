@@ -1,13 +1,12 @@
 import React, {Component} from 'react';
 import {inject, observer} from 'mobx-react';
 import DataGrid from '../components/DataGrid';
-import DataLoaderFunc from '../hoc/DataLoader';
+import DataLoader from '../hoc/DataLoader';
 import UserAbout from "../components/UserAbout";
 import {observable} from 'mobx';
 
-const DataLoader = DataLoaderFunc();
-
-@inject('sessionStore') @observer
+@inject('sessionStore')
+@observer
 class UserContent extends Component {
   @observable request;
 
@@ -70,7 +69,7 @@ class UserContent extends Component {
     return (
       <DataLoader
         url={this.request.url}
-        options={this.request.params}
+        params={this.request.params}
         render={({ data, ...props }) =>
           <DataGrid data={this.filterData(data)} {...props} />
         }

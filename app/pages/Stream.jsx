@@ -1,12 +1,11 @@
 import React from 'react';
 import {inject, observer} from 'mobx-react';
 import DataGrid from '../components/DataGrid';
-import DataLoaderFunc from '../hoc/DataLoader';
+import DataLoader from '../hoc/DataLoader';
 import RequireAuth from '../hoc/RequireAuth';
 
-const DataLoader = DataLoaderFunc();
-
-@inject('viewStore') @observer
+@inject('viewStore')
+@observer
 class Stream extends React.Component {
 
   componentDidMount() {

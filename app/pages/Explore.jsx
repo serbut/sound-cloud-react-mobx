@@ -3,9 +3,7 @@ import {inject, observer} from 'mobx-react';
 import Tabs from 'material-ui/Tabs';
 import Tab from 'material-ui/Tabs/Tab';
 import DataGrid from '../components/DataGrid';
-import DataLoaderFunc from '../hoc/DataLoader';
-
-const DataLoader = DataLoaderFunc();
+import DataLoader from '../hoc/DataLoader';
 
 export const GENRES_MAP = {
   ambient: 'Ambient',
@@ -26,7 +24,8 @@ for (var key in GENRES_MAP) {
   GENRES_LIST.push(key);
 }
 
-@inject('viewStore') @observer
+@inject('viewStore')
+@observer
 export default class Explore extends Component {
 
   componentDidMount() {
@@ -34,11 +33,6 @@ export default class Explore extends Component {
 
     if (!this.props.params.genre) {
       this.props.router.replace(`/explore/${GENRES_LIST[0]}`);
-    }
-  }
-
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.params.genre !== this.props.params.genre) {
     }
   }
 
@@ -65,7 +59,7 @@ export default class Explore extends Component {
         <div className='container' style={{ paddingTop: 48 + 48 }}>
           <DataLoader
             url={'/tracks'}
-            options={{ tags: params.genre }}
+            params={{ tags: params.genre }}
             render={(props) =>
               <DataGrid {...props} />
             }

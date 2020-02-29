@@ -5,21 +5,12 @@ import {CircularProgress} from 'material-ui/Progress';
 import Comment from './SingleComment';
 import InfiniteScrollify from '../hoc/InfiniteScrollify';
 import {addComment, removeComment} from '../api';
-import DataLoaderFunc from '../hoc/DataLoader';
+import DataLoader from '../hoc/DataLoader';
 import CommentForm from './CommentForm';
-
-const DataLoader = DataLoaderFunc();
 
 @inject('sessionStore', 'playerStore')
 @observer
 export default class Comments extends Component {
-  componentDidMount() {
-  }
-
-  componentWillReceiveProps (nextProps, nextState) {
-    if (nextProps.trackId !== this.props.trackId) {
-    }
-  }
 
   addComment = (commentBody) => {
     const { playerStore, sessionStore, trackId } = this.props;
@@ -28,13 +19,13 @@ export default class Comments extends Component {
     (sessionStore.isLoggedIn ? Promise.resolve() : sessionStore.login())
       .then(() => {
         addComment(trackId, commentBody, timestamp)
-          // .then(res => comments.unshift(res)); TODO:
+          // .then(res => comments.unshift(res)); TODO
       });
   };
 
   removeComment = (comment) => {
     removeComment(comment.track_id, comment.id)
-      // .then(res => comments.remove(comment)); TODO:
+      // .then(res => comments.remove(comment)); TODO
   };
 
   render() {
