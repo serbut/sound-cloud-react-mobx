@@ -1,61 +1,82 @@
 import React, {Component} from 'react';
 import {inject, observer} from 'mobx-react';
 import DataGrid from '../components/DataGrid';
-import DataLoader from '../hoc/DataLoader';
+import DataLoaderFunc from '../hoc/DataLoader';
 import UserAbout from "../components/UserAbout";
+import {observable} from 'mobx';
+
+const DataLoader = DataLoaderFunc();
 
 @inject('sessionStore') @observer
 class UserContent extends Component {
+  @observable request;
 
   componentDidMount() {
-    this.load(this.props);
+    this.handlePropsChange(this.props);
   }
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.params.section !== this.props.params.section)
-      this.load(nextProps);
+      this.handlePropsChange(nextProps);
   }
 
-  load({ params: { section } }) {
+  handlePropsChange({ params: { section } }) {
     const baseUrl = `/users/${this.props.user.id}`;
-    this.props.clearData();
 
     switch (section) {
       case 'tracks':
-        this.props.loadData(`${baseUrl}/tracks`);
+        this.request = {url: `${baseUrl}/tracks`};
         break;
       case 'playlists':
-        this.props.loadData(`${baseUrl}/playlists`, { representation: `compact` });
+        this.request = {url: `${baseUrl}/playlists`, params: { representation: `compact` }};
         break;
       case 'likes':
-        this.props.loadData(`${baseUrl}/favorites`);
+        this.request = {url: `${baseUrl}/favorites`};
         break;
       case 'followings':
-        this.props.loadData(`${baseUrl}/followings`);
+        this.request = {url: `${baseUrl}/followings`};
+        break;
       default:
+        this.request = null;
         break;
     }
   }
 
   filterData(data) {
     const { params, sessionStore, user } = this.props;
-    if (params.section === 'likes' && sessionStore.isLoggedIn && user.id === sessionStore.user.id && sessionStore.userLikesIds.length)
+
+    if (params.section === 'likes'
+      && sessionStore.isLoggedIn
+      && user.id === sessionStore.user.id
+      && sessionStore.userLikesIds.length
+    ) {
       return data.filter(el => sessionStore.userLikesIds.includes(el.id));
-    else
+    } else {
       return data;
+    }
   }
 
   render() {
-    const { data, isLoading, isLastPage, loadMore, params: { section }, user } = this.props;
+    const { params: { section }, user } = this.props;
 
     if (section && section === 'about') {
       return <UserAbout user={user}></UserAbout>
     }
 
+    if (!this.request) {
+      return null;
+    }
+
     return (
-      <DataGrid data={this.filterData(data)} isLoading={isLoading} isLastPage={isLastPage} loadMore={loadMore} />
+      <DataLoader
+        url={this.request.url}
+        options={this.request.params}
+        render={({ data, ...props }) =>
+          <DataGrid data={this.filterData(data)} {...props} />
+        }
+      />
     );
   }
 }
 
-export default DataLoader(UserContent);
+export default UserContent;

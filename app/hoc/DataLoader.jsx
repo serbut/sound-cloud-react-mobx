@@ -30,9 +30,12 @@ export default function (InnerComponent) {
       }
     }
 
-    loadData = (href, opts) => {
+    loadData = (url, params) => {
+      if (!url) {
+        return;
+      }
       this.isLoading = true;
-      loadData(href, opts).then(data => this.callback(data, true));
+      loadData(url, params).then(data => this.callback(data, true));
     };
 
     loadMore = () => {
