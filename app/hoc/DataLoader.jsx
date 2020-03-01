@@ -3,66 +3,88 @@ import {action, computed, observable} from 'mobx';
 import {observer} from 'mobx-react';
 import {loadData, loadMore} from '../api';
 
-export default function (InnerComponent) {
+@observer
+export default class DataLoader extends Component {
+  @observable.shallow data = [];
+  @observable isLoading = false;
+  @observable nextHref;
 
-  @observer
-  class DataLoader extends Component {
-    @observable.shallow data = [];
-    @observable isLoading;
-    @observable nextHref;
+  @computed get isLastPage() {
+    return !this.nextHref;
+  }
 
-    @computed get isLastPage() {
-      return !this.nextHref;
-    }
+  componentDidMount() {
+    const { url, params } = this.props;
+    this.loadData(url, params);
+  }
 
-    loadData = (href, opts) => {
-      this.isLoading = true;
-      loadData(href, opts).then(data => this.callback(data, true));
-    };
+  componentWillReceiveProps(nextProps) {
+    const { url, params } = this.props;
+    const {url: nextUrl, params: nextParams} = nextProps;
 
-    loadMore = () => {
-      if (this.isLoading || this.isLastPage)
-        return;
-
-      const nextHref = this.nextHref;
-      this.isLoading = true;
-
-      loadMore(nextHref).then(data => {
-        if (nextHref === this.nextHref)
-          this.callback(data);
-      });
-    };
-
-    @action callback(data, replace) {
-      if (!data.collection.length) {
-        this.nextHref = null;
-        this.isLoading = false;
-        return;
-      }
-
-      if (replace)
-        this.data = data.collection;
-      else
-        data.collection.forEach(i => this.data.push(i));
-      this.nextHref = data.next_href;
-      this.isLoading = false;
-    }
-
-    clearData() {
-      this.data = [];
-      this.nextHref = null;
-    }
-
-    render() {
-      return <InnerComponent {...this.props}
-        data={this.data}
-        isLoading={this.isLoading}
-        isLastPage={this.isLastPage}
-        loadData={this.loadData}
-        loadMore={this.loadMore}
-        clearData={this.clearData.bind(this)} />;
+    if (url !== nextUrl || JSON.stringify(params) !== JSON.stringify(nextParams)) {
+      this.clearData();
+      this.loadData(nextUrl, nextParams);
     }
   }
 
-  return DataLoader;
+  loadData = (url, params) => {
+    if (!url) {
+      return;
+    }
+    this.isLoading = true;
+    loadData(url, params).then(data => this.callback(data, true));
+  };
+
+  loadMore = () => {
+    if (this.isLoading || this.isLastPage) {
+      return;
+    }
+
+    const nextHref = this.nextHref;
+    this.isLoading = true;
+
+    loadMore(nextHref).then(data => {
+      // TODO: why we need this check ?
+      if (nextHref === this.nextHref) {
+        this.callback(data);
+      }
+    });
+  };
+
+  clearData = () => {
+    this.data = [];
+    this.nextHref = null;
+  };
+
+  @action callback(data, replace) {
+    if (!data.collection.length) {
+      this.nextHref = null;
+      this.isLoading = false;
+      return;
+    }
+
+    if (replace) {
+      this.data = data.collection;
+    } else {
+      data.collection.forEach(el => this.data.push(el));
+    }
+
+    this.nextHref = data.next_href;
+    this.isLoading = false;
+  }
+
+  render() {
+    const {data, isLoading, isLastPage, loadData, loadMore, clearData} = this;
+
+    return this.props.render({
+      data,
+      isLoading,
+      isLastPage,
+      loadData,
+      loadMore,
+      clearData
+    });
+  }
 }
+

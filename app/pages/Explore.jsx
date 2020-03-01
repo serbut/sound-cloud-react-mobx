@@ -24,25 +24,15 @@ for (var key in GENRES_MAP) {
   GENRES_LIST.push(key);
 }
 
-@inject('viewStore') @observer
-class Explore extends Component {
+@inject('viewStore')
+@observer
+export default class Explore extends Component {
 
   componentDidMount() {
     this.props.viewStore.title = 'Explore';
-    this.load(this.props);
-  }
 
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.params.genre !== this.props.params.genre)
-      this.load(nextProps);
-  }
-
-  load({params, router}) {
-    if (!params.genre)
-      router.replace(`/explore/${GENRES_LIST[0]}`);
-    else {
-      this.props.clearData();
-      this.props.loadData('/tracks', { tags: params.genre });
+    if (!this.props.params.genre) {
+      this.props.router.replace(`/explore/${GENRES_LIST[0]}`);
     }
   }
 
@@ -51,24 +41,31 @@ class Explore extends Component {
   };
 
   render() {
-    const { params, data, isLoading, isLastPage, loadMore } = this.props;
-    let index = GENRES_LIST.indexOf(params.genre);
-    index = index === -1 ? 0 : index;
+    const { params } = this.props;
+    const currentTabIndex = GENRES_LIST.indexOf(params.genre);
+
+    if (!params.genre) {
+      return null;
+    }
 
     return (
       <div>
         <div className='app-toolbar'>
-          <Tabs textColor='accent' index={index} onChange={this.handleChange}>
+          <Tabs textColor='accent' index={currentTabIndex} onChange={this.handleChange}>
             {GENRES_LIST.map((el, i) => <Tab key={i} label={GENRES_MAP[el]} />)}
           </Tabs>
         </div>
 
         <div className='container' style={{ paddingTop: 48 + 48 }}>
-          <DataGrid data={data} isLoading={isLoading} isLastPage={isLastPage} loadMore={loadMore} />
+          <DataLoader
+            url={'/tracks'}
+            params={{ tags: params.genre }}
+            render={(props) =>
+              <DataGrid {...props} />
+            }
+          />
         </div>
       </div>
     );
   }
 }
-
-export default DataLoader(Explore);

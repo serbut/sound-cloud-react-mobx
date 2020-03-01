@@ -1,46 +1,78 @@
-import React, { Component } from 'react';
-import { observable } from 'mobx';
-import { observer, inject } from 'mobx-react';
-import { browserHistory } from 'react-router';
+import React, {Component} from 'react';
+import {inject, observer} from 'mobx-react';
 import Text from 'material-ui/Text';
-
 import DataGrid from '../components/DataGrid';
 import DataLoader from '../hoc/DataLoader';
+import {observable} from 'mobx';
 
-@inject('viewStore') @observer
+@inject('viewStore')
+@observer
 class Search extends Component {
+  @observable request;
 
-  componentWillMount() {
+  componentDidMount() {
     const { viewStore, location, params} = this.props;
     viewStore.title = 'Search';
-    this.loadData(location.query.q, params.cat);
+    this.handlePropsChange(location.query.q, params.type);
   }
 
-  componentWillReceiveProps({ params: { cat }, location: { query: {q} } }, nextState) {
-    if (this.props.params.cat !== cat || this.props.location.query.q !== q)
-      this.loadData(q, cat);
+  componentWillReceiveProps({ params: nextParams, location: nextLocation }) {
+    const { location, params } = this.props;
+
+    if (location.query.q !== nextLocation.query.q || params.type !== nextParams.type) {
+      this.handlePropsChange(nextLocation.query.q, nextParams.type);
+    }
   }
 
-  loadData(q, cat) {
-    if (q.charAt(0) === '#')
-      return this.props.loadData('/tracks', { tags: q.slice(1) });
-    if (cat === 'tracks')
-      return this.props.loadData('/tracks', { q });
-    if (cat === 'people')
-      return this.props.loadData('/users', { q });
+  handlePropsChange(query, type) {
+    if (query.charAt(0) === '#') {
+      this.request = {
+        url: '/tracks',
+        params: { tags: query.slice(1)}
+      }
+    } else if (type === 'tracks') {
+      this.request = {
+        url: '/tracks',
+        params: {q: query}
+      }
+    } else if (type === 'users') {
+      this.request = {
+        url: '/users',
+        params: {q: query}
+      }
+    }
   }
 
   render() {
-    const { params: { cat }, location: { query: {q} }, data, isLoading, isLastPage, loadMore} = this.props;
-    const hash = q.charAt(0) === '#';
+    const { location, params } = this.props;
+    const query = location.query.q;
+    const isTag = query.charAt(0) === '#';
+    const isUser = !isTag && params.type === 'users';
+    const isTrack = !isTag && params.type === 'tracks';
+
+    if (!this.request) {
+      return null;
+    }
 
     return (
       <div className="container">
-        <Text type='display2' style={{ padding: '70px 0' }}>Results for <span style={{ color: '#3f51b5' }}>{q}</span></Text>
-        <DataGrid data={data} isLoading={isLoading} isLastPage={isLastPage} loadMore={loadMore} />
+        <Text type='display1' style={{ margin: '70px 0 20px 0' }}>
+          Results for <span style={{ color: '#3f51b5' }}>{query}</span>
+          {isTag && ' tag'}
+          {isUser && ' in users'}
+          {isTrack && ' in tracks'}
+        </Text>
+
+        <DataLoader
+          url={this.request.url}
+          params={this.request.params}
+          render={(props) =>
+            <DataGrid {...props} />
+          }
+        />
       </div>
     );
   }
 }
 
-export default DataLoader(Search);
+export default Search;
