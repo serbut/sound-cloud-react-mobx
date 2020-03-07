@@ -65,7 +65,7 @@ class Track extends React.Component {
             <div className='track-header__details'>
               <Text type='subheading'>Single</Text>
               <Text type='display1' gutterBottom>{track.title}</Text>
-              <Text type="subheading" gutterBottom>by <Link to={`/${user.permalink}`} className='link link--blue'>{user.username}</Link></Text>
+              <Text type="subheading" gutterBottom>by <Link to={`/users/${user.permalink}`} className='link link--blue'>{user.username}</Link></Text>
               <Text type='subheading' gutterBottom>
                 {fromNow(track.created_at)} <span className='bullet'>&bull;</span>
                 {formatDuration(track.duration)} <span className='bullet'>&bull;</span>

@@ -29,24 +29,27 @@ class User extends React.Component {
       this.loadUser(nextProps);
   }
 
-  loadUser({ params: { user, section }, viewStore }) {
+  loadUser({ params: { user, section }, viewStore, router }) {
     this.isLoading = true;
 
     loadUser(user)
       .then(user => {
         this.user = user;
-        viewStore.title = user.username;
+      })
+      .then(() => loadUserWebProfiles(this.user.id))
+      .then(profiles => {
+        this.user.webProfiles = profiles;
+      })
+      .then(() => {
+        this.isLoading = false;
 
-        loadUserWebProfiles(user.id)
-          .then(profiles => {
-            this.user.webProfiles = profiles;
-            this.tabs = this.getTabs(this.user);
-            if (!section && this.tabs.length > 0) {
-              this.props.router.replace(`/${this.user.permalink}/${this.tabs[0]}`);
-            }
-            this.isLoading = false;
-          });
-      });
+        viewStore.title = this.user.username;
+        this.tabs = this.getTabs(this.user);
+
+        if (!this.tabs.find(tab => router.location.pathname.includes(tab))) {
+          this.props.router.replace(`users/${this.user.permalink}/${this.tabs[0]}`);
+        }
+      })
   }
 
   getTabs(user) {
@@ -69,13 +72,13 @@ class User extends React.Component {
   }
 
   handleTabChange = (e, i) => {
-    this.props.router.push(`/${this.user.permalink}/${this.tabs[i]}`);
+    this.props.router.push(`users/${this.user.permalink}/${this.tabs[i]}`);
   };
 
   render() {
-    const { sessionStore, params, children } = this.props;
+    const { sessionStore, router, children } = this.props;
     const { user, isLoading, handleTabChange, tabs } = this;
-    const selectedTabIndex = this.tabs.indexOf(params.section);
+    const selectedTabIndex = this.tabs.findIndex(tab => router.location.pathname.includes(tab));
     const location = getUserLocation(user);
 
     if (isLoading) {
@@ -83,7 +86,7 @@ class User extends React.Component {
     }
 
     if (!user) {
-      return <div></div>;
+      return null;
     }
 
     return (
@@ -115,9 +118,9 @@ class User extends React.Component {
               </div>
             </div>
 
-            <Tabs textColor="accent" index={selectedTabIndex} onChange={handleTabChange}>
+            {selectedTabIndex !== -1 && <Tabs textColor="accent" index={selectedTabIndex} onChange={handleTabChange}>
               {tabs.map((el, i) => <Tab key={i} label={el} />)}
-            </Tabs>
+            </Tabs>}
           </div>
         </div>
 

@@ -29,10 +29,10 @@ const TrackCard = ({ track, compact, playerStore, tracks = [track] }) =>
     {!compact &&
       <CardContent>
         <Text type='subheading' noWrap title={track.title}>
-          <Link to={`/${track.user.permalink}/tracks/${track.permalink}`} className='link'>{track.title}</Link>
+          <Link to={`users/${track.user.permalink}/tracks/${track.permalink}`} className='link'>{track.title}</Link>
         </Text>
         <Text type='body1' secondary noWrap gutterBottom>
-          <Link to={`/${track.user.permalink}`} className='link'>{track.user.username}</Link>
+          <Link to={`users/${track.user.permalink}`} className='link'>{track.user.username}</Link>
         </Text>
         <Text type='caption'>
           {formatNumber(track.likes_count || track.favoritings_count) + ' likes'}
