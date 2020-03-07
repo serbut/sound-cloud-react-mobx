@@ -1,6 +1,6 @@
 import React from 'react';
 import {hashHistory, IndexRedirect, Route, Router} from 'react-router';
-import App from './components/App';
+import App from './App';
 import Explore from './pages/Explore';
 import Search from './pages/Search';
 import User from './pages/User';
