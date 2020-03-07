@@ -1,99 +1,93 @@
 import SC from 'soundcloud';
 import Cookies from 'js-cookie';
 import axios from 'axios';
+import {CLIENT_ID, COOKIE_PATH, REDIRECT_URI} from './config';
 
-import { CLIENT_ID, REDIRECT_URI, COOKIE_PATH } from './config';
-const TOKEN = () => Cookies.get(COOKIE_PATH);
+const getToken = () => Cookies.get(COOKIE_PATH);
 const BASE_URL = '//api.soundcloud.com/';
-const RESOLVE_URL = `${BASE_URL}resolve?url=http://soundcloud.com/`;
-const params = { client_id: CLIENT_ID };
+const RESOLVE_URL = `resolve?url=http://soundcloud.com`;
 const PAGE_SIZE = 50;
-let nextHref = null;
+let nextHref = null; // TODO: remove this
 
 SC.initialize({
   client_id: CLIENT_ID,
   redirect_uri: REDIRECT_URI,
-  oauth_token: TOKEN()
+  oauth_token: getToken()
 });
 
-export const getNextHref = () => nextHref;
+export const getNextHref = () => nextHref; // TODO: remove this
 
-export function formatNextHref(href) {
-  if (!href.includes('client_id') && !href.includes('oauth_token'))
-    return href += TOKEN() ? `&oauth_token=${TOKEN()}` : `&client_id=${CLIENT_ID}`;
-  else
+const resolve = (url) => RESOLVE_URL + url;
+
+const formatNextHref = (href) => {
+  if (!href.includes('client_id') && !href.includes('oauth_token')) {
+    return href += getToken() ? `&oauth_token=${getToken()}` : `&client_id=${CLIENT_ID}`;
+  } else {
     return href;
-}
+  }
+};
 
-export function loadData(href, opts) {
-  return SC.get(href, Object.assign({ limit: PAGE_SIZE, linked_partitioning: 1 }, opts))
-    .then(data => {
-      nextHref = data.next_href;
-      return data;
-    })
-}
-
-export function loadMore(nextHref) {
-  return axios.get(formatNextHref(nextHref))
-    .then(({ data }) => {
-      nextHref = data.next_href;
-      return data;
-    });
-}
-
-export function loadUser(permalink) {
-  return axios.get(`${RESOLVE_URL}${permalink}`, { params })
-    .then(({data}) => data);
-}
-
-export function loadPlaylist(user, playlist) {
-  return axios.get(`${RESOLVE_URL}${user}/sets/${playlist}`, { params })
-    .then(({data}) => data);
-}
-
-export function loadTrack(user, track) {
-  return axios.get(`${RESOLVE_URL}${user}/${track}`, { params })
-    .then(({data}) => data);
-}
-
-export function loadUserWebProfiles(userId) {
-  return SC.get(`/users/${userId}/web-profiles`);
-}
-
-export function followUser(userId) {
-  return SC.put(`/me/followings/${userId}`);
-}
-
-export function unfollowUser(userId) {
-  return SC.delete(`/me/followings/${userId}`);
-}
-
-export function addLike(trackId) {
-  return SC.put(`/me/favorites/${trackId}`);
-}
-
-export function removeLike(trackId) {
-  return SC.delete(`/me/favorites/${trackId}`);
-}
-
-export function addComment(trackId, body, timestamp) {
-  return SC.post(`/tracks/${trackId}/comments`, {
-    comment: { body, timestamp }
+export const loadData = (href, params) => SC.get(href, { limit: PAGE_SIZE, linked_partitioning: 1, ...params })
+  .then(data => {
+    nextHref = data.next_href;
+    return data;
   });
-}
 
-export function removeComment(trackId, commentId) {
-  return SC.delete(`/tracks/${trackId}/comments/${commentId}`);
-}
+export const loadMore = (nextHref) => axios.get(formatNextHref(nextHref))
+  .then(({ data }) => {
+    nextHref = data.next_href;
+    return data;
+  });
 
-export function getMeLikesIds() {
-  return axios.get(`${BASE_URL}e1/me/track_likes/ids`, {
-    params: { limit: 5000, linked_partitioning: 1, oauth_token: TOKEN() }
-  })
-    .then(({data}) => data.collection);
-}
+export const loadUser = (user) => SC.get(resolve(`/${user}`));
+export const loadPlaylist = (user, playlist) => SC.get(resolve(`/${user}/sets/${playlist}`));
+export const loadTrack = (user, track) => SC.get(resolve(`/${user}/${track}`));
+export const loadUserWebProfiles = (userId) => SC.get(`/users/${userId}/web-profiles`);
+export const followUser = (userId) => SC.put(`/me/followings/${userId}`);
+export const unfollowUser = (userId) => SC.delete(`/me/followings/${userId}`);
+export const addLike = (trackId) => SC.put(`/me/favorites/${trackId}`);
+export const removeLike = (trackId) => SC.delete(`/me/favorites/${trackId}`);
 
-export function getMeFollowingsIds() {
-  return SC.get('me/followings', { limit: 5000, linked_partitioning: 1 })
-    .then(data => data.collection.map(el => el.id));
-}
+export const addComment = (trackId, body, timestamp) => SC.post(
+  `/tracks/${trackId}/comments`,
+  {comment: {body, timestamp}}
+);
+
+export const removeComment = (trackId, commentId) => SC.delete(`/tracks/${trackId}/comments/${commentId}`);
+
+export const getMeLikesIds = () => axios.get(
+  `${BASE_URL}e1/me/track_likes/ids`,
+  {params: {limit: 5000, linked_partitioning: 1, oauth_token: getToken()}}
+  )
+  .then(({data}) => data.collection);
+
+export const getMeFollowingsIds = () => SC.get('me/followings', {limit: 5000, linked_partitioning: 1})
+  .then(data => data.collection.map(el => el.id));
+
+export const getUserTracksUrl = (userId) => `/users/${userId}/tracks`;
+export const getUserFollowingsUrl = (userId) => `/users/${userId}/followings`;
+export const getUserLikesUrl = (userId) => `/users/${userId}/favorites`;
+export const getUserPlaylistsUrl = (userId) => `/users/${userId}/playlists`;
+export const USER_PLAYLISTS_PARAMS = {representation: 'compact'};
+export const getTrackCommentsUrl = (trackId) => `tracks/${trackId}/comments`;
+
+export const getSearchTracksByTagRequest = (tags) => ({
+  url: '/tracks',
+  params: {
+    tags
+  }
+});
+
+export const getSearchTracksRequest = (query) => ({
+  url: '/tracks',
+  params: {
+    q: query
+  }
+});
+
+export const getSearchUsersRequest = (query) => ({
+  url: '/users',
+  params: {
+    q: query
+  }
+});

@@ -4,7 +4,7 @@ import {List, ListSubheader} from 'material-ui/List';
 import {CircularProgress} from 'material-ui/Progress';
 import Comment from './SingleComment';
 import InfiniteScrollify from '../hoc/InfiniteScrollify';
-import {addComment, removeComment} from '../api';
+import {addComment, getTrackCommentsUrl, removeComment} from '../api';
 import DataLoader from '../hoc/DataLoader';
 import CommentForm from './CommentForm';
 import Error from './Error';
@@ -38,7 +38,7 @@ export default class Comments extends Component {
         <CommentForm addComment={addComment}></CommentForm>
 
         <DataLoader
-          url={`tracks/${trackId}/comments`}
+          url={getTrackCommentsUrl(trackId)}
           render={({data: comments, isLoading, loadMore, error}) =>
             <div>
               <InfiniteScrollify load={loadMore}>

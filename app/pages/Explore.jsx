@@ -4,6 +4,7 @@ import Tabs from 'material-ui/Tabs';
 import Tab from 'material-ui/Tabs/Tab';
 import DataGrid from '../components/DataGrid';
 import DataLoader from '../hoc/DataLoader';
+import {getSearchTracksByTagRequest} from '../api';
 
 export const GENRES_MAP = {
   ambient: 'Ambient',
@@ -48,6 +49,8 @@ export default class Explore extends Component {
       return null;
     }
 
+    const {url, params: requestParams} = getSearchTracksByTagRequest(params.genre);
+
     return (
       <div>
         <div className='app-toolbar'>
@@ -58,8 +61,8 @@ export default class Explore extends Component {
 
         <div className='container' style={{ paddingTop: 48 + 48 }}>
           <DataLoader
-            url={'/tracks'}
-            params={{ tags: params.genre }}
+            url={url}
+            params={requestParams}
             render={(props) =>
               <DataGrid {...props} />
             }

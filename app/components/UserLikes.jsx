@@ -2,6 +2,7 @@ import DataLoader from '../hoc/DataLoader';
 import DataGrid from './DataGrid';
 import React from 'react';
 import {inject} from 'mobx-react';
+import {getUserLikesUrl} from '../api';
 
 let UserLikes = ({user, sessionStore}) => {
   const filterData = (data) => {
@@ -16,7 +17,7 @@ let UserLikes = ({user, sessionStore}) => {
   };
 
   return <DataLoader
-    url={`/users/${user.id}/favorites`}
+    url={getUserLikesUrl(user.id)}
     render={({data, ...props}) =>
       <DataGrid data={filterData(data)} {...props} />
     }

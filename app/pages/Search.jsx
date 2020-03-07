@@ -4,6 +4,7 @@ import Text from 'material-ui/Text';
 import DataGrid from '../components/DataGrid';
 import DataLoader from '../hoc/DataLoader';
 import {observable} from 'mobx';
+import {getSearchTracksByTagRequest, getSearchTracksRequest, getSearchUsersRequest} from '../api';
 
 @inject('viewStore')
 @observer
@@ -26,20 +27,11 @@ class Search extends Component {
 
   handlePropsChange(query, type) {
     if (query.charAt(0) === '#') {
-      this.request = {
-        url: '/tracks',
-        params: { tags: query.slice(1)}
-      }
+      this.request = getSearchTracksByTagRequest(query.slice(1));
     } else if (type === 'tracks') {
-      this.request = {
-        url: '/tracks',
-        params: {q: query}
-      }
+      this.request = getSearchTracksRequest(query);
     } else if (type === 'users') {
-      this.request = {
-        url: '/users',
-        params: {q: query}
-      }
+      this.request = getSearchUsersRequest(query);
     }
   }
 
