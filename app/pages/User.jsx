@@ -11,6 +11,7 @@ import './User.less';
 import {formatNumber, getImageUrl, getUserLocation} from '../utils';
 import {IMAGE_SIZES} from '../constants';
 import {loadUser, loadUserWebProfiles} from '../api';
+import Error from '../components/Error';
 
 const TABS = ['tracks', 'playlists', 'likes', 'followings', 'about'];
 
@@ -19,6 +20,7 @@ class User extends React.Component {
   @observable user;
   @observable isLoading = false;
   @observable tabs = [];
+  @observable error;
 
   componentDidMount() {
     this.loadUser(this.props);
@@ -50,6 +52,10 @@ class User extends React.Component {
           this.props.router.replace(`users/${this.user.permalink}/${this.tabs[0]}`);
         }
       })
+      .catch(err => {
+        this.error = 'Failed to load user';
+        this.isLoading = false;
+      })
   }
 
   getTabs(user) {
@@ -77,12 +83,16 @@ class User extends React.Component {
 
   render() {
     const { sessionStore, router, children } = this.props;
-    const { user, isLoading, handleTabChange, tabs } = this;
+    const { user, isLoading, handleTabChange, tabs, error } = this;
     const selectedTabIndex = this.tabs.findIndex(tab => router.location.pathname.includes(tab));
     const location = getUserLocation(user);
 
     if (isLoading) {
       return <div className='loader-wrap'><CircularProgress /></div>;
+    }
+
+    if (error) {
+      return <Error>{error}</Error>;
     }
 
     if (!user) {

@@ -11,11 +11,13 @@ import TrackCard from '../components/TrackCard';
 import {formatDuration, formatNumber, fromNow, getTags} from '../utils';
 import {loadTrack} from '../api';
 import {Link} from "react-router";
+import Error from '../components/Error';
 
 @inject('sessionStore', 'viewStore') @observer
 class Track extends React.Component {
   @observable track;
   @observable isLoading;
+  @observable error;
 
   componentDidMount() {
     this.loadTrack(this.props);
@@ -38,7 +40,11 @@ class Track extends React.Component {
         this.track = track;
         this.isLoading = false;
         viewStore.title = `${track.user.username} - ${track.title} (Single)`;
-      });
+      })
+      .catch(err => {
+        this.error = 'Failed to load track';
+        this.isLoading = false;
+      })
   }
 
   handleTagClick(q) {
@@ -47,10 +53,18 @@ class Track extends React.Component {
 
   render() {
     const { sessionStore } = this.props;
-    const { track, isLoading = true } = this;
+    const { track, isLoading, error } = this;
 
     if (isLoading) {
       return <div className='loader-wrap'><CircularProgress/></div>;
+    }
+
+    if (error) {
+      return <Error>{error}</Error>
+    }
+
+    if (!track) {
+      return null;
     }
 
     const { user } = track;

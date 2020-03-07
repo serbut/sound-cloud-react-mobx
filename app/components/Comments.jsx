@@ -7,6 +7,7 @@ import InfiniteScrollify from '../hoc/InfiniteScrollify';
 import {addComment, removeComment} from '../api';
 import DataLoader from '../hoc/DataLoader';
 import CommentForm from './CommentForm';
+import Error from './Error';
 
 @inject('sessionStore', 'playerStore')
 @observer
@@ -38,7 +39,7 @@ export default class Comments extends Component {
 
         <DataLoader
           url={`tracks/${trackId}/comments`}
-          render={({data: comments, isLoading, loadMore}) =>
+          render={({data: comments, isLoading, loadMore, error}) =>
             <div>
               <InfiniteScrollify load={loadMore}>
                 <List subheader={<ListSubheader>Comments</ListSubheader>}>
@@ -49,6 +50,8 @@ export default class Comments extends Component {
               </InfiniteScrollify>
 
               {isLoading && <div className='loader-wrap'><CircularProgress/></div>}
+
+              {error && <Error>{'Failed to load comments'}</Error>}
             </div>
           }
           />

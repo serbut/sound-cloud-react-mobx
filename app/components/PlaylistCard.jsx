@@ -8,7 +8,7 @@ import {getImageUrl} from '../utils';
 import {IMAGE_SIZES} from '../constants';
 
 const PlaylistCard = ({ playlist }) => {
-  const link = `/${playlist.user.permalink}/playlists/${playlist.permalink}`;
+  const link = `users/${playlist.user.permalink}/playlists/${playlist.permalink}`;
 
   return (
     <Card className='playlist-card'>

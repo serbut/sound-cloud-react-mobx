@@ -9,17 +9,24 @@ import './DataGrid.less';
 import TrackCard from './TrackCard';
 import PlaylistCard from './PlaylistCard';
 import UserCard from './UserCard';
+import Error from './Error';
 
 const COLUMN_COUNT = 5;
 const CELL_HEIGHT = 316;
 const CELL_WIDTH = 216;
 
-const DataGrid = ({ data, isLoading, isLastPage, loadMore }) => {
-  if (!data.length && isLoading)
+const DataGrid = ({ data, isLoading, isLastPage, error, loadMore }) => {
+  if (isLoading) {
     return <div className="loader-wrap"><CircularProgress /></div>;
+  }
 
-  if (!data.length && isLastPage)
-    return <Text type='display2' align='center'>Nothing to show :(</Text>;
+  if (error) {
+    return <Error>{error}</Error>;
+  }
+
+  if (!data.length && isLastPage) {
+    return <Text type='display1' align='center'>Nothing to show</Text>;
+  }
 
   const initialRowCount = Math.ceil(data.length / COLUMN_COUNT);
   const rowCount = isLastPage ? initialRowCount : initialRowCount + 1;

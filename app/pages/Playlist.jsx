@@ -9,11 +9,13 @@ import {loadPlaylist} from '../api';
 import {formatDuration, fromNow, getImageUrl} from '../utils';
 import {IMAGE_SIZES} from '../constants';
 import {Link} from "react-router";
+import Error from '../components/Error';
 
 @inject('sessionStore', 'viewStore', 'playerStore') @observer
 export default class Playlist extends Component {
   @observable playlist;
   @observable isLoading;
+  @observable error;
 
   componentDidMount() {
     this.loadData(this.props);
@@ -36,16 +38,29 @@ export default class Playlist extends Component {
         this.playlist = playlist;
         this.isLoading = false;
         viewStore.title = `${playlist.user.username} - ${playlist.title} (Playlist)`;
+      })
+      .catch(err => {
+        this.error = 'Failed to load playlist';
+        this.isLoading = false;
       });
   }
 
   render() {
-    const { playlist = {}, isLoading = true } = this;
-    const { user } = playlist;
+    const { playlist, isLoading, error } = this;
 
     if (isLoading) {
       return <div className='loader-wrap'><CircularProgress /></div>;
     }
+
+    if (error) {
+      return <Error>{error}</Error>;
+    }
+
+    if (!playlist) {
+      return null;
+    }
+
+    const { user } = playlist;
 
     return (
       <div>
