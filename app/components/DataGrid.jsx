@@ -3,20 +3,41 @@ import {observer} from 'mobx-react';
 import {CircularProgress} from 'material-ui/Progress';
 import Text from 'material-ui/Text';
 import {InfiniteLoader, List, WindowScroller} from 'react-virtualized';
-import 'react-virtualized/styles.css';
 import overscanIndicesGetter from '../defaultOverscanIndicesGetter.js';
-import './DataGrid.less';
 import TrackCard from './TrackCard';
 import PlaylistCard from './PlaylistCard';
 import UserCard from './UserCard';
 import Error from './Error';
 
-const COLUMN_COUNT = 5;
 const CELL_HEIGHT = 316;
 const CELL_WIDTH = 216;
+const CELLS_IN_ROW = 5;
+const WIDTH = CELL_WIDTH * CELLS_IN_ROW;
+
+const cellStyle = {
+  flex: '0 0 auto',
+  boxSizing: 'border-box',
+  padding: 8,
+  width: CELL_WIDTH
+};
+
+const rowStyle = {
+  display: 'flex'
+};
+
+const listStyle = {
+  outline: 'none'
+};
+
+const loaderContainerStyle = {
+  width: '100%',
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center'
+};
 
 const DataGrid = ({ data, isLoading, isLastPage, error, loadMore }) => {
-  if (isLoading) {
+  if (!data.length && isLoading) {
     return <div className="loader-wrap"><CircularProgress /></div>;
   }
 
@@ -24,44 +45,49 @@ const DataGrid = ({ data, isLoading, isLastPage, error, loadMore }) => {
     return <Error>{error}</Error>;
   }
 
-  if (!data.length && isLastPage) {
+  if (!data.length && !isLoading && isLastPage) {
     return <Text type='display1' align='center'>Nothing to show</Text>;
   }
 
-  const initialRowCount = Math.ceil(data.length / COLUMN_COUNT);
-  const rowCount = isLastPage ? initialRowCount : initialRowCount + 1;
-  const width = CELL_WIDTH * COLUMN_COUNT;
-  const rowHeight = CELL_HEIGHT;
+  const loadedRowCount = Math.ceil(data.length / CELLS_IN_ROW);
+  const rowCount = isLastPage ? loadedRowCount : loadedRowCount + 1;
 
-  function isRowLoaded({ index }) {
-    return initialRowCount > index;
-  }
+  const isRowLoaded = ({ index }) => loadedRowCount > index;
 
-  function rowRenderer({ key, index, isScrolling, isVisible, style }) {
-    const from = index * COLUMN_COUNT;
-    const to = from + COLUMN_COUNT;
+  const rowRenderer = ({ key, index, style }) => {
+    const from = index * CELLS_IN_ROW;
+    const to = from + CELLS_IN_ROW;
+    const rowData = data.slice(from, to);
+
+    if (rowData.length === 0) {
+      return <div key={key} style={{ ...style, ...loaderContainerStyle }}>
+        <CircularProgress />
+      </div>
+    }
 
     return (
-      <div key={key} style={{ ...style, display: 'flex' }}>
-        {data.slice(from, to).map((item, i) =>
-          <div key={i} className='layout-item animated fadeIn'>
+      <div key={key} style={{ ...style, ...rowStyle }}>
+        {rowData.map((item, i) =>
+          <div key={i} className='animated fadeIn' style={cellStyle}>
             {item.kind === 'user' ? <UserCard user={item} /> :
               item.kind === 'playlist' ? <PlaylistCard playlist={item} /> :
                 item.kind === 'track' ? <TrackCard track={item} tracks={data} /> :
-                  null}
+                  null
+            }
           </div>
         )}
       </div>
     )
-  }
+  };
 
   return (
     <WindowScroller>
-      {({ height, isScrolling, scrollTop }) => (
+      {({ height, scrollTop }) => (
         <InfiniteLoader
           isRowLoaded={isRowLoaded}
           loadMoreRows={() => loadMore()}
           rowCount={rowCount}
+          threshold={0}
         >
           {({ onRowsRendered, registerChild }) => (
             <List
@@ -70,13 +96,13 @@ const DataGrid = ({ data, isLoading, isLastPage, error, loadMore }) => {
               autoHeight
               height={height}
               rowCount={rowCount}
-              rowHeight={rowHeight}
+              rowHeight={CELL_HEIGHT}
               rowRenderer={rowRenderer}
               scrollTop={scrollTop}
-              width={width}
-              overscanRowCount={5}
+              width={WIDTH}
+              overscanRowCount={10}
               overscanIndicesGetter={overscanIndicesGetter}
-              style={{ outline: 'none' }}
+              style={listStyle}
             />
           )}
         </InfiniteLoader>

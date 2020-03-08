@@ -3,6 +3,7 @@ import {render} from 'react-dom';
 import {AppContainer} from 'react-hot-loader';
 import './api';
 import Root from './Root';
+import 'react-virtualized/styles.css';
 import './styles/index.less';
 
 
