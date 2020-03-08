@@ -1,21 +1,17 @@
 import React from 'react';
 import {observable} from 'mobx';
-import {inject, observer} from 'mobx-react';
-import Button from 'material-ui/Button';
+import {observer} from 'mobx-react';
 import {CircularProgress} from 'material-ui/Progress';
-import Text from 'material-ui/Text';
 import Tabs from 'material-ui/Tabs';
 import Tab from 'material-ui/Tabs/Tab';
-import Avatar from 'material-ui/Avatar';
 import './User.less';
-import {formatNumber, getImageUrl, getUserLocation} from '../utils';
-import {IMAGE_SIZES} from '../constants';
 import {loadUser, loadUserWebProfiles} from '../api';
 import Error from '../components/Error';
+import UserHeader from '../components/UserHeader';
 
 const TABS = ['tracks', 'playlists', 'likes', 'followings', 'about'];
 
-@inject('sessionStore', 'viewStore') @observer
+@observer
 class User extends React.Component {
   @observable user;
   @observable isLoading = false;
@@ -31,7 +27,7 @@ class User extends React.Component {
       this.loadUser(nextProps);
   }
 
-  loadUser({ params: { user, section }, viewStore, router }) {
+  loadUser({ params: { user, section }, router }) {
     this.isLoading = true;
 
     loadUser(user)
@@ -45,7 +41,6 @@ class User extends React.Component {
       .then(() => {
         this.isLoading = false;
 
-        viewStore.title = this.user.username;
         this.tabs = this.getTabs(this.user);
 
         if (!this.tabs.find(tab => router.location.pathname.includes(tab))) {
@@ -82,10 +77,9 @@ class User extends React.Component {
   };
 
   render() {
-    const { sessionStore, router, children } = this.props;
+    const { router, children } = this.props;
     const { user, isLoading, handleTabChange, tabs, error } = this;
     const selectedTabIndex = this.tabs.findIndex(tab => router.location.pathname.includes(tab));
-    const location = getUserLocation(user);
 
     if (isLoading) {
       return <div className='loader-wrap'><CircularProgress /></div>;
@@ -95,38 +89,12 @@ class User extends React.Component {
       return <Error>{error}</Error>;
     }
 
-    if (!user) {
-      return null;
-    }
-
     return (
       <div className='animated fadeIn'>
         <div className='user-header'>
 
           <div className='container'>
-            <div className='user-header__row'>
-              <Avatar alt={user.username} src={getImageUrl(user.avatar_url, IMAGE_SIZES.t500x500)}
-                style={{ width: 250, height: 250 }}
-              />
-              <div className='user-header__details'>
-                <Text type='subheading'>Artist</Text>
-                <Text type='display1' gutterBottom>{user.username}</Text>
-                <Text type='subheading' gutterBottom>{formatNumber(user.followers_count)} followers</Text>
-                <Text type='body1' gutterBottom>
-                  {user.followings_count} followings <span className='bullet'>&bull;</span>
-                  {user.playlist_count} playlists <span className='bullet'>&bull;</span>
-                  {user.public_favorites_count} likes <span className='bullet'>&bull;</span>
-                  {user.reposts_count} reposts <span className='bullet'>&bull;</span>
-                  {user.track_count} tracks
-                </Text>
-                {location && <Text type='body1' gutterBottom>from {location}</Text>}
-                {sessionStore.isAuthedUser(user) ? null :
-                  sessionStore.isFollowing(user) ?
-                    <Button raised primary onTouchTap={() => sessionStore.toggleFollowing(user)}>Unfollow</Button> :
-                    <Button raised accent onTouchTap={() => sessionStore.toggleFollowing(user)}>Follow</Button>
-                }
-              </div>
-            </div>
+            <UserHeader user={user}></UserHeader>
 
             {selectedTabIndex !== -1 && <Tabs textColor="accent" index={selectedTabIndex} onChange={handleTabChange}>
               {tabs.map((el, i) => <Tab key={i} label={el} />)}
