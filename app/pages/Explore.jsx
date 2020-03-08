@@ -54,9 +54,9 @@ export default class Explore extends Component {
     return (
       <div>
         <div className='app-toolbar'>
-          <Tabs textColor='accent' index={currentTabIndex} onChange={this.handleChange}>
+          {currentTabIndex !== -1 && <Tabs textColor='accent' index={currentTabIndex} onChange={this.handleChange}>
             {GENRES_LIST.map((el, i) => <Tab key={i} label={GENRES_MAP[el]} />)}
-          </Tabs>
+          </Tabs>}
         </div>
 
         <div className='container' style={{ paddingTop: 48 + 48 }}>
