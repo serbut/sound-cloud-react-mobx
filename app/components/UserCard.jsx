@@ -8,7 +8,7 @@ import {formatNumber, getImageUrl} from '../utils';
 import {IMAGE_SIZES} from '../constants';
 
 const UserCard = ({ user }) => {
-  const link = `/${user.permalink}`;
+  const link = `/users/${user.permalink}`;
 
   return (
     <div className="user-card">
@@ -29,6 +29,6 @@ const UserCard = ({ user }) => {
       </div>
     </div>
   );
-}
+};
 
 export default observer(UserCard);

@@ -8,6 +8,7 @@ import Cloud from 'material-ui/svg-icons/file/cloud';
 import Favorite from 'material-ui/svg-icons/action/favorite';
 import Explore from 'material-ui/svg-icons/action/explore';
 
+// TODO: remove this component
 
 const AppDrawer = ({ viewStore, sessionStore }) => {
   return (

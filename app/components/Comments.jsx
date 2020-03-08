@@ -20,13 +20,13 @@ export default class Comments extends Component {
     (sessionStore.isLoggedIn ? Promise.resolve() : sessionStore.login())
       .then(() => {
         addComment(trackId, commentBody, timestamp)
-          // .then(res => comments.unshift(res)); TODO
+          // .then(res => comments.unshift(res)); TODO: addComment
       });
   };
 
   removeComment = (comment) => {
     removeComment(comment.track_id, comment.id)
-      // .then(res => comments.remove(comment)); TODO
+      // .then(res => comments.remove(comment)); TODO: removeComment
   };
 
   render() {

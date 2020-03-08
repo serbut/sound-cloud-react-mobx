@@ -72,9 +72,10 @@ class User extends React.Component {
   }
 
   redirectToFirstAvailableTabIfNoneIsSelected() {
-    if (this.tabs.length > 0 && !this.tabs.find(tab => this.props.router.location.pathname.includes(tab))) {
-      this.props.router.replace(`users/${this.user.permalink}/${this.tabs[0]}`);
-    }
+    // TODO: fix this
+    // if (this.tabs.length > 0 && !this.tabs.find(tab => this.props.router.location.pathname.includes(tab))) {
+    //   this.props.router.replace(`users/${this.user.permalink}/${this.tabs[0]}`);
+    // }
   }
 
   handleTabChange = (e, i) => {

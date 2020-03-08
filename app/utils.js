@@ -73,6 +73,7 @@ export function getTags(text) {
 
 export const isPreview = (track) => track.duration === PREVIEW_DURATION;
 
+// TODO: remove?
 // split by rows & remove extraneous new lines
 export function formatText(text) {
   if (text)
@@ -80,7 +81,7 @@ export function formatText(text) {
       .filter((row, i, arr) => (row === '' && (arr[i - 1] === '' || i === arr.length - 1)) ? false : true);
 }
 
-// TODO:
+// TODO: remove?
 // - find tags #tag
 // - find users @user.permalink
 // - find links http://link... or link.com... or www.link... or <a href="">...</a>

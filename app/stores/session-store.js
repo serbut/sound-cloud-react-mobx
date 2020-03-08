@@ -39,7 +39,7 @@ class SessionStore {
         return this.getMe();
       })
       .catch(() => {
-        // TODO
+        // TODO: add error handler
       });
   }
 
@@ -60,7 +60,7 @@ class SessionStore {
       .then(() => getMeFollowingsIds())
       .then(userFollowingsIds => this.userFollowingsIds = userFollowingsIds)
       .catch(() => {
-        // TODO
+        // TODO: add error handler
       });
   }
 
