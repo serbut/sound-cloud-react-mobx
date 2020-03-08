@@ -32,23 +32,6 @@ export default class MyAppBar extends React.Component {
     this.props.sessionStore.logout();
   };
 
-  handleProfileClick = e => {
-    const { router, sessionStore } = this.props;
-    this.handleRequestClose();
-    router.push(`/${sessionStore.user.permalink}`);
-  };
-
-  handleLikesClick = e => {
-    const { router, sessionStore } = this.props;
-    this.handleRequestClose();
-    router.push(`/${sessionStore.user.permalink}/likes`);
-  };
-
-  handleStreamClick = e => {
-    this.handleRequestClose();
-    this.props.router.push('/stream');
-  };
-
   handleSearch = q => {
     this.props.router.push({ pathname: `/search/tracks`, query: { q } });
   };
@@ -59,11 +42,17 @@ export default class MyAppBar extends React.Component {
     return (
       <AppBar className={'app-header'}>
         <Toolbar>
-          {/*<IconButton contrast onTouchTap={() => viewStore.toggleDrawer()}>menu</IconButton>*/}
-          <Text type="title" colorInherit className='header-title'>
-            <Link to='/' className='link'>{APP_TITLE}</Link>
-            <span className='title-separator'>-</span> <span>{viewStore.title}</span>
-          </Text>
+          <div className='header-title'>
+            <Text type="title" colorInherit style={{marginRight: 20}}>{APP_TITLE}</Text>
+            <Link to='/explore' className='link'><Button style={{color: '#fff'}}>Explore</Button></Link>
+            {sessionStore.isLoggedIn &&
+              <div>
+                <Link to={`/stream`} className='link'><Button style={{color: '#fff'}}>Stream</Button></Link>
+                <Link to={`/users/${sessionStore.user.permalink}`} className='link'><Button style={{color: '#fff'}}>Me</Button></Link>
+              </div>
+            }
+          </div>
+
 
           <SearchWidget handleSearch={this.handleSearch}/>
 
@@ -77,9 +66,6 @@ export default class MyAppBar extends React.Component {
                 open={this.state.open}
                 onRequestClose={this.handleRequestClose}
               >
-                <MenuItem onClick={this.handleProfileClick}>Profile</MenuItem>
-                <MenuItem onClick={this.handleStreamClick}>Stream</MenuItem>
-                <MenuItem onClick={this.handleLikesClick}>Likes</MenuItem>
                 <MenuItem onClick={this.handleLogoutClick}>Logout</MenuItem>
               </Menu>
             </div>
