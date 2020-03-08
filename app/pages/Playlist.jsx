@@ -70,7 +70,7 @@ export default class Playlist extends Component {
             <div className='playlist-header__details'>
               <Text type="subheading">Playlist</Text>
               <Text type='display1' gutterBottom>{playlist.title}</Text>
-              <Text type="subheading" gutterBottom>by <Link to={`/${user.permalink}`} className='link link--blue'>{user.username}</Link></Text>
+              <Text type="subheading" gutterBottom>by <Link to={`/users/${user.permalink}`} className='link link--blue'>{user.username}</Link></Text>
               <Text type='subheading'>
                 {fromNow(playlist.created_at)} <span className='bullet'>&bull;</span>
                 {playlist.track_count} tracks, &nbsp;

@@ -1,9 +1,7 @@
-import { observable, computed } from 'mobx';
+import {computed, observable} from 'mobx';
 import SC from 'soundcloud';
-
 import {TOKEN_KEY, USER_KEY} from '../config';
-import { getMeLikesIds, getMeFollowingsIds, addLike, removeLike, followUser, unfollowUser } from '../api';
-
+import {addLike, followUser, getMeFollowingsIds, getMeLikesIds, removeLike, unfollowUser} from '../api';
 
 class SessionStore {
   @observable user;

@@ -4,11 +4,9 @@ import { observer, Provider } from 'mobx-react';
 import key from 'keymaster';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import injectTapEventPlugin from 'react-tap-event-plugin';
-
 import AppBar from './components/AppBar';
 import Player from './components/Player';
 import ScrollToTopBtn from './components/ScrollToTopBtn';
-
 import viewStore from './stores/view-store';
 import playerStore from './stores/player-store';
 import sessionStore from './stores/session-store';
@@ -44,7 +42,7 @@ class App extends React.Component {
     return (
       <MuiThemeProvider>
         <Provider playerStore={playerStore} viewStore={viewStore} sessionStore={sessionStore}>
-          <div>
+          <div style={{paddingBottom: playerStore.track ? 64 : 0}}>
             <AppBar router={this.props.router} />
             {this.props.children}
             <Player />
