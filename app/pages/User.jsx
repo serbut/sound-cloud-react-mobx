@@ -23,8 +23,11 @@ class User extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.params.user !== this.props.params.user)
+    if (nextProps.params.user !== this.props.params.user) {
       this.loadUser(nextProps);
+    }
+
+    this.redirectToFirstAvailableTabIfNoneIsSelected();
   }
 
   loadUser({ params: { user, section }, router }) {
@@ -40,12 +43,8 @@ class User extends React.Component {
       })
       .then(() => {
         this.isLoading = false;
-
-        this.tabs = this.getTabs(this.user);
-
-        if (!this.tabs.find(tab => router.location.pathname.includes(tab))) {
-          this.props.router.replace(`users/${this.user.permalink}/${this.tabs[0]}`);
-        }
+        this.tabs = this.getAvailableTabs(this.user);
+        this.redirectToFirstAvailableTabIfNoneIsSelected();
       })
       .catch(err => {
         this.error = 'Failed to load user';
@@ -53,7 +52,7 @@ class User extends React.Component {
       })
   }
 
-  getTabs(user) {
+  getAvailableTabs(user) {
     return TABS.filter(tab => {
       switch (tab) {
         case 'tracks':
@@ -72,6 +71,12 @@ class User extends React.Component {
     });
   }
 
+  redirectToFirstAvailableTabIfNoneIsSelected() {
+    if (this.tabs.length > 0 && !this.tabs.find(tab => this.props.router.location.pathname.includes(tab))) {
+      this.props.router.replace(`users/${this.user.permalink}/${this.tabs[0]}`);
+    }
+  }
+
   handleTabChange = (e, i) => {
     this.props.router.push(`users/${this.user.permalink}/${this.tabs[i]}`);
   };
@@ -87,6 +92,10 @@ class User extends React.Component {
 
     if (error) {
       return <Error>{error}</Error>;
+    }
+
+    if (!user) {
+      return null;
     }
 
     return (

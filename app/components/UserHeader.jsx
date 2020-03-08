@@ -7,10 +7,6 @@ import Button from 'material-ui/Button';
 import {inject} from 'mobx-react';
 
 const UserHeader = ({ user, sessionStore }) => {
-  if (!user) {
-    return null;
-  }
-
   return <div className='user-header__row'>
     <Avatar alt={user.username} src={getImageUrl(user.avatar_url, IMAGE_SIZES.t500x500)}
             style={{ width: 250, height: 250 }}
