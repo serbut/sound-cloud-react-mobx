@@ -4,16 +4,14 @@ import {inject, observer} from 'mobx-react';
 import Chip from 'material-ui/Chip';
 import Text from 'material-ui/Text';
 import {CircularProgress} from 'material-ui/Progress';
-import Button from 'material-ui/Button';
 import './Track.less';
 import Comments from '../components/Comments';
-import TrackCard from '../components/TrackCard';
-import {formatDuration, formatNumber, fromNow, getTags} from '../utils';
+import {getTags} from '../utils';
 import {loadTrack} from '../api';
-import {Link} from "react-router";
 import Error from '../components/Error';
+import TrackHeader from '../components/TrackHeader';
 
-@inject('sessionStore', 'viewStore') @observer
+@observer
 class Track extends React.Component {
   @observable track;
   @observable isLoading;
@@ -32,14 +30,13 @@ class Track extends React.Component {
     }
   }
 
-  loadTrack({params: {user, track}, viewStore}) {
+  loadTrack({params: {user, track}}) {
     this.isLoading = true;
 
     loadTrack(user, track)
       .then(track => {
         this.track = track;
         this.isLoading = false;
-        viewStore.title = `${track.user.username} - ${track.title} (Single)`;
       })
       .catch(err => {
         this.error = 'Failed to load track';
@@ -52,7 +49,6 @@ class Track extends React.Component {
   }
 
   render() {
-    const { sessionStore } = this.props;
     const { track, isLoading, error } = this;
 
     if (isLoading) {
@@ -67,35 +63,9 @@ class Track extends React.Component {
       return null;
     }
 
-    const { user } = track;
-
     return (
       <div className='animated fadeIn'>
-        <div className='track-header'>
-          <div className='track-header__row container'>
-            <div className='track-header__artwork'>
-              <TrackCard track={track} compact />
-            </div>
-            <div className='track-header__details'>
-              <Text type='subheading'>Single</Text>
-              <Text type='display1' gutterBottom>{track.title}</Text>
-              <Text type="subheading" gutterBottom>by <Link to={`/users/${user.permalink}`} className='link link--blue'>{user.username}</Link></Text>
-              <Text type='subheading' gutterBottom>
-                {fromNow(track.created_at)} <span className='bullet'>&bull;</span>
-                {formatDuration(track.duration)} <span className='bullet'>&bull;</span>
-                {track.genre} <span className='bullet'>&bull;</span>
-                {formatNumber(track.playback_count)} plays <span className='bullet'>&bull;</span>
-                {formatNumber(track.favoritings_count || track.likes_count)} likes <span className='bullet'>&bull;</span>
-                {formatNumber(track.reposts_count)} reposts <span className='bullet'>&bull;</span>
-                {formatNumber(track.comment_count)} comments
-              </Text>
-              {sessionStore.isLiked(track) ?
-                <Button raised primary onTouchTap={() => sessionStore.toggleLike(track)}>Liked</Button> :
-                <Button raised accent onTouchTap={() => sessionStore.toggleLike(track)}>Like</Button>
-              }
-            </div>
-          </div>
-        </div>
+        <TrackHeader track={track}></TrackHeader>
 
         <div className='container'>
           {track.description &&
