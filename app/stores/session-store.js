@@ -1,11 +1,8 @@
 import { observable, computed } from 'mobx';
 import SC from 'soundcloud';
-import Cookies from 'js-cookie';
 
-import { COOKIE_PATH } from '../config';
+import {TOKEN_KEY, USER_KEY} from '../config';
 import { getMeLikesIds, getMeFollowingsIds, addLike, removeLike, followUser, unfollowUser } from '../api';
-
-const handleError = err => console.error(err);
 
 
 class SessionStore {
@@ -14,8 +11,10 @@ class SessionStore {
   @observable userFollowingsIds = [];
 
   constructor() {
-    if (SC.isConnected())
+    if (localStorage.getItem(TOKEN_KEY)) {
+      this.user = JSON.parse(localStorage.getItem(USER_KEY));
       this.getMe();
+    }
   }
 
   @computed get isLoggedIn() {
@@ -37,14 +36,18 @@ class SessionStore {
   login() {
     return SC.connect()
       .then(res => {
-        Cookies.set(COOKIE_PATH, res.oauth_token);
+        localStorage.setItem(TOKEN_KEY, res.oauth_token);
+
         return this.getMe();
       })
-      .catch(handleError);
+      .catch(() => {
+        // TODO
+      });
   }
 
   logout() {
-    Cookies.remove(COOKIE_PATH);
+    localStorage.removeItem(TOKEN_KEY);
+    localStorage.removeItem(USER_KEY);
     this.user = null;
   }
 
@@ -52,40 +55,45 @@ class SessionStore {
     return SC.get('/me')
       .then(user => {
         this.user = user;
-
-        getMeLikesIds()
-          .then(data => this.userLikesIds = data);
-
-        getMeFollowingsIds()
-          .then(data => this.userFollowingsIds = data);
+        localStorage.setItem(USER_KEY, JSON.stringify(user));
       })
-      .catch(handleError);
+      .then(() => getMeLikesIds())
+      .then(userLikesIds => this.userLikesIds = userLikesIds)
+      .then(() => getMeFollowingsIds())
+      .then(userFollowingsIds => this.userFollowingsIds = userFollowingsIds)
+      .catch(() => {
+        // TODO
+      });
   }
 
   toggleLike(track) {
-    if (!this.isLoggedIn)
+    if (!this.isLoggedIn) {
       return this.login()
         .then(() => this.toggleLike(track));
+    }
 
-    if (this.isLiked(track))
+    if (this.isLiked(track)) {
       removeLike(track.id)
         .then(() => this.userLikesIds.remove(track.id))
-    else
+    } else {
       addLike(track.id)
         .then(() => this.userLikesIds.unshift(track.id))
+    }
   }
 
   toggleFollowing(user) {
-    if (!this.isLoggedIn)
+    if (!this.isLoggedIn) {
       return this.login()
         .then(() => this.toggleFollowing(user));
+    }
 
-    if (this.isFollowing(user))
+    if (this.isFollowing(user)) {
       unfollowUser(user.id)
         .then(() => this.userFollowingsIds.remove(user.id));
-    else
+    } else {
       followUser(user.id)
         .then(() => this.userFollowingsIds.unshift(user.id));
+    }
   }
 }
 

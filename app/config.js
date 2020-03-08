@@ -8,6 +8,7 @@ export const CLIENT_ID = isDev ?
   'IrPMGeU7yK6uFyuptLxVtWE2tiuphX8t' :
   'BqVqkdpqbop0oQLZJ4OyaW7U0UpyytJS';
 
-export const COOKIE_PATH = 'accessToken';
+export const TOKEN_KEY = 'accessToken';
+export const USER_KEY = 'user';
 
 export const APP_TITLE = 'SoundConnect';

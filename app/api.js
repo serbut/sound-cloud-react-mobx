@@ -1,9 +1,8 @@
 import SC from 'soundcloud';
-import Cookies from 'js-cookie';
 import axios from 'axios';
-import {CLIENT_ID, COOKIE_PATH, REDIRECT_URI} from './config';
+import {CLIENT_ID, TOKEN_KEY, REDIRECT_URI} from './config';
 
-const getToken = () => Cookies.get(COOKIE_PATH);
+const getToken = () => localStorage.getItem(TOKEN_KEY);
 const BASE_URL = '//api.soundcloud.com';
 const RESOLVE_URL = '/resolve?url=http://soundcloud.com';
 const PAGE_SIZE = 50;
