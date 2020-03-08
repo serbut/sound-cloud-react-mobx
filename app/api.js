@@ -4,8 +4,8 @@ import axios from 'axios';
 import {CLIENT_ID, COOKIE_PATH, REDIRECT_URI} from './config';
 
 const getToken = () => Cookies.get(COOKIE_PATH);
-const BASE_URL = '//api.soundcloud.com/';
-const RESOLVE_URL = `resolve?url=http://soundcloud.com`;
+const BASE_URL = '//api.soundcloud.com';
+const RESOLVE_URL = '/resolve?url=http://soundcloud.com';
 const PAGE_SIZE = 50;
 let nextHref = null; // TODO: remove this
 
@@ -18,6 +18,16 @@ SC.initialize({
 export const getNextHref = () => nextHref; // TODO: remove this
 
 const resolve = (url) => RESOLVE_URL + url;
+
+const getWithClientID = (url, params = {}) => axios.get(
+  BASE_URL + url,
+  {
+    params: {
+      client_id: CLIENT_ID,
+      ...params
+    }
+  }
+).then(({ data }) => data);
 
 const formatNextHref = (href) => {
   if (!href.includes('client_id') && !href.includes('oauth_token')) {
@@ -39,9 +49,9 @@ export const loadMore = (nextHref) => axios.get(formatNextHref(nextHref))
     return data;
   });
 
-export const loadUser = (user) => SC.get(resolve(`/${user}`));
-export const loadPlaylist = (user, playlist) => SC.get(resolve(`/${user}/sets/${playlist}`));
-export const loadTrack = (user, track) => SC.get(resolve(`/${user}/${track}`));
+export const loadUser = (user) => getWithClientID(resolve(`/${user}`));
+export const loadPlaylist = (user, playlist) => getWithClientID(resolve(`/${user}/sets/${playlist}`));
+export const loadTrack = (user, track) => getWithClientID(resolve(`/${user}/${track}`));
 export const loadUserWebProfiles = (userId) => SC.get(`/users/${userId}/web-profiles`);
 export const followUser = (userId) => SC.put(`/me/followings/${userId}`);
 export const unfollowUser = (userId) => SC.delete(`/me/followings/${userId}`);
@@ -56,7 +66,7 @@ export const addComment = (trackId, body, timestamp) => SC.post(
 export const removeComment = (trackId, commentId) => SC.delete(`/tracks/${trackId}/comments/${commentId}`);
 
 export const getMeLikesIds = () => axios.get(
-  `${BASE_URL}e1/me/track_likes/ids`,
+  `${BASE_URL}/e1/me/track_likes/ids`,
   {params: {limit: 5000, linked_partitioning: 1, oauth_token: getToken()}}
   )
   .then(({data}) => data.collection);
@@ -91,3 +101,5 @@ export const getSearchUsersRequest = (query) => ({
     q: query
   }
 });
+
+export const formatStreamUrl = (url) =>`${url}?client_id=${CLIENT_ID}`;
