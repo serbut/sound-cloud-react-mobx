@@ -12,10 +12,9 @@ class Stream extends React.Component {
     this.props.viewStore.title = 'Your Stream';
   }
 
-  filterData(data) {
+  formatData(data) {
     return data
-      .filter(el => el.hasOwnProperty('origin') && el.origin)
-      .filter(el => el.type === 'track' || el.type === 'track-repost')
+      .filter(el => el.origin)
       .map(el => el.origin);
   }
 
@@ -24,8 +23,8 @@ class Stream extends React.Component {
       <div className="container" style={{ paddingTop: 48 }}>
         <DataLoader
           url={'me/activities/tracks/affiliated'}
-          render={(props) =>
-            <DataGrid {...props} />
+          render={({data, ...other}) =>
+            <DataGrid data={this.formatData(data)} {...other} />
           }
         />
       </div>
