@@ -1,4 +1,5 @@
 import React from 'react';
+import {hot} from 'react-hot-loader/root';
 import {browserHistory, IndexRedirect, Route, Router} from 'react-router';
 import App from './App';
 import Explore from './components/Explore';
@@ -37,4 +38,4 @@ const Root = (props) => (
   </Router>
 );
 
-export default Root;
+export default hot(Root);

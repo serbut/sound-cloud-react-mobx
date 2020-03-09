@@ -5,10 +5,7 @@ const AddAssetHtmlPlugin = require('add-asset-html-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 module.exports = {
-  entry: [
-    'react-hot-loader/patch',
-    './app/main.js'
-  ],
+  entry: './app/main.js',
   output: {
     path: path.resolve(__dirname, 'dist'),
     publicPath: '',

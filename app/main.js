@@ -1,24 +1,12 @@
+import 'react-hot-loader'; // Make sure react-hot-loader is required before react and react-dom
+
 import React from 'react';
-import {render} from 'react-dom';
-import {AppContainer} from 'react-hot-loader';
+import ReactDOM from 'react-dom';
 import './api';
 import Root from './Root';
 import 'react-virtualized/styles.css';
 import './styles/index.less';
 
-const renderApp = () => {
-  render(
-    <AppContainer>
-      <Root />
-    </AppContainer>,
-    document.getElementById('root')
-  );
-};
+ReactDOM.render(<Root />, document.getElementById('root'));
 
-renderApp();
-
-if (module.hot) {
-  module.hot.accept('./Root', () => {
-    renderApp();
-  });
-}
+//TODO: hot-loader not working, update webpack and check again, if not probably remove it
