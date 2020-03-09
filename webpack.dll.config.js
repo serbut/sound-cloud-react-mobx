@@ -21,16 +21,34 @@ module.exports = {
             'soundcloud',
         ]
     },
-    devtool: '#source-map',
+    devtool: 'source-map',
     output: {
         path: path.join(__dirname, 'dist'),
-        filename: 'dll.[name].js',
+        filename: '[name].js',
         library: '[name]'
     },
     plugins: [
         new webpack.DllPlugin({
+            context: __dirname,
+            name: '[name]',
             path: path.join(__dirname, 'dist', '[name]-manifest.json'),
-            name: '[name]'
         })
-    ]
+    ],
+    module: {
+        rules: [
+            {
+                test: /\.(css)$/,
+                use: [
+                    'style-loader',
+                    {
+                        loader: 'css-loader',
+                        options: {
+                            sourceMap: true,
+                            importLoaders: 1
+                        }
+                    }
+                ]
+            }
+        ]
+    }
 };
