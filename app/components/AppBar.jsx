@@ -8,7 +8,7 @@ import Button from 'material-ui/Button';
 import IconButton from 'material-ui/IconButton';
 import {Menu, MenuItem} from 'material-ui/Menu';
 import './AppBar.less';
-import SearchWidget from './SearchWidget';
+import SearchWidget from './Search/SearchWidget';
 import {APP_TITLE} from '../config';
 
 const activeLinkStyle = {

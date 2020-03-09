@@ -5,7 +5,7 @@ import key from 'keymaster';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import injectTapEventPlugin from 'react-tap-event-plugin';
 import AppBar from './components/AppBar';
-import Player from './components/Player';
+import Player from './components/Player/Player';
 import ScrollToTopBtn from './components/ScrollToTopBtn';
 import viewStore from './stores/view-store';
 import playerStore from './stores/player-store';

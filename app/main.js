@@ -6,7 +6,6 @@ import Root from './Root';
 import 'react-virtualized/styles.css';
 import './styles/index.less';
 
-
 const renderApp = () => {
   render(
     <AppContainer>

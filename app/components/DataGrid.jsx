@@ -4,9 +4,9 @@ import {CircularProgress} from 'material-ui/Progress';
 import Text from 'material-ui/Text';
 import {InfiniteLoader, List, WindowScroller} from 'react-virtualized';
 import overscanIndicesGetter from '../defaultOverscanIndicesGetter.js';
-import TrackCard from './TrackCard';
-import PlaylistCard from './PlaylistCard';
-import UserCard from './UserCard';
+import TrackCard from './Track/TrackCard';
+import PlaylistCard from './Playlist/PlaylistCard';
+import UserCard from './User/UserCard';
 import Error from './Error';
 
 const CELL_HEIGHT = 316;

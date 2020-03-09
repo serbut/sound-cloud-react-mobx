@@ -1,0 +1,24 @@
+@import '../../styles/mixins.less';
+
+.volume-slider-wrap {
+  position: relative;
+}
+
+.volume-slider {
+  position: absolute;
+  right: 0;
+  bottom: 100%;
+
+  .pseudo-triangle;
+
+  width: 48px;
+  height: 125px;
+
+  transition: .25s;
+  overflow: visible !important;
+
+  &:not(.visible) {
+    opacity: 0;
+    visibility: hidden;
+  }
+}
