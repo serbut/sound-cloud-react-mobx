@@ -25,6 +25,7 @@ class User extends React.Component {
   componentWillReceiveProps(nextProps) {
     if (nextProps.params.user !== this.props.params.user) {
       this.loadUser(nextProps);
+      return;
     }
 
     this.redirectToFirstAvailableTabIfNoneIsSelected();
@@ -72,10 +73,17 @@ class User extends React.Component {
   }
 
   redirectToFirstAvailableTabIfNoneIsSelected() {
-    // TODO: fix this
-    // if (this.tabs.length > 0 && !this.tabs.find(tab => this.props.router.location.pathname.includes(tab))) {
-    //   this.props.router.replace(`users/${this.user.permalink}/${this.tabs[0]}`);
-    // }
+    const { router } = this.props;
+
+    if (this.tabs.length === 0) {
+      return;
+    }
+
+    if (/^.*\/(tracks|playlists|likes|followings|about)$/.test(router.location.pathname)) {
+      return;
+    }
+
+    router.replace(`users/${this.user.permalink}/${this.tabs[0]}`);
   }
 
   handleTabChange = (e, i) => {
