@@ -9,4 +9,6 @@ import './styles/index.less';
 
 ReactDOM.render(<Root />, document.getElementById('root'));
 
-//TODO: hot-loader not working, update webpack and check again, if not probably remove it
+// TODO: 1. hot-loader not working, update webpack and check again, if not probably remove it
+// TODO: 2. update React, Mobx, and other deps except Material UI
+// TODO: 3. update Material UI

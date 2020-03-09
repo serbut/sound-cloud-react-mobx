@@ -5,7 +5,6 @@ module.exports = {
     entry: {
         vendor: [
             'axios',
-            'js-cookie',
             'keymaster',
             'material-ui',
             'mobx',
