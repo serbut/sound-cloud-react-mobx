@@ -45,7 +45,7 @@ class Track extends React.Component {
   }
 
   handleTagClick(q) {
-    this.props.router.push({ pathname: `/search/tracks`, query: { q } });
+    this.props.router.push({ pathname: `/search`, query: { q, where: 'tracks' } });
   }
 
   render() {

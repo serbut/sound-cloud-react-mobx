@@ -1,46 +1,43 @@
 import React, {Component} from 'react';
-import {inject, observer} from 'mobx-react';
+import {observer} from 'mobx-react';
 import Text from 'material-ui/Text';
 import DataGrid from '../components/DataGrid';
 import DataLoader from '../hoc/DataLoader';
 import {observable} from 'mobx';
 import {getSearchTracksByTagRequest, getSearchTracksRequest, getSearchUsersRequest} from '../api';
 
-@inject('viewStore')
 @observer
 class Search extends Component {
   @observable request;
 
   componentDidMount() {
-    const { viewStore, location, params} = this.props;
-    viewStore.title = 'Search';
-    this.handlePropsChange(location.query.q, params.type);
+    this.handlePropsChange();
   }
 
-  componentWillReceiveProps({ params: nextParams, location: nextLocation }) {
-    const { location, params } = this.props;
-
-    if (location.query.q !== nextLocation.query.q || params.type !== nextParams.type) {
-      this.handlePropsChange(nextLocation.query.q, nextParams.type);
+  componentDidUpdate(prevProps) {
+    if (JSON.stringify(this.props.location.query) !== JSON.stringify(prevProps.location.query)) {
+      this.handlePropsChange();
     }
   }
 
-  handlePropsChange(query, type) {
+  handlePropsChange() {
+    const { query: { q: query, where } } = this.props.location;
+
     if (query.charAt(0) === '#') {
       this.request = getSearchTracksByTagRequest(query.slice(1));
-    } else if (type === 'tracks') {
+    } else if (where === 'tracks') {
       this.request = getSearchTracksRequest(query);
-    } else if (type === 'users') {
+    } else if (where === 'users') {
       this.request = getSearchUsersRequest(query);
     }
   }
 
   render() {
-    const { location, params } = this.props;
+    const { location } = this.props;
     const query = location.query.q;
     const isTag = query.charAt(0) === '#';
-    const isUser = !isTag && params.type === 'users';
-    const isTrack = !isTag && params.type === 'tracks';
+    const isUser = !isTag && location.query.where === 'users';
+    const isTrack = !isTag && location.query.where === 'tracks';
 
     if (!this.request) {
       return null;

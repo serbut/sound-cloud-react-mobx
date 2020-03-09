@@ -32,24 +32,34 @@ export default class Explore extends Component {
   componentDidMount() {
     this.props.viewStore.title = 'Explore';
 
-    if (!this.props.params.genre) {
-      this.props.router.replace(`/explore/${GENRES_LIST[0]}`);
+    if (!this.props.location.query.genre) {
+      this.props.router.replace({
+        path: '/explore',
+        query: {
+          genre: GENRES_LIST[0]
+        }
+      });
     }
   }
 
   handleChange = (e, i) => {
-    this.props.router.push(`/explore/${GENRES_LIST[i]}`);
+    this.props.router.push({
+      path: '/explore',
+      query: {
+        genre: GENRES_LIST[i]
+      }
+    });
   };
 
   render() {
-    const { params } = this.props;
-    const currentTabIndex = GENRES_LIST.indexOf(params.genre);
+    const { location } = this.props;
+    const currentTabIndex = GENRES_LIST.indexOf(location.query.genre);
 
-    if (!params.genre) {
+    if (!location.query.genre) {
       return null;
     }
 
-    const {url, params: requestParams} = getSearchTracksByTagRequest(params.genre);
+    const {url, params: requestParams} = getSearchTracksByTagRequest(location.query.genre);
 
     return (
       <div>

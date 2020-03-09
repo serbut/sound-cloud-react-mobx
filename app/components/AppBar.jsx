@@ -11,6 +11,11 @@ import './AppBar.less';
 import SearchWidget from './SearchWidget';
 import {APP_TITLE} from '../config';
 
+const activeLinkStyle = {
+  pointerEvents: 'none',
+  opacity: 0.5
+};
+
 @inject('sessionStore', 'viewStore') @observer
 export default class MyAppBar extends React.Component {
   state = {
@@ -33,7 +38,7 @@ export default class MyAppBar extends React.Component {
   };
 
   handleSearch = q => {
-    this.props.router.push({ pathname: `/search/tracks`, query: { q } });
+    this.props.router.push({ pathname: `/search`, query: { q, where: 'tracks' } });
   };
 
   render() {
@@ -44,11 +49,17 @@ export default class MyAppBar extends React.Component {
         <Toolbar>
           <div className='header-title'>
             <Text type="title" colorInherit style={{marginRight: 20}}>{APP_TITLE}</Text>
-            <Link to='/explore' className='link'><Button style={{color: '#fff'}}>Explore</Button></Link>
+            <Link to='/explore' className='link' activeStyle={activeLinkStyle}>
+              <Button style={{color: '#fff'}}>Explore</Button>
+            </Link>
             {sessionStore.isLoggedIn &&
               <div>
-                <Link to={`/stream`} className='link'><Button style={{color: '#fff'}}>Stream</Button></Link>
-                <Link to={`/users/${sessionStore.user.permalink}`} className='link'><Button style={{color: '#fff'}}>Me</Button></Link>
+                <Link to={`/stream`} className='link' activeStyle={activeLinkStyle}>
+                  <Button style={{color: '#fff'}} >Stream</Button>
+                </Link>
+                <Link to={`/users/${sessionStore.user.permalink}`} className='link' activeStyle={activeLinkStyle}>
+                  <Button style={{color: '#fff'}}>Me</Button>
+                </Link>
               </div>
             }
           </div>
