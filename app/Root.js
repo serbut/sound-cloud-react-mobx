@@ -1,5 +1,5 @@
 import React from 'react';
-import {hashHistory, IndexRedirect, Route, Router} from 'react-router';
+import {browserHistory, IndexRedirect, Route, Router} from 'react-router';
 import App from './App';
 import Explore from './pages/Explore';
 import Search from './pages/Search';
@@ -16,13 +16,13 @@ import UserFollowings from './components/UserFollowings';
 import PageNotFound from './pages/PageNotFound';
 
 const Root = (props) => (
-  <Router history={hashHistory}>
+  <Router history={browserHistory}>
     <Route path='/' component={App} test='test'>
       <IndexRedirect to='explore'/>
       <Route path='callback' component={Callback} />
       <Route path='stream' component={Stream} />
-      <Route path='explore(/:genre)' component={Explore} />
-      <Route path='search/:type' component={Search} />
+      <Route path='explore' component={Explore} />
+      <Route path='search' component={Search} />
       <Route path='users/:user' component={User}>
         <Route path='tracks' component={UserTracks} />
         <Route path='playlists' component={UserPlaylists} />
