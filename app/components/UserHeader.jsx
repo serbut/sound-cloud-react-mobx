@@ -4,7 +4,7 @@ import {formatNumber, getImageUrl, getUserLocation} from '../utils';
 import {IMAGE_SIZES} from '../constants';
 import Text from 'material-ui/Text';
 import Button from 'material-ui/Button';
-import {inject} from 'mobx-react';
+import {inject, observer} from 'mobx-react';
 
 const UserHeader = ({ user, sessionStore }) => {
   return <div className='user-header__row'>
@@ -32,4 +32,4 @@ const UserHeader = ({ user, sessionStore }) => {
   </div>;
 };
 
-export default inject('sessionStore')(UserHeader);
+export default inject('sessionStore')(observer(UserHeader));

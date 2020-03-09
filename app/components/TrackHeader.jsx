@@ -4,7 +4,7 @@ import Text from 'material-ui/Text';
 import {Link} from 'react-router';
 import {formatDuration, formatNumber, fromNow} from '../utils';
 import Button from 'material-ui/Button';
-import {inject} from 'mobx-react';
+import {inject, observer} from 'mobx-react';
 
 const TrackHeader = ({ track, sessionStore }) => {
   const { user } = track;
@@ -36,4 +36,4 @@ const TrackHeader = ({ track, sessionStore }) => {
   </div>
 };
 
-export default inject('sessionStore')(TrackHeader);
+export default inject('sessionStore')(observer(TrackHeader));

@@ -18,19 +18,21 @@ class Track extends React.Component {
   @observable error;
 
   componentDidMount() {
-    this.loadTrack(this.props);
+    this.loadTrack();
   }
 
-  componentWillReceiveProps (nextProps, nextState) {
-    const {user: nextUser, track: nextTrack} = nextProps.params;
+  componentDidUpdate (prevProps) {
+    const {user: nextUser, track: nextTrack} = prevProps.params;
     const {user, track} = this.props.params;
 
     if (nextUser !== user || nextTrack !== track) {
-      this.loadTrack(nextProps);
+      this.loadTrack();
     }
   }
 
-  loadTrack({params: {user, track}}) {
+  loadTrack() {
+    const { params: {user, track} } = this.props;
+
     this.isLoading = true;
 
     loadTrack(user, track)

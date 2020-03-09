@@ -15,19 +15,21 @@ export default class Playlist extends Component {
   @observable error;
 
   componentDidMount() {
-    this.loadData(this.props);
+    this.loadPlaylist();
   }
 
-  componentWillReceiveProps(nextProps) {
-    const {user: nextUser, playlist: nextPlaylist} = nextProps.params;
+  componentDidUpdate(prevProps) {
+    const {user: nextUser, playlist: nextPlaylist} = prevProps.params;
     const {user, playlist} = this.props.params;
 
     if (nextUser !== user || nextPlaylist !== playlist) {
-      this.loadData(nextProps);
+      this.loadPlaylist();
     }
   }
 
-  loadData({params: { user, playlist } }) {
+  loadPlaylist() {
+    const { params: { user, playlist } } = this.props;
+
     this.isLoading = true;
 
     loadPlaylist(user, playlist)

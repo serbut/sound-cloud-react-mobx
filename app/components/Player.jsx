@@ -117,11 +117,11 @@ export default class Player extends React.Component {
             <img className='player__track-artwork' src={getImageUrl(track.artwork_url)} width={64} height={64} />
             <div className='player__track-details'>
               <Text type='subheading' noWrap>
-                <Link to={`/${track.user.permalink}/tracks/${track.permalink}`}
+                <Link to={`/users/${track.user.permalink}/tracks/${track.permalink}`}
                   title={track.title} className='link'>{track.title}</Link>
               </Text>
               <Text type='body1' noWrap secondary>
-                <Link to={`/${track.user.permalink}`} className='link'>{track.user.username}</Link>
+                <Link to={`/users/${track.user.permalink}`} className='link'>{track.user.username}</Link>
               </Text>
             </div>
           </div>

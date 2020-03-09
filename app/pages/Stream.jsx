@@ -7,9 +7,6 @@ import RequireAuth from '../hoc/RequireAuth';
 @observer
 class Stream extends React.Component {
 
-  componentDidMount() {
-  }
-
   formatData(data) {
     return data
       .filter(el => el.origin)

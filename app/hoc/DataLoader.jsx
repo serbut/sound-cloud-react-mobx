@@ -15,21 +15,21 @@ export default class DataLoader extends Component {
   }
 
   componentDidMount() {
-    const { url, params } = this.props;
-    this.loadData(url, params);
+    this.loadData();
   }
 
-  componentWillReceiveProps(nextProps) {
+  componentDidUpdate({ url: prevUrl, params: prevParams }) {
     const { url, params } = this.props;
-    const {url: nextUrl, params: nextParams} = nextProps;
 
-    if (url !== nextUrl || JSON.stringify(params) !== JSON.stringify(nextParams)) {
+    if (url !== prevUrl || JSON.stringify(params) !== JSON.stringify(prevParams)) {
       this.clearData();
-      this.loadData(nextUrl, nextParams);
+      this.loadData();
     }
   }
 
-  loadData = (url, params) => {
+  loadData = () => {
+    const { url, params } = this.props;
+
     if (!url) {
       return;
     }
@@ -89,10 +89,7 @@ export default class DataLoader extends Component {
       isLoading,
       isLastPage,
       error,
-      loadData,
       loadMore,
-      clearData
     });
   }
 }
-
