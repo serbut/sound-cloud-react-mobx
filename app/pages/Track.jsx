@@ -1,15 +1,11 @@
 import React from 'react';
 import {observable} from 'mobx';
-import {inject, observer} from 'mobx-react';
-import Chip from 'material-ui/Chip';
-import Text from 'material-ui/Text';
+import {observer} from 'mobx-react';
 import {CircularProgress} from 'material-ui/Progress';
 import './Track.less';
-import Comments from '../components/Comments';
-import {getTags} from '../utils';
 import {loadTrack} from '../api';
 import Error from '../components/Error';
-import TrackHeader from '../components/TrackHeader';
+import TrackView from '../components/TrackView';
 
 @observer
 class Track extends React.Component {
@@ -46,10 +42,6 @@ class Track extends React.Component {
       })
   }
 
-  handleTagClick(q) {
-    this.props.router.push({ pathname: `/search`, query: { q, where: 'tracks' } });
-  }
-
   render() {
     const { track, isLoading, error } = this;
 
@@ -66,24 +58,7 @@ class Track extends React.Component {
     }
 
     return (
-      <div className='animated fadeIn'>
-        <TrackHeader track={track}></TrackHeader>
-
-        <div className='container'>
-          {track.description &&
-            <Text className='track-description'> <pre> {track.description} </pre> </Text>
-          }
-          {track.tag_list &&
-            <div className='track-tags'>
-              {getTags(track.tag_list).map((el, i) =>
-                <Chip key={i} label={el} style={{ margin: 4 }} onClick={e => this.handleTagClick(el)} />)
-              }
-            </div>
-          }
-
-          <Comments trackId={track.id} />
-        </div>
-      </div >
+      <TrackView track={track} router={this.props.router}></TrackView>
     )
   }
 }
