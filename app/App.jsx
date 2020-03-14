@@ -1,22 +1,16 @@
 import React from 'react';
-import DevTools from 'mobx-react-devtools';
 import { observer, Provider } from 'mobx-react';
 import key from 'keymaster';
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-import injectTapEventPlugin from 'react-tap-event-plugin';
-import AppBar from './components/AppBar';
-import Player from './components/Player/Player';
-import ScrollToTopBtn from './components/ScrollToTopBtn';
+import {Switch} from 'react-router-dom';
+// import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+// import AppBar from './components/AppBar';
+// import Player from './components/Player/Player';
+// import ScrollToTopBtn from './components/ScrollToTopBtn';
 import viewStore from './stores/view-store';
 import playerStore from './stores/player-store';
 import sessionStore from './stores/session-store';
-import { isDev } from './config';
 
 class App extends React.Component {
-  componentWillMount() {
-    injectTapEventPlugin();
-  }
-
   componentDidMount() {
     key('space', (e) => { e.preventDefault(); playerStore.playTrack() });
     key('right', () => playerStore.stepForward());
@@ -40,17 +34,34 @@ class App extends React.Component {
 
   render() {
     return (
-      <MuiThemeProvider>
+      // <MuiThemeProvider>
         <Provider playerStore={playerStore} viewStore={viewStore} sessionStore={sessionStore}>
           <div style={{paddingBottom: playerStore.track ? 64 : 0}}>
-            <AppBar router={this.props.router} />
-            {this.props.children}
-            <Player />
-            <ScrollToTopBtn />
-            {isDev ? <DevTools /> : null}
+            {/*<AppBar router={this.props.router} />*/}
+
+            <Switch>
+              {/*<IndexRedirect to='explore'/>*/}
+              {/*<Route path='callback' component={Callback} />*/}
+              {/*<Route path='stream' component={Stream} />*/}
+              {/*<Route path='explore' component={Explore} />*/}
+              {/*<Route path='search' component={Search} />*/}
+              {/*<Route path='users/:user' component={User}>*/}
+              {/*  <Route path='tracks' component={UserTracks} />*/}
+              {/*  <Route path='playlists' component={UserPlaylists} />*/}
+              {/*  <Route path='likes' component={UserLikes} />*/}
+              {/*  <Route path='followings' component={UserFollowings} />*/}
+              {/*  <Route path='about' component={UserAbout} />*/}
+              {/*</Route>*/}
+              {/*<Route path='users/:user/tracks/:track' component={Track} />*/}
+              {/*<Route path='users/:user/playlists/:playlist' component={Playlist} />*/}
+              {/*<Route path='*' component={PageNotFound} />*/}
+            </Switch>
+
+            {/*<Player />*/}
+            {/*<ScrollToTopBtn />*/}
           </div>
         </Provider>
-      </MuiThemeProvider>
+      // </MuiThemeProvider>
     );
   }
 }

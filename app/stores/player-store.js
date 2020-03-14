@@ -1,4 +1,5 @@
-import { extendObservable, observable, action, computed, createTransformer } from 'mobx';
+import { extendObservable, observable, action, computed } from 'mobx';
+import { createTransformer } from 'mobx-utils';
 import { loadMore, getNextHref } from '../api';
 import { isPreview } from '../utils';
 
