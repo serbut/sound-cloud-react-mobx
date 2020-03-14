@@ -1,14 +1,14 @@
-import React from 'react';
-import { observer, Provider } from 'mobx-react';
 import key from 'keymaster';
-import {Switch} from 'react-router-dom';
+import {observer, Provider} from 'mobx-react';
+import React from 'react';
+import {Redirect, Route, Switch} from 'react-router-dom';
+import AppBar from './components/AppBar';
+import playerStore from './stores/player-store';
+import sessionStore from './stores/session-store';
 // import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-// import AppBar from './components/AppBar';
 // import Player from './components/Player/Player';
 // import ScrollToTopBtn from './components/ScrollToTopBtn';
 import viewStore from './stores/view-store';
-import playerStore from './stores/player-store';
-import sessionStore from './stores/session-store';
 
 class App extends React.Component {
   componentDidMount() {
@@ -35,10 +35,12 @@ class App extends React.Component {
   render() {
     return (
       // <MuiThemeProvider>
+        // TODO: refactor to use context
         <Provider playerStore={playerStore} viewStore={viewStore} sessionStore={sessionStore}>
           <div style={{paddingBottom: playerStore.track ? 64 : 0}}>
-            {/*<AppBar router={this.props.router} />*/}
+            <AppBar />
 
+            <Route exact path="/" render={() => (<Redirect to="/explore" />)} />
             <Switch>
               {/*<IndexRedirect to='explore'/>*/}
               {/*<Route path='callback' component={Callback} />*/}

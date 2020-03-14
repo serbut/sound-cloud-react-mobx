@@ -1,90 +1,197 @@
-import React from 'react';
-import {Link} from 'react-router';
+import {
+  AppBar,
+  Button,
+  fade,
+  IconButton,
+  InputBase,
+  makeStyles,
+  Menu,
+  MenuItem,
+  Toolbar,
+  Typography
+} from '@material-ui/core';
+import {AccountCircle, Search} from '@material-ui/icons';
 import {inject, observer} from 'mobx-react';
-import AppBar from 'material-ui/AppBar';
-import Toolbar from 'material-ui/Toolbar';
-import Text from 'material-ui/Text';
-import Button from 'material-ui/Button';
-import IconButton from 'material-ui/IconButton';
-import {Menu, MenuItem} from 'material-ui/Menu';
-import './AppBar.less';
-import SearchWidget from './Search/SearchWidget';
+import React from 'react';
+import {Link, useHistory, useLocation} from 'react-router-dom';
 import {APP_TITLE} from '../config';
 
-const activeLinkStyle = {
-  pointerEvents: 'none',
-  opacity: 0.5
+const useStyles = makeStyles(theme => ({
+  grow: {
+    flexGrow: 1,
+  },
+  title: {
+    marginRight: theme.spacing(2)
+  },
+  link: {
+    display: 'inline-block',
+    color: 'inherit',
+    textDecoration: 'none'
+  },
+  button: {
+    "&$buttonDisabled": {
+      color: '#ffffff60'
+    }
+  },
+  buttonDisabled: {},
+  search: {
+    position: 'relative',
+    borderRadius: theme.shape.borderRadius,
+    backgroundColor: fade(theme.palette.common.white, 0.15),
+    '&:hover': {
+      backgroundColor: fade(theme.palette.common.white, 0.25),
+    },
+    marginRight: theme.spacing(2),
+    marginLeft: 0,
+    width: '100%',
+    [theme.breakpoints.up('sm')]: {
+      marginLeft: theme.spacing(3),
+      width: 'auto',
+    },
+  },
+  searchIcon: {
+    width: theme.spacing(7),
+    height: '100%',
+    position: 'absolute',
+    pointerEvents: 'none',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  inputRoot: {
+    color: 'inherit',
+  },
+  inputInput: {
+    padding: theme.spacing(1, 1, 1, 7),
+    transition: theme.transitions.create('width'),
+    width: '100%',
+    [theme.breakpoints.up('md')]: {
+      width: 200,
+    },
+  }
+}));
+
+const AppBarComponent = ({ sessionStore, router }) => {
+  const classes = useStyles();
+  const history = useHistory();
+  const { pathname } = useLocation();
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const [query, setQuery] = React.useState('');
+  const isMenuOpen = Boolean(anchorEl);
+  const menuId = 'profile-menu';
+
+  const handleProfileMenuOpen = event => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleMenuClose = () => {
+    setAnchorEl(null);
+  };
+
+  const hangleLogin = () => {
+    sessionStore.login().then(() => history.push('/stream'))
+  };
+
+  const handleLogout = () => {
+    sessionStore.logout();
+    setAnchorEl(null);
+  };
+
+  const handleSearchInputChange = ev => {
+    setQuery(ev.target.value);
+  };
+
+  const handleSearchSubmit = (ev) => {
+    ev.preventDefault();
+
+    if (query.length >= 3 ) {
+      history.push({
+        pathname: `/search`,
+        search: `?q=${query}&where=tracks`
+      });
+    }
+  };
+
+  const buttonClasses = {root: classes.button, disabled: classes.buttonDisabled};
+
+  return (
+    <AppBar position="fixed">
+      <Toolbar>
+        <Typography variant="h6" color="inherit" className={classes.title}>{APP_TITLE}</Typography>
+          <Button color="inherit"
+                  component={Link}
+                  to='/explore'
+                  disabled={pathname === '/explore'}
+                  classes={buttonClasses}
+          >
+            Explore
+          </Button>
+        {sessionStore.isLoggedIn &&
+          <div>
+            <Button color="inherit"
+                    component={Link}
+                    to='/stream'
+                    disabled={pathname === '/stream'}
+                    classes={buttonClasses}
+            >
+              Stream
+            </Button>
+            <Button color="inherit" component={Link} to={`/users/${sessionStore.user.permalink}`}
+                    disabled={pathname === `/users/${sessionStore.user.permalink}`}
+                    classes={buttonClasses}
+            >
+              Me
+            </Button>
+          </div>
+        }
+
+        <div className={classes.grow} />
+
+        <form className={classes.search} onSubmit={handleSearchSubmit}>
+          <div className={classes.searchIcon}>
+            <Search />
+          </div>
+          <InputBase
+            placeholder="Search…"
+            classes={{
+              root: classes.inputRoot,
+              input: classes.inputInput,
+            }}
+            inputProps={{ 'aria-label': 'search' }}
+            onChange={handleSearchInputChange}
+          />
+        </form>
+
+        {sessionStore.isLoggedIn ?
+          <>
+            <IconButton
+              edge="end"
+              aria-label="account of current user"
+              aria-controls={menuId}
+              aria-haspopup="true"
+              onClick={handleProfileMenuOpen}
+              color="inherit"
+            >
+              <AccountCircle />
+            </IconButton>
+            <Menu
+              anchorEl={anchorEl}
+              anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+              id={menuId}
+              keepMounted
+              transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+              open={isMenuOpen}
+              onClose={handleMenuClose}
+            >
+              <MenuItem onClick={handleLogout}>Logout</MenuItem>
+            </Menu>
+          </>
+          :
+          <Button color="inherit" onClick={hangleLogin}>Login</Button>
+        }
+      </Toolbar>
+    </AppBar>
+  );
 };
 
-@inject('sessionStore', 'viewStore') @observer
-export default class MyAppBar extends React.Component {
-  state = {
-    anchorEl: undefined,
-    open: false
-  };
-
-  handleRequestOpen = (event) => this.setState({ open: true, anchorEl: event.currentTarget });
-
-  handleRequestClose = () => this.setState({ open: false });
-
-  handleLoginClick = e => {
-    this.props.sessionStore.login()
-      .then(() => this.props.router.push('/stream'))
-  };
-
-  handleLogoutClick = e => {
-    this.handleRequestClose();
-    this.props.sessionStore.logout();
-  };
-
-  handleSearch = q => {
-    this.props.router.push({ pathname: `/search`, query: { q, where: 'tracks' } });
-  };
-
-  render() {
-    const { sessionStore, viewStore } = this.props;
-
-    return (
-      <AppBar className={'app-header'}>
-        <Toolbar>
-          <div className='header-title'>
-            <Text type="title" colorInherit style={{marginRight: 20}}>{APP_TITLE}</Text>
-            <Link to='/explore' className='link' activeStyle={activeLinkStyle}>
-              <Button style={{color: '#fff'}}>Explore</Button>
-            </Link>
-            {sessionStore.isLoggedIn &&
-              <div>
-                <Link to={`/stream`} className='link' activeStyle={activeLinkStyle}>
-                  <Button style={{color: '#fff'}} >Stream</Button>
-                </Link>
-                <Link to={`/users/${sessionStore.user.permalink}`} className='link' activeStyle={activeLinkStyle}>
-                  <Button style={{color: '#fff'}}>Me</Button>
-                </Link>
-              </div>
-            }
-          </div>
-
-
-          <SearchWidget handleSearch={this.handleSearch}/>
-
-          {sessionStore.isLoggedIn ?
-            <div>
-              <IconButton contrast aria-owns="simple-menu" aria-haspopup="true"
-                onClick={this.handleRequestOpen}>more_vert_icon</IconButton>
-              <Menu
-                id="simple-menu"
-                anchorEl={this.state.anchorEl}
-                open={this.state.open}
-                onRequestClose={this.handleRequestClose}
-              >
-                <MenuItem onClick={this.handleLogoutClick}>Logout</MenuItem>
-              </Menu>
-            </div>
-            :
-            <Button contrast onTouchTap={this.handleLoginClick}>Login</Button>
-          }
-        </Toolbar>
-      </AppBar>
-    );
-  }
-}
+export default inject('sessionStore')(observer(AppBarComponent));
