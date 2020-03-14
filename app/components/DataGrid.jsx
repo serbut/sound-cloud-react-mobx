@@ -1,13 +1,13 @@
 import React from 'react';
 import {observer} from 'mobx-react';
-import {CircularProgress} from 'material-ui/Progress';
-import Text from 'material-ui/Text';
-import {InfiniteLoader, List, WindowScroller} from 'react-virtualized';
+// import {CircularProgress} from 'material-ui/Progress';
+// import Text from 'material-ui/Text';
+// import {InfiniteLoader, List, WindowScroller} from 'react-virtualized';
 import overscanIndicesGetter from '../defaultOverscanIndicesGetter.js';
-import TrackCard from './Track/TrackCard';
-import PlaylistCard from './Playlist/PlaylistCard';
-import UserCard from './User/UserCard';
-import Error from './Error';
+// import TrackCard from './Track/TrackCard';
+// import PlaylistCard from './Playlist/PlaylistCard';
+// import UserCard from './User/UserCard';
+// import Error from './Error';
 
 const CELL_HEIGHT = 316;
 const CELL_WIDTH = 216;
@@ -38,15 +38,18 @@ const loaderContainerStyle = {
 
 const DataGrid = ({ data, isLoading, isLastPage, error, loadMore }) => {
   if (!data.length && isLoading) {
-    return <div className="loader-wrap"><CircularProgress /></div>;
+    return <h3>Loading...</h3>
+    // return <div className="loader-wrap"><CircularProgress /></div>;
   }
 
   if (error) {
-    return <Error>{error}</Error>;
+    return <h3>{error}</h3>;
+    // return <Error>{error}</Error>;
   }
 
   if (!data.length && !isLoading && isLastPage) {
-    return <Text type='display1' align='center'>Nothing to show</Text>;
+    return <h3>Nothing to show</h3>
+    // return <Text type='display1' align='center'>Nothing to show</Text>;
   }
 
   const loadedRowCount = Math.ceil(data.length / CELLS_IN_ROW);
@@ -79,6 +82,8 @@ const DataGrid = ({ data, isLoading, isLastPage, error, loadMore }) => {
       </div>
     )
   };
+
+  return <div>{JSON.stringify(data)}</div>;
 
   return (
     <WindowScroller>

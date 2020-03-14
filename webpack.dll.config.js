@@ -15,10 +15,10 @@ module.exports = {
             'normalize.css',
             'react',
             'react-dom',
-            // 'react-hot-loader',
             'react-router-dom',
             'react-virtualized',
-            'soundcloud'
+            'soundcloud',
+            'query-string'
         ]
     },
     devtool: 'source-map',

@@ -1,10 +1,11 @@
-import React, {Component} from 'react';
-import {inject, observer} from 'mobx-react';
-import Tabs from 'material-ui/Tabs';
-import Tab from 'material-ui/Tabs/Tab';
-import DataGrid from './DataGrid';
-import DataLoader from '../hoc/DataLoader';
+import {Paper, Tab, Tabs} from '@material-ui/core'
+import {observer} from 'mobx-react';
+import {parse, stringify} from 'query-string';
+import React, {useEffect} from 'react';
+import {useHistory, useLocation} from 'react-router-dom';
 import {getSearchTracksByTagRequest} from '../api';
+import DataLoader from '../hoc/DataLoader';
+import DataGrid from './DataGrid';
 
 export const GENRES_MAP = {
   ambient: 'Ambient',
@@ -25,60 +26,60 @@ for (var key in GENRES_MAP) {
   GENRES_LIST.push(key);
 }
 
-@inject('viewStore')
-@observer
-export default class Explore extends Component {
+const Explore = ({}) => {
+  const history = useHistory();
+  const location =  useLocation();
+  const genre = parse(location.search).genre;
+  const currentTabIndex = GENRES_LIST.indexOf(genre);
+  const {url, params: requestParams} = getSearchTracksByTagRequest(genre);
 
-  componentDidMount() {
-    this.props.viewStore.title = 'Explore';
-
-    if (!this.props.location.query.genre) {
-      this.props.router.replace({
+  useEffect(() => {
+    // TODO: somehow improve this maybe?
+    if (!genre) {
+      history.replace({
         path: '/explore',
-        query: {
-          genre: GENRES_LIST[0]
-        }
+        search: stringify({genre: GENRES_LIST[0]})
       });
     }
-  }
+  }, []);
 
-  handleChange = (e, i) => {
-    this.props.router.push({
-      path: '/explore',
-      query: {
-        genre: GENRES_LIST[i]
-      }
+  const handleChange = (e, i) => {
+    history.push({
+      pathname: '/explore',
+      search: stringify({genre: GENRES_LIST[i]})
     });
   };
 
-  render() {
-    const { location } = this.props;
-    const currentTabIndex = GENRES_LIST.indexOf(location.query.genre);
-
-    if (!location.query.genre) {
-      return null;
-    }
-
-    const {url, params: requestParams} = getSearchTracksByTagRequest(location.query.genre);
-
-    return (
-      <div>
-        <div className='app-toolbar'>
-          {currentTabIndex !== -1 && <Tabs textColor='accent' index={currentTabIndex} onChange={this.handleChange}>
-            {GENRES_LIST.map((el, i) => <Tab key={i} label={GENRES_MAP[el]} />)}
-          </Tabs>}
-        </div>
-
-        <div className='container' style={{ paddingTop: 48 + 48 }}>
-          <DataLoader
-            url={url}
-            params={requestParams}
-            render={(props) =>
-              <DataGrid {...props} />
-            }
-          />
-        </div>
-      </div>
-    );
+  if (!genre) {
+    return null;
   }
-}
+
+  return (
+    <div>
+      {currentTabIndex !== -1 &&
+        <Paper square>
+          <Tabs
+            textColor='primary'
+            indicatorColor="primary"
+            value={currentTabIndex}
+            onChange={handleChange}
+          >
+            {GENRES_LIST.map((el, i) => <Tab key={i} label={GENRES_MAP[el]} />)}
+          </Tabs>
+        </Paper>
+      }
+
+      <div className='container' style={{ paddingTop: 48 + 48 }}>
+        <DataLoader
+          url={url}
+          params={requestParams}
+          render={(props) =>
+            <DataGrid {...props} />
+          }
+        />
+      </div>
+    </div>
+  );
+};
+
+export default observer(Explore);

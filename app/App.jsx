@@ -3,6 +3,9 @@ import {observer, Provider} from 'mobx-react';
 import React from 'react';
 import {Redirect, Route, Switch} from 'react-router-dom';
 import AppBar from './components/AppBar';
+import Callback from './components/Callback';
+import Explore from './components/Explore';
+import PageNotFound from './components/PageNotFound';
 import playerStore from './stores/player-store';
 import sessionStore from './stores/session-store';
 // import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
@@ -42,10 +45,11 @@ class App extends React.Component {
 
             <Route exact path="/" render={() => (<Redirect to="/explore" />)} />
             <Switch>
-              {/*<IndexRedirect to='explore'/>*/}
-              {/*<Route path='callback' component={Callback} />*/}
+              <Route path='/callback' component={Callback} />
               {/*<Route path='stream' component={Stream} />*/}
-              {/*<Route path='explore' component={Explore} />*/}
+              <Route path='/explore'>
+                <Explore/>
+              </Route>
               {/*<Route path='search' component={Search} />*/}
               {/*<Route path='users/:user' component={User}>*/}
               {/*  <Route path='tracks' component={UserTracks} />*/}
@@ -56,7 +60,9 @@ class App extends React.Component {
               {/*</Route>*/}
               {/*<Route path='users/:user/tracks/:track' component={Track} />*/}
               {/*<Route path='users/:user/playlists/:playlist' component={Playlist} />*/}
-              {/*<Route path='*' component={PageNotFound} />*/}
+              <Route path='*'>
+                <PageNotFound/>
+              </Route>
             </Switch>
 
             {/*<Player />*/}
