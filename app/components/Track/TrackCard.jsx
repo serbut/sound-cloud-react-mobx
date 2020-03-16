@@ -1,46 +1,57 @@
-import React from 'react';
-import {Link} from 'react-router';
+import {Card, CardContent, CardMedia, IconButton, Typography} from '@material-ui/core';
+import {Pause, PlayArrow} from '@material-ui/icons';
 import {inject, observer} from 'mobx-react';
-import {Card, CardContent, CardMedia} from 'material-ui/Card';
-import Text from 'material-ui/Text';
-import IconButton from 'material-ui/IconButton';
-import {formatNumber, fromNow, getImageUrl, isPreview} from '../../utils';
+import React from 'react';
+import {Link} from 'react-router-dom';
 import {IMAGE_SIZES} from '../../constants';
+import {formatNumber, fromNow, getImageUrl, isPreview} from '../../utils';
 import './TrackCard.less';
 
-const TrackCard = ({ track, compact, playerStore, tracks = [track] }) =>
-  <Card className={'track-card' + (!compact && playerStore.isSelected(track) ? ' active' : '')}>
-    <CardMedia className='track-card__media'>
-      <img src={getImageUrl(track.artwork_url, IMAGE_SIZES.t500x500, track.title)} alt={track.title} />
+// TODO: split into 2 components: TrackCard & TrackCardContent
+const TrackCard = ({ track, compact, playerStore, tracks = [track] }) => {
+  const handlePlayClick = () => {
+    playerStore.playTrack(track, tracks.slice());
+  };
+
+  const isPlaying = playerStore.isSelected(track) === 'isPlaying';
+
+  return <Card className={'track-card' + (!compact && playerStore.isSelected(track) ? ' active' : '')}>
+    <CardMedia
+      className='track-card__media'
+      image={getImageUrl(track.artwork_url, IMAGE_SIZES.t500x500, track.title)}
+      title={track.title}
+    >
       <div className='track-card__overlay'>
-        <IconButton iconClassName='track-card__play'
-          onTouchTap={() => playerStore.playTrack(track, tracks.slice())}>
-          {(playerStore.isSelected(track) === 'isPlaying') ? 'pause' : 'play_arrow'}
+        <IconButton onClick={handlePlayClick} aria-label={isPlaying ? 'pause' : 'play'}>
+          {isPlaying
+            ? <Pause fontSize="large" color='secondary'/>
+            : <PlayArrow fontSize="large" color='secondary'/>
+          }
         </IconButton>
       </div>
-      {isPreview(track) ?
+      {isPreview(track) &&
         <div className="track-card__overlay2">
-          <Text colorInherit>Preview</Text>
+          <Typography>Preview</Typography>
         </div>
-        : null
       }
     </CardMedia>
 
     {!compact &&
       <CardContent>
-        <Text type='subheading' noWrap title={track.title}>
+        <Typography variant='subtitle2' noWrap>
           <Link to={`users/${track.user.permalink}/tracks/${track.permalink}`} className='link'>{track.title}</Link>
-        </Text>
-        <Text type='body1' secondary noWrap gutterBottom>
+        </Typography>
+        <Typography variant='body2' noWrap>
           <Link to={`users/${track.user.permalink}`} className='link'>{track.user.username}</Link>
-        </Text>
-        <Text type='caption'>
+        </Typography>
+        <Typography variant='caption'>
           {formatNumber(track.likes_count || track.favoritings_count) + ' likes'}
           <span className='bullet'>&bull;</span>
           {fromNow(track.created_at)}
-        </Text>
+        </Typography>
       </CardContent>
     }
   </Card>;
+};
 
 export default inject('playerStore')(observer(TrackCard));
