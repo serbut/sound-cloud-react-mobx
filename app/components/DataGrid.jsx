@@ -1,13 +1,12 @@
-import React from 'react';
+import {CircularProgress, Typography} from '@material-ui/core';
 import {observer} from 'mobx-react';
-// import {CircularProgress} from 'material-ui/Progress';
-// import Text from 'material-ui/Text';
-// import {InfiniteLoader, List, WindowScroller} from 'react-virtualized';
+import React from 'react';
+import {InfiniteLoader, List, WindowScroller} from 'react-virtualized';
 import overscanIndicesGetter from '../defaultOverscanIndicesGetter.js';
 // import TrackCard from './Track/TrackCard';
 // import PlaylistCard from './Playlist/PlaylistCard';
 // import UserCard from './User/UserCard';
-// import Error from './Error';
+import Error from './Error';
 
 const CELL_HEIGHT = 316;
 const CELL_WIDTH = 216;
@@ -38,18 +37,15 @@ const loaderContainerStyle = {
 
 const DataGrid = ({ data, isLoading, isLastPage, error, loadMore }) => {
   if (!data.length && isLoading) {
-    return <h3>Loading...</h3>
-    // return <div className="loader-wrap"><CircularProgress /></div>;
+    return <div className="loader-wrap"><CircularProgress /></div>;
   }
 
   if (error) {
-    return <h3>{error}</h3>;
-    // return <Error>{error}</Error>;
+    return <Error>{error}</Error>;
   }
 
   if (!data.length && !isLoading && isLastPage) {
-    return <h3>Nothing to show</h3>
-    // return <Text type='display1' align='center'>Nothing to show</Text>;
+    return <Typography variant='h2'>Nothing to show</Typography>
   }
 
   const loadedRowCount = Math.ceil(data.length / CELLS_IN_ROW);
@@ -72,18 +68,17 @@ const DataGrid = ({ data, isLoading, isLastPage, error, loadMore }) => {
       <div key={key} style={{ ...style, ...rowStyle }}>
         {rowData.map((item) =>
           <div key={item.id} className='animated fadeIn' style={cellStyle}>
-            {item.kind === 'user' ? <UserCard user={item} /> :
-              item.kind === 'playlist' ? <PlaylistCard playlist={item} /> :
-                item.kind === 'track' ? <TrackCard track={item} tracks={data} /> :
-                  null
-            }
+            {item.title}
+            {/*{item.kind === 'user' ? <UserCard user={item} /> :*/}
+            {/*  item.kind === 'playlist' ? <PlaylistCard playlist={item} /> :*/}
+            {/*    item.kind === 'track' ? <TrackCard track={item} tracks={data} /> :*/}
+            {/*      null*/}
+            {/*}*/}
           </div>
         )}
       </div>
     )
   };
-
-  return <div>{JSON.stringify(data)}</div>;
 
   return (
     <WindowScroller>

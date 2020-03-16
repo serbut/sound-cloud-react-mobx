@@ -1,11 +1,14 @@
 import React from 'react';
-import Text from 'material-ui/Text';
-import Button from 'material-ui/Button';
+import {Button, Typography} from '@material-ui/core';
 
 const Error = ({children}) => {
-  return <div style={{margin: '48px 0'}}>
-    <Text type='display1' align='center' style={{color: '#F44336', marginBottom: '12px'}}>{children}</Text>
-    <Button raised primary onTouchTap={() => location.reload()} style={{display: 'block', margin: '0 auto'}}>Reload page</Button>
+  const handleClick = () => {
+    location.reload();
+  };
+
+  return <div>
+    <Typography variant='h2' color='error' gutterBottom>{children}</Typography>
+    <Button onClick={handleClick}>Reload page</Button>
   </div>
 };
 
