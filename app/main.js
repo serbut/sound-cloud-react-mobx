@@ -10,3 +10,4 @@ import './styles/index.less';
 ReactDOM.render(<Root />, document.getElementById('root'));
 
 // TODO: add eslint & prettier
+// TODO: use Mobx in strict mode (useStrict)
