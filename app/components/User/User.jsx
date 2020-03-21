@@ -1,11 +1,12 @@
-import React from 'react';
+import {CircularProgress} from '@material-ui/core';
 import {action, observable} from 'mobx';
 import {observer} from 'mobx-react';
-import {CircularProgress} from 'material-ui/Progress';
-import './User.less';
+import React from 'react';
+import {withRouter} from 'react-router-dom';
 import {loadUser, loadUserWebProfiles} from '../../api';
 import Error from '../Error';
 import UserView from '../User/UserView';
+import './User.less';
 
 @observer
 class User extends React.Component {
@@ -18,7 +19,7 @@ class User extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps.params.user !== this.props.params.user) {
+    if (prevProps.match.params.user !== this.props.match.params.user) {
       this.loadUser();
     }
   }
@@ -26,7 +27,7 @@ class User extends React.Component {
   loadUser() {
     this.isLoading = true;
 
-    loadUser(this.props.params.user)
+    loadUser(this.props.match.params.user)
       .then(user => this.user = user)
       .then(() => loadUserWebProfiles(this.user.id))
       .then(profiles => this.user.webProfiles = profiles)
@@ -53,9 +54,14 @@ class User extends React.Component {
     }
 
     return (
-      <UserView user={user} router={this.props.router} children={this.props.children}></UserView>
+      <UserView
+        user={user}
+        history={this.props.history}
+        location={this.props.location}
+        children={this.props.children}
+      ></UserView>
     )
   }
 }
 
-export default User;
+export default withRouter(User);

@@ -1,22 +1,24 @@
-import React from 'react';
-import DevTools from 'mobx-react-devtools';
-import { observer, Provider } from 'mobx-react';
 import key from 'keymaster';
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-import injectTapEventPlugin from 'react-tap-event-plugin';
+import {observer, Provider} from 'mobx-react';
+import React from 'react';
+import {hot} from 'react-hot-loader/root';
+import {BrowserRouter as Router, Redirect, Route, Switch} from 'react-router-dom';
 import AppBar from './components/AppBar';
+import Callback from './components/Callback';
+import Explore from './components/Explore';
+import PageNotFound from './components/PageNotFound';
 import Player from './components/Player/Player';
+import Playlist from './components/Playlist/Playlist';
 import ScrollToTopBtn from './components/ScrollToTopBtn';
-import viewStore from './stores/view-store';
+import Search from './components/Search/Search';
+import Stream from './components/Stream';
+import Track from './components/Track/Track';
+import User from './components/User/User';
 import playerStore from './stores/player-store';
 import sessionStore from './stores/session-store';
-import { isDev } from './config';
+import viewStore from './stores/view-store';
 
 class App extends React.Component {
-  componentWillMount() {
-    injectTapEventPlugin();
-  }
-
   componentDidMount() {
     key('space', (e) => { e.preventDefault(); playerStore.playTrack() });
     key('right', () => playerStore.stepForward());
@@ -40,19 +42,47 @@ class App extends React.Component {
 
   render() {
     return (
-      <MuiThemeProvider>
-        <Provider playerStore={playerStore} viewStore={viewStore} sessionStore={sessionStore}>
+      // TODO: refactor to use context
+      <Provider playerStore={playerStore} viewStore={viewStore} sessionStore={sessionStore}>
+        <Router>
           <div style={{paddingBottom: playerStore.track ? 64 : 0}}>
-            <AppBar router={this.props.router} />
-            {this.props.children}
+            <AppBar />
+
+            <Route exact path="/" render={() => (<Redirect to="/explore" />)} />
+            <Switch>
+              <Route path='/callback'>
+                <Callback/>
+              </Route>
+              <Route path='/stream'>
+                <Stream/>
+              </Route>
+              <Route path='/explore'>
+                <Explore/>
+              </Route>
+              <Route path='/search'>
+                <Search/>
+              </Route>
+              <Route path='/users/:user/tracks/:track'>
+                <Track/>
+              </Route>
+              <Route path='/users/:user/playlists/:playlist'>
+                <Playlist/>
+              </Route>
+              <Route path='/users/:user'>
+                <User/>
+              </Route>
+              <Route path='*'>
+                <PageNotFound/>
+              </Route>
+            </Switch>
+
             <Player />
             <ScrollToTopBtn />
-            {isDev ? <DevTools /> : null}
           </div>
-        </Provider>
-      </MuiThemeProvider>
+        </Router>
+      </Provider>
     );
   }
 }
 
-export default observer(App);
+export default hot(observer(App));

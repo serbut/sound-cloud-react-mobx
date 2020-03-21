@@ -1,5 +1,5 @@
 import React from 'react';
-import Text from 'material-ui/Text';
+import {Typography} from '@material-ui/core';
 
 const renderDescription = (description) => {
     if (!description) {
@@ -7,10 +7,12 @@ const renderDescription = (description) => {
     }
 
     return <div>
-        <Text type='headline' gutterBottom>Description</Text>
-        <Text style={{marginBottom: 24}}>
-            <pre>{description}</pre>
-        </Text>
+        <Typography variant='h5'>Description</Typography>
+        <pre>
+            <Typography>
+                {description}
+            </Typography>
+        </pre>
     </div>
 };
 
@@ -20,7 +22,7 @@ const renderLinks = (links) => {
     }
 
     return <div>
-        <Text type='headline' gutterBottom>Links</Text>
+        <Typography variant='h5' gutterBottom>Links</Typography>
         <ul className='user-links'>
             {links.map((el, i) =>
                 <li key={i}><a href={el.url} target='_blank' className='link link--blue'>{el.title}</a></li>
@@ -32,6 +34,7 @@ const renderLinks = (links) => {
 const UserAbout = ({user}) =>
   <div>
     {renderDescription(user.description)}
+    <br/>
     {renderLinks(user.webProfiles)}
   </div>;
 

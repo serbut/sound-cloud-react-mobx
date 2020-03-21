@@ -1,8 +1,9 @@
-import React, {Component} from 'react';
-import TextField from 'material-ui/TextField';
+import {TextField} from '@material-ui/core';
 import {observable} from 'mobx';
 import {observer} from 'mobx-react';
+import React, {Component} from 'react';
 
+// TODO: add validation
 @observer
 export default class CommentForm extends Component{
   @observable commentBody = '';
@@ -26,9 +27,10 @@ export default class CommentForm extends Component{
   render() {
     return <form onSubmit={this.handleFormSubmit}>
       <TextField
-        label='Write a comment'
+        label='Enter comment text'
         value={this.commentBody}
         onChange={this.handleInputChange}
+        fullWidth
       />
     </form>
   }

@@ -1,35 +1,42 @@
+import {
+  Avatar,
+  IconButton,
+  ListItem,
+  ListItemAvatar,
+  ListItemSecondaryAction,
+  ListItemText,
+  Typography
+} from '@material-ui/core';
+import {Delete} from '@material-ui/icons';
+import {inject, observer} from 'mobx-react';
 import React from 'react';
-import { observer, inject } from 'mobx-react';
-import { Link } from 'react-router';
-import { ListItem, ListItemText, ListItemSecondaryAction } from 'material-ui/List';
-import Avatar from 'material-ui/Avatar';
-import IconButton from 'material-ui/IconButton';
-
-import { fromNow, getImageUrl, formatDuration } from '../../utils';
-import { IMAGE_SIZES } from '../../constants';
+import {Link} from 'react-router-dom';
+import {IMAGE_SIZES} from '../../constants';
+import {formatDuration, fromNow, getImageUrl} from '../../utils';
 
 const Comment = ({ comment, removeComment, sessionStore }) => {
   return (
     <ListItem divider>
-      <Avatar
-        src={getImageUrl(comment.user.avatar_url, IMAGE_SIZES.badge)}
-        alt={comment.user.username}
-        className='list-avatar' />
+      <ListItemAvatar>
+        <Avatar
+          src={getImageUrl(comment.user.avatar_url, IMAGE_SIZES.badge)}
+          alt={comment.user.username}
+        />
+      </ListItemAvatar>
       <ListItemText
         primary={
           <span>
             <Link to={`/${comment.user.permalink}`} className='link link--blue'>{comment.user.username}</Link>
-            <small> at {formatDuration(comment.timestamp)}</small>
+            <Typography variant="caption"> at {formatDuration(comment.timestamp)}</Typography>
             <span className='bullet'>&bull;</span>
-            <small>{fromNow(comment.created_at)}</small>
+            <Typography variant="caption">{fromNow(comment.created_at)}</Typography>
           </span>
         }
         secondary={comment.body}
-        className='list-item-text'
       />
       {sessionStore.isLoggedIn && sessionStore.user.id === comment.user.id &&
         <ListItemSecondaryAction>
-          <IconButton onClick={() => removeComment(comment)}>close</IconButton>
+          <IconButton color="secondary" onClick={() => removeComment(comment)}><Delete /></IconButton>
         </ListItemSecondaryAction>
       }
     </ListItem>

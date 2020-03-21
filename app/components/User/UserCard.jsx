@@ -1,11 +1,10 @@
-import React from 'react';
-import {Link} from 'react-router';
+import {Avatar, Typography} from '@material-ui/core';
 import {observer} from 'mobx-react';
-import Avatar from 'material-ui/Avatar';
-import Text from 'material-ui/Text';
-import './UserCard.less';
-import {formatNumber, getImageUrl} from '../../utils';
+import React from 'react';
+import {Link} from 'react-router-dom';
 import {IMAGE_SIZES} from '../../constants';
+import {formatNumber, getImageUrl} from '../../utils';
+import './UserCard.less';
 
 const UserCard = ({ user }) => {
   const link = `/users/${user.permalink}`;
@@ -20,11 +19,11 @@ const UserCard = ({ user }) => {
         />
       </Link>
       <div className="user-card__content">
-        <Text type='subheading' align='center'>
+        <Typography variant='subtitle2' align='center'>
           <Link to={link} className='link'>{user.username}</Link>
-        </Text>
+        </Typography>
         {user.followers_count &&
-          <Text type='caption' align='center'>{formatNumber(user.followers_count)} followers</Text>
+          <Typography variant='caption' component='p' align='center'>{formatNumber(user.followers_count)} followers</Typography>
         }
       </div>
     </div>

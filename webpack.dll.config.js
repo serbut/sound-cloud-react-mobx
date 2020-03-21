@@ -4,20 +4,21 @@ const webpack = require('webpack');
 module.exports = {
     entry: {
         vendor: [
+            '@material-ui/core',
+            '@material-ui/icons',
             'axios',
             'keymaster',
-            'material-ui',
             'mobx',
             'mobx-react',
-            'mobx-react-devtools',
+            'mobx-utils',
             'moment',
             'normalize.css',
             'react',
             'react-dom',
-            'react-router',
-            'react-tap-event-plugin',
+            'react-router-dom',
             'react-virtualized',
             'soundcloud',
+            'query-string'
         ]
     },
     devtool: 'source-map',

@@ -3,12 +3,13 @@ import 'react-hot-loader'; // Make sure react-hot-loader is required before reac
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './api';
-import Root from './Root';
+import App from './App';
 import 'react-virtualized/styles.css';
 import './styles/index.less';
 
-ReactDOM.render(<Root />, document.getElementById('root'));
+ReactDOM.render(<App />, document.getElementById('root'));
 
-// TODO: 1. hot-loader not working, update webpack and check again, if not probably remove it
-// TODO: 2. update React, Mobx, and other deps except Material UI
-// TODO: 3. update Material UI
+// TODO: add eslint & prettier
+// TODO: use Mobx in strict mode (useStrict)
+// TODO: refactor styles
+// TODO: refactor all to Function comps with hooks

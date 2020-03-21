@@ -1,13 +1,12 @@
-import React, {Component} from 'react';
+import {CircularProgress, List, Typography} from '@material-ui/core';
 import {inject, observer} from 'mobx-react';
-import {List, ListSubheader} from 'material-ui/List';
-import {CircularProgress} from 'material-ui/Progress';
-import Comment from './SingleComment';
-import InfiniteScrollify from '../../hoc/InfiniteScrollify';
+import React, {Component} from 'react';
 import {addComment, getTrackCommentsUrl, removeComment} from '../../api';
 import DataLoader from '../../hoc/DataLoader';
-import CommentForm from './CommentForm';
+import InfiniteScrollify from '../../hoc/InfiniteScrollify';
 import Error from '../Error';
+import CommentForm from './CommentForm';
+import Comment from './SingleComment';
 
 @inject('sessionStore', 'playerStore')
 @observer
@@ -35,14 +34,16 @@ export default class Comments extends Component {
 
     return (
       <div>
+        <Typography variant="h5">Leave a comment</Typography>
         <CommentForm addComment={addComment}></CommentForm>
+        <br/>
 
         <DataLoader
           url={getTrackCommentsUrl(trackId)}
           render={({data: comments, isLoading, loadMore, error}) =>
             <div>
               <InfiniteScrollify load={loadMore}>
-                <List subheader={<ListSubheader>Comments</ListSubheader>}>
+                <List>
                   {comments.map((comment, i) =>
                     <Comment key={comment.id} comment={comment} removeComment={removeComment}/>
                   )}

@@ -60,6 +60,7 @@ export default class DataLoader extends Component {
   };
 
   @action clearData = () => {
+    this.error = null;
     this.data = [];
     this.nextHref = null;
   };

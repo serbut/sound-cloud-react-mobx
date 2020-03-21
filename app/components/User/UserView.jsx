@@ -1,10 +1,16 @@
-import React, {Component} from 'react';
-import UserHeader from './UserHeader';
-import Tabs from 'material-ui/Tabs';
-import Tab from 'material-ui/Tabs/Tab';
+import {Tab, Tabs} from '@material-ui/core';
 import {observable} from 'mobx';
 import {observer} from 'mobx-react';
+import React, {Component} from 'react';
+import {Route} from 'react-router-dom';
+import UserAbout from './UserAbout';
+import UserFollowings from './UserFollowings';
+import UserHeader from './UserHeader';
+import UserLikes from './UserLikes';
+import UserPlaylists from './UserPlaylists';
+import UserTracks from './UserTracks';
 
+// TODO: move tabs to UserTabs component
 @observer
 export default class UserView extends Component {
   @observable tabs = [];
@@ -37,35 +43,37 @@ export default class UserView extends Component {
   }
 
   redirectToFirstAvailableTabIfNoneIsSelected() {
-    const { router } = this.props;
+    const { history, location } = this.props;
 
     if (this.tabs.length === 0) {
       return;
     }
 
-    if (/^.*\/(tracks|playlists|likes|followings|about)$/.test(router.location.pathname)) {
+    if (/^.*\/(tracks|playlists|likes|followings|about)$/.test(location.pathname)) {
       return;
     }
 
-    router.replace(`users/${this.props.user.permalink}/${this.tabs[0]}`);
+    history.replace(`/users/${this.props.user.permalink}/${this.tabs[0]}`);
   }
 
   handleTabChange = (e, i) => {
-    this.props.router.push(`users/${this.props.user.permalink}/${this.tabs[i]}`);
+    this.props.history.push(`/users/${this.props.user.permalink}/${this.tabs[i]}`);
   };
 
   render() {
-    const { user, children, router } = this.props;
-    const selectedTabIndex = this.tabs.findIndex(tab => router.location.pathname.includes(tab));
+    const { user, children, location } = this.props;
+    const selectedTabIndex = this.tabs.findIndex(tab => location.pathname.includes(tab));
 
     return <div className='animated fadeIn'>
       <div className='user-header'>
-
         <div className='container'>
           <UserHeader user={user}></UserHeader>
 
           {selectedTabIndex !== -1 &&
-            <Tabs textColor="accent" index={selectedTabIndex} onChange={this.handleTabChange}>
+            <Tabs
+              value={selectedTabIndex}
+              onChange={this.handleTabChange}
+            >
               {this.tabs.map((el, i) => <Tab key={i} label={el} />)}
             </Tabs>
           }
@@ -73,11 +81,12 @@ export default class UserView extends Component {
       </div>
 
       <div className='container'>
-        {children && React.cloneElement(children, {
-          user
-        })}
+        <Route path='/users/:user/tracks' render={() => <UserTracks user={user} />}/>
+        <Route path='/users/:user/playlists' render={() => <UserPlaylists user={user} />} />
+        <Route path='/users/:user/likes' render={() => <UserLikes user={user} />} />
+        <Route path='/users/:user/followings' render={() => <UserFollowings user={user} />} />
+        <Route path='/users/:user/about' component={() => <UserAbout user={user} />} />
       </div>
-
     </div>
   }
 }

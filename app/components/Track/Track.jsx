@@ -1,11 +1,12 @@
-import React from 'react';
+import {CircularProgress} from '@material-ui/core';
 import {observable} from 'mobx';
 import {observer} from 'mobx-react';
-import {CircularProgress} from 'material-ui/Progress';
-import './Track.less';
+import React from 'react';
+import {withRouter} from 'react-router-dom';
 import {loadTrack} from '../../api';
 import Error from '../Error';
 import TrackView from '../Track/TrackView';
+import './Track.less';
 
 @observer
 class Track extends React.Component {
@@ -18,8 +19,8 @@ class Track extends React.Component {
   }
 
   componentDidUpdate (prevProps) {
-    const {user: nextUser, track: nextTrack} = prevProps.params;
-    const {user, track} = this.props.params;
+    const {user: nextUser, track: nextTrack} = prevProps.match.params;
+    const {user, track} = this.props.match.params;
 
     if (nextUser !== user || nextTrack !== track) {
       this.loadTrack();
@@ -27,7 +28,7 @@ class Track extends React.Component {
   }
 
   loadTrack() {
-    const { params: {user, track} } = this.props;
+    const { user, track } = this.props.match.params;
 
     this.isLoading = true;
 
@@ -58,9 +59,9 @@ class Track extends React.Component {
     }
 
     return (
-      <TrackView track={track} router={this.props.router}></TrackView>
+      <TrackView track={track} history={this.props.history}></TrackView>
     )
   }
 }
 
-export default Track;
+export default withRouter(Track);

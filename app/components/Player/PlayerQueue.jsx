@@ -1,16 +1,13 @@
 import React from 'react';
 import {inject, observer} from 'mobx-react';
-import {Card, CardActions, CardHeader} from 'material-ui/Card';
-import {List, ListItem, ListItemIcon, ListItemText} from 'material-ui/List';
-import Avatar from 'material-ui/Avatar';
-import Divider from 'material-ui/Divider';
-import Icon from 'material-ui/Icon';
-import {LabelSwitch} from 'material-ui/Switch';
+import {Card, CardActions, CardHeader, List, ListItem, ListItemIcon, ListItemText, Avatar, Divider, ListItemAvatar} from '@material-ui/core';
+import {VolumeUp} from '@material-ui/icons';
 import './PlayerQueue.less';
 import {getImageUrl, isElementInViewport} from '../../utils';
 
 const PER_PAGE = 30;
 
+// TODO: use dialog, maybe fullscreen dialog
 @inject('viewStore', 'playerStore') @observer
 class PlayerQueue extends React.Component {
   componentDidUpdate(prevProps, prevState) {
@@ -42,29 +39,34 @@ class PlayerQueue extends React.Component {
     return (
       <div className='player-queue' onClick={e => e.stopPropagation()}>
         <Card>
-          <CardHeader title={`Queue (${trackIndex + 1}/${items.length}) ${loading}`} />
-          <Divider />
           <div className='player-queue__inner'>
             <List>
               {items.slice(from, to).map((track, i) =>
                 <ListItem key={track.permalink + i} button divider dense data-id={track.id}
-                  onTouchTap={() => playerStore.playTrack(track)}
+                  onClick={() => playerStore.playTrack(track)}
                 >
-                  <Avatar src={getImageUrl(track.artwork_url)} className='list-avatar' />
-                  <ListItemText primary={track.title} secondary={track.user.username}
-                    title={track.title} className='list-item-text-nowrap' />
-                  {playerStore.isSelected(track) ?
-                    <ListItemIcon className='list-icon'><Icon>volume_up</Icon></ListItemIcon> : null}
+                  {playerStore.isSelected(track)
+                    ? <ListItemIcon><VolumeUp/></ListItemIcon>
+                    : <ListItemAvatar>
+                        <Avatar src={getImageUrl(track.artwork_url)} className='list-avatar' />
+                      </ListItemAvatar>
+                  }
+                  <ListItemText
+                    primary={track.title}
+                    secondary={track.user.username}
+                    className='list-item-text-nowrap'
+                  />
                 </ListItem>
               )}
             </List>
           </div>
           <CardActions style={{ justifyContent: 'center' }}>
-            <LabelSwitch
-              checked={playerStore.skipPreviews}
-              onChange={(event, checked) => playerStore.toggleSkipPreviews()}
-              label="Skip Previews"
-            />
+            {/*TODO: move to settings page*/}
+            {/*<LabelSwitch*/}
+            {/*  checked={playerStore.skipPreviews}*/}
+            {/*  onChange={(event, checked) => playerStore.toggleSkipPreviews()}*/}
+            {/*  label="Skip Previews"*/}
+            {/*/>*/}
           </CardActions>
         </Card>
       </div>

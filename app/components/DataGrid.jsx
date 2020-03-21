@@ -1,13 +1,12 @@
-import React from 'react';
+import {CircularProgress, Typography} from '@material-ui/core';
 import {observer} from 'mobx-react';
-import {CircularProgress} from 'material-ui/Progress';
-import Text from 'material-ui/Text';
+import React from 'react';
 import {InfiniteLoader, List, WindowScroller} from 'react-virtualized';
 import overscanIndicesGetter from '../defaultOverscanIndicesGetter.js';
-import TrackCard from './Track/TrackCard';
-import PlaylistCard from './Playlist/PlaylistCard';
-import UserCard from './User/UserCard';
 import Error from './Error';
+import PlaylistCard from './Playlist/PlaylistCard';
+import TrackCard from './Track/TrackCard';
+import UserCard from './User/UserCard';
 
 const CELL_HEIGHT = 316;
 const CELL_WIDTH = 216;
@@ -46,7 +45,7 @@ const DataGrid = ({ data, isLoading, isLastPage, error, loadMore }) => {
   }
 
   if (!data.length && !isLoading && isLastPage) {
-    return <Text type='display1' align='center'>Nothing to show</Text>;
+    return <Typography variant='h2'>Nothing to show</Typography>
   }
 
   const loadedRowCount = Math.ceil(data.length / CELLS_IN_ROW);
