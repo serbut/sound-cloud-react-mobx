@@ -1,12 +1,12 @@
 import key from 'keymaster';
 import {observer, Provider} from 'mobx-react';
 import React from 'react';
-import {Redirect, Route, Switch} from 'react-router-dom';
+import {hot} from 'react-hot-loader/root';
+import {BrowserRouter as Router, Redirect, Route, Switch} from 'react-router-dom';
 import AppBar from './components/AppBar';
 import Callback from './components/Callback';
 import Explore from './components/Explore';
 import PageNotFound from './components/PageNotFound';
-// import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import Player from './components/Player/Player';
 import Playlist from './components/Playlist/Playlist';
 import ScrollToTopBtn from './components/ScrollToTopBtn';
@@ -42,9 +42,9 @@ class App extends React.Component {
 
   render() {
     return (
-      // <MuiThemeProvider>
-        // TODO: refactor to use context
-        <Provider playerStore={playerStore} viewStore={viewStore} sessionStore={sessionStore}>
+      // TODO: refactor to use context
+      <Provider playerStore={playerStore} viewStore={viewStore} sessionStore={sessionStore}>
+        <Router>
           <div style={{paddingBottom: playerStore.track ? 64 : 0}}>
             <AppBar />
 
@@ -79,10 +79,10 @@ class App extends React.Component {
             <Player />
             <ScrollToTopBtn />
           </div>
-        </Provider>
-      // </MuiThemeProvider>
+        </Router>
+      </Provider>
     );
   }
 }
 
-export default observer(App);
+export default hot(observer(App));
