@@ -1,15 +1,15 @@
-import {Chip, Typography} from '@material-ui/core';
-import {observer} from 'mobx-react';
-import React from 'react';
-import {getTags} from '../../utils';
-import Comments from '../Comments/Comments';
-import TrackHeader from './TrackHeader';
+import { Chip, Typography } from "@material-ui/core";
+import { observer } from "mobx-react";
+import React from "react";
+import { getTags } from "../../utils";
+import Comments from "../Comments/Comments";
+import TrackHeader from "./TrackHeader";
 
 const TrackView = ({ track, history }) => {
-  const handleTagClick = (q) => {
+  const handleTagClick = q => {
     const searchParams = new URLSearchParams();
-    searchParams.append('q', q);
-    searchParams.append('where', 'tracks');
+    searchParams.append("q", q);
+    searchParams.append("where", "tracks");
 
     history.push({
       pathname: `/search`,
@@ -17,28 +17,33 @@ const TrackView = ({ track, history }) => {
     });
   };
 
-  return <div className='animated fadeIn'>
-    <TrackHeader track={track}></TrackHeader>
+  return (
+    <div className="animated fadeIn">
+      <TrackHeader track={track}></TrackHeader>
 
-    <div className='container'>
-      {track.description &&
-        <pre>
-          <Typography>
-            {track.description}
-          </Typography>
-        </pre>
-      }
-      {track.tag_list &&
-        <div className='track-tags'>
-          {getTags(track.tag_list).map((el, i) =>
-            <Chip key={i} label={el} style={{ margin: 4 }} onClick={e => handleTagClick(el)} />)
-          }
-        </div>
-      }
+      <div className="container">
+        {track.description && (
+          <pre>
+            <Typography>{track.description}</Typography>
+          </pre>
+        )}
+        {track.tag_list && (
+          <div className="track-tags">
+            {getTags(track.tag_list).map((el, i) => (
+              <Chip
+                key={i}
+                label={el}
+                style={{ margin: 4 }}
+                onClick={e => handleTagClick(el)}
+              />
+            ))}
+          </div>
+        )}
 
-      <Comments trackId={track.id} />
+        <Comments trackId={track.id} />
+      </div>
     </div>
-  </div>
+  );
 };
 
 export default observer(TrackView);

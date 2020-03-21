@@ -1,7 +1,14 @@
-import {computed, observable} from 'mobx';
-import SC from 'soundcloud';
-import {TOKEN_KEY, USER_KEY} from '../config';
-import {addLike, followUser, getMeFollowingsIds, getMeLikesIds, removeLike, unfollowUser} from '../api';
+import { computed, observable } from "mobx";
+import SC from "soundcloud";
+import { TOKEN_KEY, USER_KEY } from "../config";
+import {
+  addLike,
+  followUser,
+  getMeFollowingsIds,
+  getMeLikesIds,
+  removeLike,
+  unfollowUser
+} from "../api";
 
 class SessionStore {
   @observable user;
@@ -50,15 +57,15 @@ class SessionStore {
   }
 
   getMe() {
-    return SC.get('/me')
+    return SC.get("/me")
       .then(user => {
         this.user = user;
         localStorage.setItem(USER_KEY, JSON.stringify(user));
       })
       .then(() => getMeLikesIds())
-      .then(userLikesIds => this.userLikesIds = userLikesIds)
+      .then(userLikesIds => (this.userLikesIds = userLikesIds))
       .then(() => getMeFollowingsIds())
-      .then(userFollowingsIds => this.userFollowingsIds = userFollowingsIds)
+      .then(userFollowingsIds => (this.userFollowingsIds = userFollowingsIds))
       .catch(() => {
         // TODO: add error handler
       });
@@ -66,31 +73,25 @@ class SessionStore {
 
   toggleLike(track) {
     if (!this.isLoggedIn) {
-      return this.login()
-        .then(() => this.toggleLike(track));
+      return this.login().then(() => this.toggleLike(track));
     }
 
     if (this.isLiked(track)) {
-      removeLike(track.id)
-        .then(() => this.userLikesIds.remove(track.id))
+      removeLike(track.id).then(() => this.userLikesIds.remove(track.id));
     } else {
-      addLike(track.id)
-        .then(() => this.userLikesIds.unshift(track.id))
+      addLike(track.id).then(() => this.userLikesIds.unshift(track.id));
     }
   }
 
   toggleFollowing(user) {
     if (!this.isLoggedIn) {
-      return this.login()
-        .then(() => this.toggleFollowing(user));
+      return this.login().then(() => this.toggleFollowing(user));
     }
 
     if (this.isFollowing(user)) {
-      unfollowUser(user.id)
-        .then(() => this.userFollowingsIds.remove(user.id));
+      unfollowUser(user.id).then(() => this.userFollowingsIds.remove(user.id));
     } else {
-      followUser(user.id)
-        .then(() => this.userFollowingsIds.unshift(user.id));
+      followUser(user.id).then(() => this.userFollowingsIds.unshift(user.id));
     }
   }
 }

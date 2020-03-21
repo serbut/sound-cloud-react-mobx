@@ -1,17 +1,19 @@
-import React, { Component } from 'react';
-
+import React, { Component } from "react";
 
 export default class InfiniteScrollComponent extends Component {
   componentDidMount() {
-    window.addEventListener('scroll', this.onScroll, false);
+    window.addEventListener("scroll", this.onScroll, false);
   }
 
   componentWillUnmount() {
-    window.removeEventListener('scroll', this.onScroll, false);
+    window.removeEventListener("scroll", this.onScroll, false);
   }
 
   onScroll = () => {
-    if ((window.innerHeight + window.scrollY) >= (document.body.offsetHeight - 200)) {
+    if (
+      window.innerHeight + window.scrollY >=
+      document.body.offsetHeight - 200
+    ) {
       this.props.load();
     }
   };
@@ -20,4 +22,3 @@ export default class InfiniteScrollComponent extends Component {
     return this.props.children;
   }
 }
-

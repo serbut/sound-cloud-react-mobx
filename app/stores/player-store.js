@@ -1,17 +1,17 @@
-import { extendObservable, observable, action, computed } from 'mobx';
-import { createTransformer } from 'mobx-utils';
-import { loadMore, getNextHref } from '../api';
-import { isPreview } from '../utils';
+import { extendObservable, observable, action, computed } from "mobx";
+import { createTransformer } from "mobx-utils";
+import { loadMore, getNextHref } from "../api";
+import { isPreview } from "../utils";
 
 const TIME_STEP = 15;
 const VOLUME_STEP = 0.25;
 
-const filterData = (data) => {
+const filterData = data => {
   return data
-    .filter(el => el.hasOwnProperty('origin') && el.origin || true)
-    .filter(el => el.type === 'track' || el.type === 'track-repost')
+    .filter(el => (el.hasOwnProperty("origin") && el.origin) || true)
+    .filter(el => el.type === "track" || el.type === "track-repost")
     .map(el => el.origin || el);
-}
+};
 
 class Queue {
   @observable originItems = [];
@@ -24,7 +24,6 @@ class Queue {
   @computed get items() {
     if (this.player.skipPreviews)
       return this.originItems.filter(el => !isPreview(el));
-
     else return this.originItems;
   }
 
@@ -33,8 +32,7 @@ class Queue {
   }
 
   @computed get prevTrack() {
-    if (this.trackIndex !== 0)
-      return this.items[this.trackIndex - 1];
+    if (this.trackIndex !== 0) return this.items[this.trackIndex - 1];
   }
 
   @computed get nextTrack() {
@@ -47,16 +45,16 @@ class Queue {
   }
 
   loadMore() {
-    if (this.isLoading || !this.nextHref)
-      return;
+    if (this.isLoading || !this.nextHref) return;
 
     this.isLoading = true;
-    loadMore(this.nextHref)
-      .then(action(data => {
+    loadMore(this.nextHref).then(
+      action(data => {
         filterData(data.collection).forEach(el => this.originItems.push(el));
         this.nextHref = data.next_href;
         this.isLoading = false;
-      }))
+      })
+    );
   }
 }
 
@@ -79,21 +77,22 @@ class PlayerStore {
   }
 
   isSelected = createTransformer(
-    track => this.track && this.track.id === track.id && (this.isPlaying ? 'isPlaying' : 'isPaused')
+    track =>
+      this.track &&
+      this.track.id === track.id &&
+      (this.isPlaying ? "isPlaying" : "isPaused")
   );
 
   @action playTrack(track = this.track, queue) {
-    if (!track)
-      return;
+    if (!track) return;
 
     if (this.track && this.track.id === track.id) {
-      return this.isPlaying = !this.isPlaying;
+      return (this.isPlaying = !this.isPlaying);
     }
 
     this.track = track;
     this.progress = 0;
     this.isPlaying = true;
-
 
     if (queue) {
       this.queue.originItems = queue;
@@ -109,7 +108,9 @@ class PlayerStore {
   }
 
   playNext() {
-    const nextTrack = this.shuffle ? this.queue.randomTrack : this.queue.nextTrack;
+    const nextTrack = this.shuffle
+      ? this.queue.randomTrack
+      : this.queue.nextTrack;
     this.playTrack(nextTrack);
   }
 
@@ -153,29 +154,23 @@ class PlayerStore {
   stepForward(offset = TIME_STEP) {
     const timeLeft = this.track.duration / 1000 - this.progress;
 
-    if (!this.isPlaying)
-      return;
+    if (!this.isPlaying) return;
 
-    if (offset < timeLeft)
-      this.progress += offset;
-    else
-      this.playNext();
+    if (offset < timeLeft) this.progress += offset;
+    else this.playNext();
   }
 
   stepBackward(offset = TIME_STEP) {
-    if (this.isPlaying)
-      this.progress -= Math.min(offset, this.progress);
+    if (this.isPlaying) this.progress -= Math.min(offset, this.progress);
   }
 
   increaseVolume(offset = VOLUME_STEP) {
-    if (this.muted)
-      this.toggleMuted();
+    if (this.muted) this.toggleMuted();
     this.setVolume(Math.min(this.volume + offset, 1));
   }
 
   decreaseVolume(offset = VOLUME_STEP) {
-    if (this.muted)
-      this.toggleMuted();
+    if (this.muted) this.toggleMuted();
     this.setVolume(Math.max(this.volume - offset, 0));
   }
 
@@ -184,4 +179,4 @@ class PlayerStore {
   }
 }
 
-export default new PlayerStore;
+export default new PlayerStore();

@@ -1,12 +1,12 @@
-import {CircularProgress, Typography} from '@material-ui/core';
-import {observer} from 'mobx-react';
-import React from 'react';
-import {InfiniteLoader, List, WindowScroller} from 'react-virtualized';
-import overscanIndicesGetter from '../defaultOverscanIndicesGetter.js';
-import Error from './Error';
-import PlaylistCard from './Playlist/PlaylistCard';
-import TrackCard from './Track/TrackCard';
-import UserCard from './User/UserCard';
+import { CircularProgress, Typography } from "@material-ui/core";
+import { observer } from "mobx-react";
+import React from "react";
+import { InfiniteLoader, List, WindowScroller } from "react-virtualized";
+import overscanIndicesGetter from "../defaultOverscanIndicesGetter.js";
+import Error from "./Error";
+import PlaylistCard from "./Playlist/PlaylistCard";
+import TrackCard from "./Track/TrackCard";
+import UserCard from "./User/UserCard";
 
 const CELL_HEIGHT = 316;
 const CELL_WIDTH = 216;
@@ -14,30 +14,34 @@ const CELLS_IN_ROW = 5;
 const WIDTH = CELL_WIDTH * CELLS_IN_ROW;
 
 const cellStyle = {
-  flex: '0 0 auto',
-  boxSizing: 'border-box',
+  flex: "0 0 auto",
+  boxSizing: "border-box",
   padding: 8,
   width: CELL_WIDTH
 };
 
 const rowStyle = {
-  display: 'flex'
+  display: "flex"
 };
 
 const listStyle = {
-  outline: 'none'
+  outline: "none"
 };
 
 const loaderContainerStyle = {
-  width: '100%',
-  display: 'flex',
-  justifyContent: 'center',
-  alignItems: 'center'
+  width: "100%",
+  display: "flex",
+  justifyContent: "center",
+  alignItems: "center"
 };
 
 const DataGrid = ({ data, isLoading, isLastPage, error, loadMore }) => {
   if (!data.length && isLoading) {
-    return <div className="loader-wrap"><CircularProgress /></div>;
+    return (
+      <div className="loader-wrap">
+        <CircularProgress />
+      </div>
+    );
   }
 
   if (error) {
@@ -45,7 +49,7 @@ const DataGrid = ({ data, isLoading, isLastPage, error, loadMore }) => {
   }
 
   if (!data.length && !isLoading && isLastPage) {
-    return <Typography variant='h2'>Nothing to show</Typography>
+    return <Typography variant="h2">Nothing to show</Typography>;
   }
 
   const loadedRowCount = Math.ceil(data.length / CELLS_IN_ROW);
@@ -59,24 +63,28 @@ const DataGrid = ({ data, isLoading, isLastPage, error, loadMore }) => {
     const rowData = data.slice(from, to);
 
     if (rowData.length === 0) {
-      return <div key={key} style={{ ...style, ...loaderContainerStyle }}>
-        <CircularProgress />
-      </div>
+      return (
+        <div key={key} style={{ ...style, ...loaderContainerStyle }}>
+          <CircularProgress />
+        </div>
+      );
     }
 
     return (
       <div key={key} style={{ ...style, ...rowStyle }}>
-        {rowData.map((item) =>
-          <div key={item.id} className='animated fadeIn' style={cellStyle}>
-            {item.kind === 'user' ? <UserCard user={item} /> :
-              item.kind === 'playlist' ? <PlaylistCard playlist={item} /> :
-                item.kind === 'track' ? <TrackCard track={item} tracks={data} /> :
-                  null
-            }
+        {rowData.map(item => (
+          <div key={item.id} className="animated fadeIn" style={cellStyle}>
+            {item.kind === "user" ? (
+              <UserCard user={item} />
+            ) : item.kind === "playlist" ? (
+              <PlaylistCard playlist={item} />
+            ) : item.kind === "track" ? (
+              <TrackCard track={item} tracks={data} />
+            ) : null}
           </div>
-        )}
+        ))}
       </div>
-    )
+    );
   };
 
   return (

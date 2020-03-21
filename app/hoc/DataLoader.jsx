@@ -1,7 +1,7 @@
-import React, {Component} from 'react';
-import {action, computed, observable} from 'mobx';
-import {observer} from 'mobx-react';
-import {loadData, loadMore} from '../api';
+import React, { Component } from "react";
+import { action, computed, observable } from "mobx";
+import { observer } from "mobx-react";
+import { loadData, loadMore } from "../api";
 
 @observer
 export default class DataLoader extends Component {
@@ -21,7 +21,10 @@ export default class DataLoader extends Component {
   componentDidUpdate({ url: prevUrl, params: prevParams }) {
     const { url, params } = this.props;
 
-    if (url !== prevUrl || JSON.stringify(params) !== JSON.stringify(prevParams)) {
+    if (
+      url !== prevUrl ||
+      JSON.stringify(params) !== JSON.stringify(prevParams)
+    ) {
       this.clearData();
       this.loadData();
     }
@@ -79,18 +82,26 @@ export default class DataLoader extends Component {
 
   @action onError(err) {
     this.isLoading = false;
-    this.error = 'Failed to load data';
+    this.error = "Failed to load data";
   }
 
   render() {
-    const {data, isLoading, isLastPage, error, loadData, loadMore, clearData} = this;
+    const {
+      data,
+      isLoading,
+      isLastPage,
+      error,
+      loadData,
+      loadMore,
+      clearData
+    } = this;
 
     return this.props.render({
       data,
       isLoading,
       isLastPage,
       error,
-      loadMore,
+      loadMore
     });
   }
 }

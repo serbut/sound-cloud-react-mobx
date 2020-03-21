@@ -1,6 +1,6 @@
-import React, { Component } from 'react';
-import {IconButton} from '@material-ui/core';
-import {KeyboardArrowUp} from '@material-ui/icons';
+import React, { Component } from "react";
+import { IconButton } from "@material-ui/core";
+import { KeyboardArrowUp } from "@material-ui/icons";
 
 class ScrollToTopBtn extends Component {
   state = {
@@ -8,18 +8,18 @@ class ScrollToTopBtn extends Component {
   };
 
   componentDidMount() {
-    window.addEventListener('scroll', this.handleScroll);
+    window.addEventListener("scroll", this.handleScroll);
   }
 
   componentWillUnmount() {
-    window.removeEventListener('scroll', this.handleScroll);
+    window.removeEventListener("scroll", this.handleScroll);
   }
 
   handleScroll = () => {
     if (window.pageYOffset > 1000) {
-      this.setState({scrollToTopVisible: true});
+      this.setState({ scrollToTopVisible: true });
     } else {
-      this.setState({scrollToTopVisible: false});
+      this.setState({ scrollToTopVisible: false });
     }
   };
 
@@ -30,9 +30,9 @@ class ScrollToTopBtn extends Component {
   render() {
     if (this.state.scrollToTopVisible)
       return (
-        <div className='scroll-to-top-btn'>
-          <IconButton color='primary' onClick={this.handleScrollToTopClick}>
-            <KeyboardArrowUp/>
+        <div className="scroll-to-top-btn">
+          <IconButton color="primary" onClick={this.handleScrollToTopClick}>
+            <KeyboardArrowUp />
           </IconButton>
         </div>
       );

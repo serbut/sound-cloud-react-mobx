@@ -1,5 +1,5 @@
-export const SCROLL_DIRECTION_BACKWARD = -1
-export const SCROLL_DIRECTION_FORWARD = 1
+export const SCROLL_DIRECTION_BACKWARD = -1;
+export const SCROLL_DIRECTION_FORWARD = 1;
 
 /**
  * Calculates the number of cells to overscan before and after a specified range.
@@ -11,9 +11,15 @@ export const SCROLL_DIRECTION_FORWARD = 1
  * @param startIndex Begin of range of visible cells
  * @param stopIndex End of range of visible cells
  */
-export default function defaultOverscanIndicesGetter({ cellCount, overscanCellsCount, scrollDirection, startIndex, stopIndex }) {
-  let overscanStartIndex
-  let overscanStopIndex
+export default function defaultOverscanIndicesGetter({
+  cellCount,
+  overscanCellsCount,
+  scrollDirection,
+  startIndex,
+  stopIndex
+}) {
+  let overscanStartIndex;
+  let overscanStopIndex;
 
   // switch (scrollDirection) {
   //   case SCROLL_DIRECTION_FORWARD:
@@ -26,11 +32,11 @@ export default function defaultOverscanIndicesGetter({ cellCount, overscanCellsC
   //     break
   // }
 
-  overscanStartIndex = startIndex - overscanCellsCount
-  overscanStopIndex = stopIndex + overscanCellsCount
+  overscanStartIndex = startIndex - overscanCellsCount;
+  overscanStopIndex = stopIndex + overscanCellsCount;
 
   return {
     overscanStartIndex: Math.max(0, overscanStartIndex),
     overscanStopIndex: Math.min(cellCount - 1, overscanStopIndex)
-  }
+  };
 }

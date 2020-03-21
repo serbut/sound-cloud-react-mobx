@@ -1,7 +1,6 @@
-import React from 'react';
+import React from "react";
 
 export default class Callback extends React.Component {
-
   componentDidMount() {
     window.setTimeout(opener.SC.connectCallback, 1);
   }
@@ -9,9 +8,7 @@ export default class Callback extends React.Component {
   render() {
     return (
       <div>
-        <p>
-          This page should close soon.
-        </p>
+        <p>This page should close soon.</p>
       </div>
     );
   }
