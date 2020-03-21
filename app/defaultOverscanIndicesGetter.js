@@ -12,31 +12,31 @@ export const SCROLL_DIRECTION_FORWARD = 1;
  * @param stopIndex End of range of visible cells
  */
 export default function defaultOverscanIndicesGetter({
-  cellCount,
-  overscanCellsCount,
-  scrollDirection,
-  startIndex,
-  stopIndex
+    cellCount,
+    overscanCellsCount,
+    scrollDirection,
+    startIndex,
+    stopIndex,
 }) {
-  let overscanStartIndex;
-  let overscanStopIndex;
+    let overscanStartIndex;
+    let overscanStopIndex;
 
-  // switch (scrollDirection) {
-  //   case SCROLL_DIRECTION_FORWARD:
-  //     overscanStartIndex = startIndex
-  //     overscanStopIndex = stopIndex + overscanCellsCount
-  //     break
-  //   case SCROLL_DIRECTION_BACKWARD:
-  //     overscanStartIndex = startIndex - overscanCellsCount
-  //     overscanStopIndex = stopIndex
-  //     break
-  // }
+    // switch (scrollDirection) {
+    //   case SCROLL_DIRECTION_FORWARD:
+    //     overscanStartIndex = startIndex
+    //     overscanStopIndex = stopIndex + overscanCellsCount
+    //     break
+    //   case SCROLL_DIRECTION_BACKWARD:
+    //     overscanStartIndex = startIndex - overscanCellsCount
+    //     overscanStopIndex = stopIndex
+    //     break
+    // }
 
-  overscanStartIndex = startIndex - overscanCellsCount;
-  overscanStopIndex = stopIndex + overscanCellsCount;
+    overscanStartIndex = startIndex - overscanCellsCount;
+    overscanStopIndex = stopIndex + overscanCellsCount;
 
-  return {
-    overscanStartIndex: Math.max(0, overscanStartIndex),
-    overscanStopIndex: Math.min(cellCount - 1, overscanStopIndex)
-  };
+    return {
+        overscanStartIndex: Math.max(0, overscanStartIndex),
+        overscanStopIndex: Math.min(cellCount - 1, overscanStopIndex),
+    };
 }
