@@ -3,11 +3,10 @@ import {observer} from 'mobx-react';
 import React from 'react';
 import {InfiniteLoader, List, WindowScroller} from 'react-virtualized';
 import overscanIndicesGetter from '../defaultOverscanIndicesGetter.js';
+import Error from './Error';
 import PlaylistCard from './Playlist/PlaylistCard';
 import TrackCard from './Track/TrackCard';
-// import PlaylistCard from './Playlist/PlaylistCard';
-// import UserCard from './User/UserCard';
-import Error from './Error';
+import UserCard from './User/UserCard';
 
 const CELL_HEIGHT = 316;
 const CELL_WIDTH = 216;
@@ -69,10 +68,10 @@ const DataGrid = ({ data, isLoading, isLastPage, error, loadMore }) => {
       <div key={key} style={{ ...style, ...rowStyle }}>
         {rowData.map((item) =>
           <div key={item.id} className='animated fadeIn' style={cellStyle}>
-            {/*{item.kind === 'user' ? <UserCard user={item} /> :*/}
-            {item.kind === 'playlist' ? <PlaylistCard playlist={item} /> :
-              item.kind === 'track' ? <TrackCard track={item} tracks={data} /> :
-                null
+            {item.kind === 'user' ? <UserCard user={item} /> :
+              item.kind === 'playlist' ? <PlaylistCard playlist={item} /> :
+                item.kind === 'track' ? <TrackCard track={item} tracks={data} /> :
+                  null
             }
           </div>
         )}
