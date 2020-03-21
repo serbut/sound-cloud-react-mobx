@@ -7,6 +7,7 @@ import Callback from './components/Callback';
 import Explore from './components/Explore';
 import PageNotFound from './components/PageNotFound';
 import Track from './components/Track/Track';
+import User from './components/User/User';
 import playerStore from './stores/player-store';
 import sessionStore from './stores/session-store';
 // import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
@@ -52,15 +53,11 @@ class App extends React.Component {
                 <Explore/>
               </Route>
               {/*<Route path='search' component={Search} />*/}
-              {/*<Route path='users/:user' component={User}>*/}
-              {/*  <Route path='tracks' component={UserTracks} />*/}
-              {/*  <Route path='playlists' component={UserPlaylists} />*/}
-              {/*  <Route path='likes' component={UserLikes} />*/}
-              {/*  <Route path='followings' component={UserFollowings} />*/}
-              {/*  <Route path='about' component={UserAbout} />*/}
-              {/*</Route>*/}
               <Route path='/users/:user/tracks/:track'>
                 <Track/>
+              </Route>
+              <Route path='/users/:user'>
+                <User/>
               </Route>
               {/*<Route path='users/:user/playlists/:playlist' component={Playlist} />*/}
               <Route path='*'>
