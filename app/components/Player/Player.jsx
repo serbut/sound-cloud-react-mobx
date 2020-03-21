@@ -1,17 +1,14 @@
-import React from 'react';
+import {Button, CircularProgress, IconButton, LinearProgress, Typography} from '@material-ui/core';
+import {Favorite, PlayArrow, QueueMusic, Repeat, Shuffle, SkipNext, SkipPrevious, Pause} from '@material-ui/icons'
 import {autorun} from 'mobx';
 import {inject, observer} from 'mobx-react';
-import {Link} from 'react-router';
-import Button from 'material-ui/Button';
-import IconButton from 'material-ui/IconButton';
-import Icon from 'material-ui/Icon';
-import {CircularProgress, LinearProgress} from 'material-ui/Progress';
-import Text from 'material-ui/Text';
+import React from 'react';
+import {Link} from 'react-router-dom';
+import {formatStreamUrl} from '../../api';
+import {getImageUrl} from '../../utils';
 import './Player.less';
 import PlayerQueue from './PlayerQueue';
 import VolumeControl from './VolumeControl';
-import {getImageUrl} from '../../utils';
-import {formatStreamUrl} from '../../api';
 
 @inject('sessionStore', 'viewStore', 'playerStore') @observer
 export default class Player extends React.Component {
@@ -82,7 +79,7 @@ export default class Player extends React.Component {
   onQueueClick = e => {
     e.stopPropagation();
     this.props.viewStore.togglePlaylist(e);
-  }
+  };
 
   render() {
     const { viewStore, sessionStore, playerStore: store, playerStore: { track } } = this.props;
@@ -97,7 +94,7 @@ export default class Player extends React.Component {
 
     return (
       <div className='player'>
-        <LinearProgress mode="determinate" value={progressPercent} className='player__progress-bar' />
+        <LinearProgress variant="determinate" value={progressPercent} className='player__progress-bar' />
         {/*onChange={(e, value) => store.setProgress(value)}*/}
 
         {/*<div className='player__bg-progress'
@@ -113,32 +110,33 @@ export default class Player extends React.Component {
           <div className='player__group player__group--left'>
             <img className='player__track-artwork' src={getImageUrl(track.artwork_url)} width={64} height={64} />
             <div className='player__track-details'>
-              <Text type='subheading' noWrap>
-                <Link to={`/users/${track.user.permalink}/tracks/${track.permalink}`}
-                  title={track.title} className='link'>{track.title}</Link>
-              </Text>
-              <Text type='body1' noWrap secondary>
+              <Typography variant='subtitle2' noWrap>
+                <Link to={`/users/${track.user.permalink}/tracks/${track.permalink}`} title={track.title} className='link'>
+                  {track.title}
+                </Link>
+              </Typography>
+              <Typography variant='subtitle1' noWrap>
                 <Link to={`/users/${track.user.permalink}`} className='link'>{track.user.username}</Link>
-              </Text>
+              </Typography>
             </div>
           </div>
 
           <div className='player__group player__group--center'>
-            <IconButton accent={sessionStore.isLiked(track)}
-              onTouchTap={() => sessionStore.toggleLike(track)}>favorite</IconButton>
-            <IconButton accent={store.loop} onTouchTap={() => store.toggleLoop()}>repeat</IconButton>
-            <IconButton disabled={!store.queue.prevTrack} onTouchTap={() => store.playPrev()}>skip_previous</IconButton>
-            <Button fab primary onTouchTap={() => store.playTrack()} className='player__play-btn'>
-              {store.isPlaying ? <Icon>pause</Icon> : <Icon>play_arrow</Icon>}
-            </Button>
-            <IconButton disabled={!store.queue.nextTrack} onTouchTap={() => store.playNext()}>skip_next</IconButton>
-            <IconButton accent={store.shuffle} onTouchTap={() => store.toggleShuffle()}>shuffle</IconButton>
+            <IconButton color={sessionStore.isLiked(track) ? 'primary' : 'default'}
+              onClick={() => sessionStore.toggleLike(track)}><Favorite/></IconButton>
+            <IconButton color={store.loop ? 'primary' : 'default'} onClick={() => store.toggleLoop()}><Repeat/></IconButton>
+            <IconButton disabled={!store.queue.prevTrack} onClick={() => store.playPrev()}><SkipPrevious/></IconButton>
+            <IconButton color='primary' onClick={() => store.playTrack()}>
+              {store.isPlaying ? <Pause/> : <PlayArrow/>}
+            </IconButton>
+            <IconButton disabled={!store.queue.nextTrack} onClick={() => store.playNext()}><SkipNext/></IconButton>
+            <IconButton color={store.shuffle ? 'primary' : 'default'} onClick={() => store.toggleShuffle()}><Shuffle/></IconButton>
           </div>
 
           <div className='player__group player__group--right'>
             <VolumeControl />
 
-            <IconButton accent={viewStore.playlistOpen} onClick={this.onQueueClick}>queue_music</IconButton>
+            <IconButton color={viewStore.playlistOpen ? 'primary' : 'default'} onClick={this.onQueueClick}><QueueMusic/></IconButton>
             <PlayerQueue />
           </div>
         </div>

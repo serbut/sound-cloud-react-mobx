@@ -6,6 +6,8 @@ import AppBar from './components/AppBar';
 import Callback from './components/Callback';
 import Explore from './components/Explore';
 import PageNotFound from './components/PageNotFound';
+// import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+import Player from './components/Player/Player';
 import Playlist from './components/Playlist/Playlist';
 import Search from './components/Search/Search';
 import Stream from './components/Stream';
@@ -13,8 +15,6 @@ import Track from './components/Track/Track';
 import User from './components/User/User';
 import playerStore from './stores/player-store';
 import sessionStore from './stores/session-store';
-// import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-// import Player from './components/Player/Player';
 // import ScrollToTopBtn from './components/ScrollToTopBtn';
 import viewStore from './stores/view-store';
 
@@ -76,7 +76,7 @@ class App extends React.Component {
               </Route>
             </Switch>
 
-            {/*<Player />*/}
+            <Player />
             {/*<ScrollToTopBtn />*/}
           </div>
         </Provider>
