@@ -7,7 +7,14 @@ import TrackHeader from './TrackHeader';
 
 const TrackView = ({ track, history }) => {
   const handleTagClick = (q) => {
-    history.push({ pathname: `/search`, query: { q, where: 'tracks' } });
+    const searchParams = new URLSearchParams();
+    searchParams.append('q', q);
+    searchParams.append('where', 'tracks');
+
+    history.push({
+      pathname: `/search`,
+      search: searchParams.toString()
+    });
   };
 
   return <div className='animated fadeIn'>

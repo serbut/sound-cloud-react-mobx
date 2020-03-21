@@ -1,6 +1,5 @@
 import {Paper, Tab, Tabs} from '@material-ui/core'
 import {observer} from 'mobx-react';
-import {parse, stringify} from 'query-string';
 import React, {useEffect} from 'react';
 import {useHistory, useLocation} from 'react-router-dom';
 import {getSearchTracksByTagRequest} from '../api';
@@ -29,24 +28,30 @@ for (var key in GENRES_MAP) {
 const Explore = ({}) => {
   const history = useHistory();
   const location =  useLocation();
-  const genre = parse(location.search).genre;
+  const genre = new URLSearchParams(location.search).get('genre');
   const currentTabIndex = GENRES_LIST.indexOf(genre);
   const {url, params: requestParams} = getSearchTracksByTagRequest(genre);
 
   useEffect(() => {
     // TODO: somehow improve this maybe?
+    const searchParams = new URLSearchParams();
+    searchParams.append('genre', GENRES_LIST[0]);
+
     if (!genre) {
       history.replace({
         path: '/explore',
-        search: stringify({genre: GENRES_LIST[0]})
+        search: searchParams.toString()
       });
     }
   }, []);
 
   const handleChange = (e, i) => {
+    const searchParams = new URLSearchParams();
+    searchParams.append('genre', GENRES_LIST[i]);
+
     history.push({
       pathname: '/explore',
-      search: stringify({genre: GENRES_LIST[i]})
+      search: searchParams.toString()
     });
   };
 
