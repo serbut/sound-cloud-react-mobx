@@ -6,6 +6,7 @@ import AppBar from './components/AppBar';
 import Callback from './components/Callback';
 import Explore from './components/Explore';
 import PageNotFound from './components/PageNotFound';
+import Track from './components/Track/Track';
 import playerStore from './stores/player-store';
 import sessionStore from './stores/session-store';
 // import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
@@ -58,7 +59,9 @@ class App extends React.Component {
               {/*  <Route path='followings' component={UserFollowings} />*/}
               {/*  <Route path='about' component={UserAbout} />*/}
               {/*</Route>*/}
-              {/*<Route path='users/:user/tracks/:track' component={Track} />*/}
+              <Route path='/users/:user/tracks/:track'>
+                <Track/>
+              </Route>
               {/*<Route path='users/:user/playlists/:playlist' component={Playlist} />*/}
               <Route path='*'>
                 <PageNotFound/>
