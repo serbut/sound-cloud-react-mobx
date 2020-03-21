@@ -15,7 +15,7 @@ const TrackHeader = ({ track, sessionStore }) => {
       </div>
       <div className='track-header__details'>
         <Typography variant='h5'>Single</Typography>
-        <Typography variant='h4'>{track.title}</Typography>
+        <Typography variant='h4' gutterBottom>{track.title}</Typography>
         <Typography variant="subtitle1">by <Link to={`/users/${user.permalink}`} className='link link--blue'>{user.username}</Link></Typography>
         <Typography variant='body1' gutterBottom>
           added {fromNow(track.created_at)} <span className='bullet'>&bull;</span>
