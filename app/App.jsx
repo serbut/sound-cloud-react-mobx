@@ -6,6 +6,7 @@ import AppBar from './components/AppBar';
 import Callback from './components/Callback';
 import Explore from './components/Explore';
 import PageNotFound from './components/PageNotFound';
+import Playlist from './components/Playlist/Playlist';
 import Search from './components/Search/Search';
 import Stream from './components/Stream';
 import Track from './components/Track/Track';
@@ -64,10 +65,12 @@ class App extends React.Component {
               <Route path='/users/:user/tracks/:track'>
                 <Track/>
               </Route>
+              <Route path='/users/:user/playlists/:playlist'>
+                <Playlist/>
+              </Route>
               <Route path='/users/:user'>
                 <User/>
               </Route>
-              {/*<Route path='users/:user/playlists/:playlist' component={Playlist} />*/}
               <Route path='*'>
                 <PageNotFound/>
               </Route>
