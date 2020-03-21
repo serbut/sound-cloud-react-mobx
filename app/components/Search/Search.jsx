@@ -1,14 +1,18 @@
-import React, {Component} from 'react';
+import {Typography} from '@material-ui/core';
+import {action, observable} from 'mobx';
 import {observer} from 'mobx-react';
-import Text from 'material-ui/Text';
-import DataGrid from '../DataGrid';
-import DataLoader from '../../hoc/DataLoader';
-import {observable} from 'mobx';
+import React, {Component} from 'react';
+import {withRouter} from 'react-router-dom';
 import {getSearchTracksByTagRequest, getSearchTracksRequest, getSearchUsersRequest} from '../../api';
+import DataLoader from '../../hoc/DataLoader';
+import DataGrid from '../DataGrid';
 
+// TODO: fix search by tag
 @observer
 class Search extends Component {
-  @observable request;
+  @observable request = {};
+  @observable query = '';
+  @observable where = '';
 
   componentDidMount() {
     this.handlePropsChange();
@@ -20,8 +24,11 @@ class Search extends Component {
     }
   }
 
-  handlePropsChange() {
-    const { query: { q: query, where } } = this.props.location;
+  @action handlePropsChange() {
+    const { search } = this.props.location;
+    const searchParams = new URLSearchParams(search);
+    const query = this.query = searchParams.get('q');
+    const where = this.where = searchParams.get('where');
 
     if (query.charAt(0) === '#') {
       this.request = getSearchTracksByTagRequest(query.slice(1));
@@ -33,24 +40,18 @@ class Search extends Component {
   }
 
   render() {
-    const { location } = this.props;
-    const query = location.query.q;
-    const isTag = query.charAt(0) === '#';
-    const isUser = !isTag && location.query.where === 'users';
-    const isTrack = !isTag && location.query.where === 'tracks';
-
-    if (!this.request) {
-      return null;
-    }
+    const isTag = this.query.charAt(0) === '#';
+    const isUser = !isTag && this.where === 'users';
+    const isTrack = !isTag && this.where === 'tracks';
 
     return (
       <div className="container">
-        <Text type='display1' style={{ margin: '70px 0 20px 0' }}>
-          Results for <span style={{ color: '#3f51b5' }}>{query}</span>
-          {isTag && ' tag'}
-          {isUser && ' in users'}
-          {isTrack && ' in tracks'}
-        </Text>
+        <Typography variant='h3' style={{ margin: '70px 0 20px 0' }}>
+          Results for <span style={{ color: '#3f51b5' }}>{this.query}</span>
+          {isTag && ' tag:'}
+          {isUser && ' in users:'}
+          {isTrack && ' in tracks:'}
+        </Typography>
 
         <DataLoader
           url={this.request.url}
@@ -64,4 +65,4 @@ class Search extends Component {
   }
 }
 
-export default Search;
+export default withRouter(Search);

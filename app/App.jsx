@@ -6,6 +6,8 @@ import AppBar from './components/AppBar';
 import Callback from './components/Callback';
 import Explore from './components/Explore';
 import PageNotFound from './components/PageNotFound';
+import Search from './components/Search/Search';
+import Stream from './components/Stream';
 import Track from './components/Track/Track';
 import User from './components/User/User';
 import playerStore from './stores/player-store';
@@ -47,12 +49,18 @@ class App extends React.Component {
 
             <Route exact path="/" render={() => (<Redirect to="/explore" />)} />
             <Switch>
-              <Route path='/callback' component={Callback} />
-              {/*<Route path='stream' component={Stream} />*/}
+              <Route path='/callback'>
+                <Callback/>
+              </Route>
+              <Route path='/stream'>
+                <Stream/>
+              </Route>
               <Route path='/explore'>
                 <Explore/>
               </Route>
-              {/*<Route path='search' component={Search} />*/}
+              <Route path='/search'>
+                <Search/>
+              </Route>
               <Route path='/users/:user/tracks/:track'>
                 <Track/>
               </Route>
