@@ -15,6 +15,12 @@ class ViewState {
   togglePlaylist() {
     this.playlistOpen = !this.playlistOpen;
   }
+
+  temprorarilyShowVolumeControl() {
+    this.volumeControlOpen = true;
+    clearTimeout(this._timerId);
+    this._timerId = setTimeout(() => (this.volumeControlOpen = false), 1000);
+  }
 }
 
 export default new ViewState();

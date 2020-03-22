@@ -1,4 +1,3 @@
-import key from 'keymaster';
 import { observer, Provider } from 'mobx-react';
 import React from 'react';
 import { hot } from 'react-hot-loader/root';
@@ -20,45 +19,16 @@ import Search from './components/Search/Search';
 import Stream from './components/Stream';
 import Track from './components/Track/Track';
 import User from './components/User/User';
+import AudioService from './services/AudioService';
+import KeyboardShortcutsService from './services/KeyboardShortcutsService';
 import playerStore from './stores/player-store';
 import sessionStore from './stores/session-store';
 import viewStore from './stores/view-store';
 
 class App extends React.Component {
   componentDidMount() {
-    key('space', e => {
-      e.preventDefault();
-      playerStore.playTrack();
-    });
-    key('right', () => playerStore.stepForward());
-    key('left', () => playerStore.stepBackward());
-    key('shift+right', () => playerStore.playNext());
-    key('shift+left', () => playerStore.playPrev());
-    key('shift+up', () => {
-      playerStore.increaseVolume();
-      this.showVolumeControl();
-    });
-    key('shift+down', () => {
-      playerStore.decreaseVolume();
-      this.showVolumeControl();
-    });
-    key('shift+l', () => playerStore.toggleLoop());
-    key('m', () => {
-      playerStore.toggleMuted();
-      this.showVolumeControl();
-    });
-    key('s', () => playerStore.toggleShuffle());
-    key('l', () => sessionStore.toggleLike(playerStore.track));
-    key('p', () => viewStore.togglePlaylist());
-  }
-
-  showVolumeControl() {
-    viewStore.volumeControlOpen = true;
-    clearTimeout(this._timerId);
-    this._timerId = setTimeout(
-      () => (viewStore.volumeControlOpen = false),
-      1000
-    );
+    new AudioService(playerStore);
+    new KeyboardShortcutsService(playerStore, viewStore, sessionStore);
   }
 
   render() {
