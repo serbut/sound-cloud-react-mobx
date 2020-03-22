@@ -1,23 +1,19 @@
-import { extendObservable } from 'mobx';
+import { observable } from 'mobx';
 
 class ViewState {
-  constructor() {
-    extendObservable(this, {
-      title: '',
-      playlistOpen: false,
-      volumeControlOpen: false,
-      drawerOpen: false,
-    });
+  @observable playlistOpen = false;
+  @observable volumeControlOpen = false;
 
-    window.addEventListener('click', () => (this.playlistOpen = false));
+  constructor() {
+    window.addEventListener('click', () => {
+      if (this.playlistOpen) {
+        this.playlistOpen = false;
+      }
+    });
   }
 
   togglePlaylist() {
     this.playlistOpen = !this.playlistOpen;
-  }
-
-  toggleDrawer() {
-    this.drawerOpen = !this.drawerOpen;
   }
 }
 
