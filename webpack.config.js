@@ -10,14 +10,23 @@ module.exports = {
   output: {
     path: path.resolve(__dirname, 'dist'),
     publicPath: '',
-    filename: 'bundle.js'
+    filename: 'bundle.js',
   },
   module: {
     rules: [
       {
+        enforce: 'pre',
         test: /\.(js|jsx)$/,
-        loader: 'babel-loader',
-        exclude: /node_modules/
+        exclude: /node_modules/,
+        loader: 'eslint-loader',
+        options: {
+          cache: true,
+        },
+      },
+      {
+        test: /\.(js|jsx)$/,
+        exclude: /node_modules/,
+        use: 'babel-loader',
       },
       {
         test: /\.(css|less)$/,
@@ -27,46 +36,55 @@ module.exports = {
             loader: 'css-loader',
             options: {
               sourceMap: true,
-              importLoaders: 1
-            }
+              importLoaders: 1,
+            },
           },
           {
             loader: 'less-loader',
             options: {
-              sourceMap: true
-            }
-          }
-        ]
+              sourceMap: true,
+            },
+          },
+        ],
       },
       {
         test: /\.(png|jpg|gif|svg)$/,
         loader: 'file-loader',
         options: {
-          name: '[name].[ext]?[hash]'
-        }
-      }
-    ]
+          name: '[name].[ext]?[hash]',
+        },
+      },
+    ],
   },
   plugins: [
     new webpack.DllReferencePlugin({
       context: __dirname,
-      manifest: require('./dist/vendor-manifest.json')
+      manifest: require('./dist/vendor-manifest.json'),
     }),
     new HtmlWebpackPlugin({
       inject: true,
       template: 'app/index.html',
-      baseUrl: process.env.NODE_ENV === 'production' ? process.env.npm_package_homepage : '/'
+      baseUrl:
+        process.env.NODE_ENV === 'production'
+          ? process.env.npm_package_homepage
+          : '/',
     }),
-    new AddAssetHtmlPlugin({ filepath: path.resolve(__dirname, 'dist/vendor.js') }),
+    new AddAssetHtmlPlugin({
+      filepath: path.resolve(__dirname, 'dist/vendor.js'),
+    }),
     new webpack.DefinePlugin({
       'process.env': {
         NODE_ENV: JSON.stringify(process.env.NODE_ENV),
-        HOMEPAGE: JSON.stringify(process.env.NODE_ENV === 'production' ? process.env.npm_package_homepage : '/')
-      }
-    })
+        HOMEPAGE: JSON.stringify(
+          process.env.NODE_ENV === 'production'
+            ? process.env.npm_package_homepage
+            : '/'
+        ),
+      },
+    }),
   ],
   resolve: {
-    extensions: ['.js', '.jsx']
+    extensions: ['.js', '.jsx'],
   },
   devServer: {
     historyApiFallback: true,
@@ -79,20 +97,19 @@ module.exports = {
       chunkModules: false,
       modules: false,
     },
-    contentBase: 'dist'
+    contentBase: 'dist',
   },
   performance: {
-    hints: false
+    hints: false,
   },
-  devtool: 'source-map'
+  devtool: 'source-map',
 };
-
 
 if (process.env.NODE_ENV === 'production') {
   module.exports.mode = 'production';
   module.exports.devtool = 'source-map';
   module.exports.plugins = (module.exports.plugins || []).concat([
-    new MiniCssExtractPlugin()
+    new MiniCssExtractPlugin(),
   ]);
   module.exports.module.rules[1] = {
     test: /\.(css|less)$/,
@@ -102,15 +119,15 @@ if (process.env.NODE_ENV === 'production') {
         loader: 'css-loader',
         options: {
           sourceMap: true,
-          importLoaders: 1
-        }
+          importLoaders: 1,
+        },
       },
       {
         loader: 'less-loader',
         options: {
-          sourceMap: true
-        }
-      }
-    ]
-  }
+          sourceMap: true,
+        },
+      },
+    ],
+  };
 }

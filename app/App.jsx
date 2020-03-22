@@ -3,11 +3,12 @@ import { observer, Provider } from 'mobx-react';
 import React from 'react';
 import { hot } from 'react-hot-loader/root';
 import {
-    BrowserRouter as Router,
-    Redirect,
-    Route,
-    Switch,
+  BrowserRouter as Router,
+  Redirect,
+  Route,
+  Switch,
 } from 'react-router-dom';
+
 import AppBar from './components/AppBar';
 import Callback from './components/Callback';
 import Explore from './components/Explore';
@@ -24,93 +25,89 @@ import sessionStore from './stores/session-store';
 import viewStore from './stores/view-store';
 
 class App extends React.Component {
-    componentDidMount() {
-        key('space', e => {
-            e.preventDefault();
-            playerStore.playTrack();
-        });
-        key('right', () => playerStore.stepForward());
-        key('left', () => playerStore.stepBackward());
-        key('shift+right', () => playerStore.playNext());
-        key('shift+left', () => playerStore.playPrev());
-        key('shift+up', () => {
-            playerStore.increaseVolume();
-            this.showVolumeControl();
-        });
-        key('shift+down', () => {
-            playerStore.decreaseVolume();
-            this.showVolumeControl();
-        });
-        key('shift+l', () => playerStore.toggleLoop());
-        key('m', () => {
-            playerStore.toggleMuted();
-            this.showVolumeControl();
-        });
-        key('s', () => playerStore.toggleShuffle());
-        key('l', () => sessionStore.toggleLike(playerStore.track));
-        key('p', () => viewStore.togglePlaylist());
-    }
+  componentDidMount() {
+    key('space', e => {
+      e.preventDefault();
+      playerStore.playTrack();
+    });
+    key('right', () => playerStore.stepForward());
+    key('left', () => playerStore.stepBackward());
+    key('shift+right', () => playerStore.playNext());
+    key('shift+left', () => playerStore.playPrev());
+    key('shift+up', () => {
+      playerStore.increaseVolume();
+      this.showVolumeControl();
+    });
+    key('shift+down', () => {
+      playerStore.decreaseVolume();
+      this.showVolumeControl();
+    });
+    key('shift+l', () => playerStore.toggleLoop());
+    key('m', () => {
+      playerStore.toggleMuted();
+      this.showVolumeControl();
+    });
+    key('s', () => playerStore.toggleShuffle());
+    key('l', () => sessionStore.toggleLike(playerStore.track));
+    key('p', () => viewStore.togglePlaylist());
+  }
 
-    showVolumeControl() {
-        viewStore.volumeControlOpen = true;
-        clearTimeout(this._timerId);
-        this._timerId = setTimeout(
-            () => (viewStore.volumeControlOpen = false),
-            1000
-        );
-    }
+  showVolumeControl() {
+    viewStore.volumeControlOpen = true;
+    clearTimeout(this._timerId);
+    this._timerId = setTimeout(
+      () => (viewStore.volumeControlOpen = false),
+      1000
+    );
+  }
 
-    render() {
-        return (
-            // TODO: refactor to use context
-            <Provider
-                playerStore={playerStore}
-                viewStore={viewStore}
-                sessionStore={sessionStore}
-            >
-                <Router>
-                    <div style={{ paddingBottom: playerStore.track ? 64 : 0 }}>
-                        <AppBar />
+  render() {
+    return (
+      // TODO: refactor to use context
+      <Provider
+        playerStore={playerStore}
+        viewStore={viewStore}
+        sessionStore={sessionStore}
+      >
+        <Router>
+          <div style={{ paddingBottom: playerStore.track ? 64 : 0 }}>
+            <AppBar />
 
-                        <Route
-                            exact
-                            path="/"
-                            render={() => <Redirect to="/explore" />}
-                        />
-                        <Switch>
-                            <Route path="/callback">
-                                <Callback />
-                            </Route>
-                            <Route path="/stream">
-                                <Stream />
-                            </Route>
-                            <Route path="/explore">
-                                <Explore />
-                            </Route>
-                            <Route path="/search">
-                                <Search />
-                            </Route>
-                            <Route path="/users/:user/tracks/:track">
-                                <Track />
-                            </Route>
-                            <Route path="/users/:user/playlists/:playlist">
-                                <Playlist />
-                            </Route>
-                            <Route path="/users/:user">
-                                <User />
-                            </Route>
-                            <Route path="*">
-                                <PageNotFound />
-                            </Route>
-                        </Switch>
+            <Route exact path="/" render={() => <Redirect to="/explore" />} />
+            <Switch>
+              <Route path="/callback">
+                <Callback />
+              </Route>
+              <Route path="/stream">
+                <Stream />
+              </Route>
+              <Route path="/explore">
+                <Explore />
+              </Route>
+              <Route path="/search">
+                <Search />
+              </Route>
+              <Route path="/users/:user/tracks/:track">
+                <Track />
+              </Route>
+              <Route path="/users/:user/playlists/:playlist">
+                <Playlist />
+              </Route>
+              <Route path="/users/:user">
+                <User />
+              </Route>
+              <Route path="*">
+                <PageNotFound />
+              </Route>
+            </Switch>
 
-                        <Player />
-                        <ScrollToTopBtn />
-                    </div>
-                </Router>
-            </Provider>
-        );
-    }
+            <Player />
+            <ScrollToTopBtn />
+          </div>
+        </Router>
+      </Provider>
+    );
+  }
 }
 
 export default hot(observer(App));

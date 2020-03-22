@@ -1,19 +1,19 @@
-import React from 'react';
 import { Button, Typography } from '@material-ui/core';
+import React from 'react';
 
 const Error = ({ children }) => {
-    const handleClick = () => {
-        location.reload();
-    };
+  const handleClick = () => {
+    location.reload();
+  };
 
-    return (
-        <div>
-            <Typography variant="h2" color="error" gutterBottom>
-                {children}
-            </Typography>
-            <Button onClick={handleClick}>Reload page</Button>
-        </div>
-    );
+  return (
+    <div>
+      <Typography variant="h2" color="error" gutterBottom>
+        {children}
+      </Typography>
+      <Button onClick={handleClick}>Reload page</Button>
+    </div>
+  );
 };
 
 export default Error;
