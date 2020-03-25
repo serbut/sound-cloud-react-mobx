@@ -9,8 +9,3 @@ import ReactDOM from 'react-dom';
 import App from './App';
 
 ReactDOM.render(<App />, document.getElementById('root'));
-
-// TODO: add eslint & prettier
-// TODO: use Mobx in strict mode (useStrict)
-// TODO: refactor styles
-// TODO: refactor all to Function comps with hooks
