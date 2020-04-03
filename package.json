@@ -1,67 +1,39 @@
 {
-  "name": "sound-cloud-react-mobx",
-  "description": "none",
-  "version": "1.0.0",
-  "author": "none",
+  "name": "sound-cloud-react-mobx-cra",
+  "version": "0.1.0",
   "private": true,
-  "homepage": "https://sbutnko.github.io/sound-cloud-react-mobx/",
-  "scripts": {
-    "prestart": "rimraf dist && npm run dll",
-    "start": "cross-env NODE_ENV=development webpack-dev-server --open --inline --hot",
-    "prebuild": "rimraf dist && npm run dll:prod",
-    "build": "cross-env NODE_ENV=production webpack --progress",
-    "dll": "webpack --config webpack.dll.config.js --progress --mode=development",
-    "dll:prod": "webpack --config webpack.dll.config.js --progress --mode=production",
-    "predeploy": "npm run build",
-    "deploy": "gh-pages -d dist",
-    "lint": "eslint --fix --ext .jsx --ext .js app/"
-  },
   "dependencies": {
-    "@material-ui/core": "^4.9.7",
-    "@material-ui/icons": "^4.9.1",
-    "axios": "^0.19.2",
-    "keymaster": "^1.6.2",
-    "mobx": "^5.15.4",
-    "mobx-react": "^6.1.8",
-    "mobx-utils": "^5.5.5",
-    "moment": "^2.24.0",
-    "normalize.css": "^8.0.1",
-    "query-string": "^6.11.1",
-    "react": "16.13.1",
-    "react-dom": "16.13.1",
-    "react-hot-loader": "^4.12.20",
-    "react-router-dom": "^5.1.2",
-    "react-virtualized": "^9.21.2",
-    "soundcloud": "^3.3.2"
+    "@testing-library/jest-dom": "^4.2.4",
+    "@testing-library/react": "^9.3.2",
+    "@testing-library/user-event": "^7.1.2",
+    "@types/jest": "^24.0.0",
+    "@types/node": "^12.0.0",
+    "@types/react": "^16.9.0",
+    "@types/react-dom": "^16.9.0",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1",
+    "react-scripts": "3.4.1",
+    "typescript": "~3.7.2"
   },
-  "devDependencies": {
-    "@babel/core": "^7.9.0",
-    "@babel/plugin-proposal-class-properties": "^7.8.3",
-    "@babel/plugin-proposal-decorators": "^7.8.3",
-    "@babel/preset-env": "^7.9.0",
-    "@babel/preset-react": "^7.9.1",
-    "add-asset-html-webpack-plugin": "3.1.3",
-    "babel-eslint": "^10.1.0",
-    "babel-loader": "^8.1.0",
-    "cross-env": "^7.0.2",
-    "css-loader": "^3.4.2",
-    "eslint": "^6.8.0",
-    "eslint-config-prettier": "^6.10.1",
-    "eslint-loader": "^3.0.3",
-    "eslint-plugin-prettier": "^3.1.2",
-    "eslint-plugin-react": "^7.19.0",
-    "eslint-plugin-simple-import-sort": "^5.0.2",
-    "file-loader": "^6.0.0",
-    "gh-pages": "^2.2.0",
-    "html-webpack-plugin": "^3.2.0",
-    "less": "^3.11.1",
-    "less-loader": "^5.0.0",
-    "mini-css-extract-plugin": "^0.9.0",
-    "prettier": "1.19.1",
-    "rimraf": "^3.0.2",
-    "style-loader": "^1.1.3",
-    "webpack": "^4.42.0",
-    "webpack-cli": "^3.3.11",
-    "webpack-dev-server": "^3.10.3"
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
   }
 }
