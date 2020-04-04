@@ -1,87 +1,33 @@
 import {
   AppBar,
   Button,
-  fade,
   IconButton,
   InputBase,
-  makeStyles,
   Menu,
   MenuItem,
   Toolbar,
   Typography,
 } from '@material-ui/core';
 import { AccountCircle, Search } from '@material-ui/icons';
-import { inject, observer } from 'mobx-react';
-import React from 'react';
+import { observer } from 'mobx-react';
+import React, { useContext } from 'react';
 import { Link, useHistory, useLocation } from 'react-router-dom';
 
 import { APP_TITLE } from '../config';
+import { StoresContext } from '../stores-context';
+import { useStyles } from './AppBarStyles';
 
-const useStyles = makeStyles((theme) => ({
-  grow: {
-    flexGrow: 1,
-  },
-  title: {
-    marginRight: theme.spacing(2),
-  },
-  link: {
-    display: 'inline-block',
-    color: 'inherit',
-    textDecoration: 'none',
-  },
-  button: {
-    '&$buttonDisabled': {
-      color: '#ffffff60',
-    },
-  },
-  buttonDisabled: {},
-  search: {
-    position: 'relative',
-    borderRadius: theme.shape.borderRadius,
-    backgroundColor: fade(theme.palette.common.white, 0.15),
-    '&:hover': {
-      backgroundColor: fade(theme.palette.common.white, 0.25),
-    },
-    marginRight: theme.spacing(2),
-    marginLeft: 0,
-    width: '100%',
-    [theme.breakpoints.up('sm')]: {
-      marginLeft: theme.spacing(3),
-      width: 'auto',
-    },
-  },
-  searchIcon: {
-    width: theme.spacing(7),
-    height: '100%',
-    position: 'absolute',
-    pointerEvents: 'none',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  inputRoot: {
-    color: 'inherit',
-  },
-  inputInput: {
-    padding: theme.spacing(1, 1, 1, 7),
-    transition: theme.transitions.create('width'),
-    width: '100%',
-    [theme.breakpoints.up('md')]: {
-      width: 200,
-    },
-  },
-}));
-
-const AppBarComponent = ({ sessionStore }) => {
+const AppBarComponent = () => {
+  const { sessionStore } = useContext(StoresContext);
   const classes = useStyles();
   const history = useHistory();
   const { pathname } = useLocation();
-  const [anchorEl, setAnchorEl] = React.useState(null);
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [query, setQuery] = React.useState('');
   const isMenuOpen = Boolean(anchorEl);
   const menuId = 'profile-menu';
 
-  const handleProfileMenuOpen = (event) => {
+  const handleProfileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };
 
@@ -89,7 +35,7 @@ const AppBarComponent = ({ sessionStore }) => {
     setAnchorEl(null);
   };
 
-  const hangleLogin = () => {
+  const handleLogin = () => {
     sessionStore.login().then(() => history.push('/stream'));
   };
 
@@ -98,12 +44,14 @@ const AppBarComponent = ({ sessionStore }) => {
     setAnchorEl(null);
   };
 
-  const handleSearchInputChange = (ev) => {
-    setQuery(ev.target.value);
+  const handleSearchInputChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    setQuery(event.target.value);
   };
 
-  const handleSearchSubmit = (ev) => {
-    ev.preventDefault();
+  const handleSearchSubmit = (event: React.FormEvent) => {
+    event.preventDefault();
 
     if (query.length >= 3) {
       history.push({
@@ -133,7 +81,7 @@ const AppBarComponent = ({ sessionStore }) => {
         >
           Explore
         </Button>
-        {sessionStore.isLoggedIn && (
+        {sessionStore.user && (
           <div>
             <Button
               color="inherit"
@@ -204,7 +152,7 @@ const AppBarComponent = ({ sessionStore }) => {
             </Menu>
           </>
         ) : (
-          <Button color="inherit" onClick={hangleLogin}>
+          <Button color="inherit" onClick={handleLogin}>
             Login
           </Button>
         )}
@@ -213,4 +161,4 @@ const AppBarComponent = ({ sessionStore }) => {
   );
 };
 
-export default inject('sessionStore')(observer(AppBarComponent));
+export default observer(AppBarComponent);

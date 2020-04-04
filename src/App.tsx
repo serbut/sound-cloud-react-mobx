@@ -1,13 +1,7 @@
-import { observer, Provider } from 'mobx-react';
+import { observer } from 'mobx-react';
 import React from 'react';
-import {
-  BrowserRouter as Router,
-  // Redirect,
-  // Route,
-  // Switch,
-} from 'react-router-dom';
-
-// import AppBar from './components/AppBar';
+import { BrowserRouter as Router } from 'react-router-dom';
+import AppBar from './components/AppBar';
 // import Callback from './components/Callback';
 // import Explore from './components/Explore';
 // import PageNotFound from './components/PageNotFound';
@@ -20,9 +14,16 @@ import {
 // import User from './components/User/User';
 import AudioService from './services/AudioService';
 import KeyboardShortcutsService from './services/KeyboardShortcutsService';
+import { StoresContext } from './stores-context';
 import playerStore from './stores/player-store';
 import sessionStore from './stores/session-store';
 import viewStore from './stores/view-store';
+
+const stores = {
+  playerStore,
+  viewStore,
+  sessionStore,
+};
 
 class App extends React.Component {
   componentDidMount() {
@@ -32,16 +33,10 @@ class App extends React.Component {
 
   render() {
     return (
-      // TODO: refactor to use context
-      <Provider
-        playerStore={playerStore}
-        viewStore={viewStore}
-        sessionStore={sessionStore}
-      >
+      <StoresContext.Provider value={stores}>
         <Router>
           <div style={{ paddingBottom: playerStore.track ? 64 : 0 }}>
-            <h1>Test</h1>
-            {/*<AppBar />*/}
+            <AppBar />
 
             {/*<Route exact path="/" render={() => <Redirect to="/explore" />} />*/}
             {/*<Switch>*/}
@@ -75,7 +70,7 @@ class App extends React.Component {
             {/*<ScrollToTopBtn />*/}
           </div>
         </Router>
-      </Provider>
+      </StoresContext.Provider>
     );
   }
 }
