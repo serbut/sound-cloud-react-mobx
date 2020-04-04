@@ -1,14 +1,17 @@
-import { inject } from 'mobx-react';
-import React from 'react';
+import React, { useContext } from 'react';
 
 import { getUserLikesUrl } from '../../api';
 import DataLoader from '../../hoc/DataLoader';
+import { User } from '../../models/user';
+import { StoresContext } from '../../stores-context';
 import DataGrid from '../DataGrid';
 
-let UserLikes = ({ user, sessionStore }) => {
-  const filterData = (data) => {
+const UserLikes = ({ user }: { user: User }) => {
+  const { sessionStore } = useContext(StoresContext);
+
+  const filterData = (data: any[]) => {
     if (
-      sessionStore.isLoggedIn &&
+      sessionStore.user &&
       user.id === sessionStore.user.id &&
       sessionStore.userLikesIds.length
     ) {
@@ -21,13 +24,12 @@ let UserLikes = ({ user, sessionStore }) => {
   return (
     <DataLoader
       url={getUserLikesUrl(user.id)}
-      render={({ data, ...props }) => (
+      render={({ data, ...props }: { data: any[]; props: any }) => (
+        // @ts-ignore
         <DataGrid data={filterData(data)} {...props} />
       )}
     />
   );
 };
-
-UserLikes = inject('sessionStore')(UserLikes);
 
 export default UserLikes;

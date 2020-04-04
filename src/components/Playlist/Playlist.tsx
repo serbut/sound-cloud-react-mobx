@@ -1,27 +1,28 @@
-import './Playlist.less';
-
 import { CircularProgress } from '@material-ui/core';
 import { action, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import React, { Component } from 'react';
-import { withRouter } from 'react-router-dom';
+import { RouteComponentProps, withRouter } from 'react-router-dom';
 
 import { loadPlaylist } from '../../api';
+import { Playlist } from '../../models/playlist';
 import DataGrid from '../DataGrid';
 import Error from '../Error';
 import PlaylistHeader from './PlaylistHeader';
 
+type Props = RouteComponentProps<{ user: string; playlist: string }>;
+
 @observer
-class Playlist extends Component {
-  @observable playlist;
-  @observable isLoading;
-  @observable error;
+class PlaylistComponent extends Component<Props> {
+  @observable playlist: Playlist | undefined;
+  @observable isLoading: boolean = false;
+  @observable error: string | undefined;
 
   componentDidMount() {
     this.loadPlaylist();
   }
 
-  componentDidUpdate(prevProps) {
+  componentDidUpdate(prevProps: Props) {
     const { user: nextUser, playlist: nextPlaylist } = prevProps.match.params;
     const { user, playlist } = this.props.match.params;
 
@@ -73,7 +74,7 @@ class Playlist extends Component {
 
     return (
       <div>
-        <PlaylistHeader playlist={playlist}></PlaylistHeader>
+        <PlaylistHeader playlist={playlist} />
 
         <div className="container">
           <DataGrid data={playlist.tracks} isLastPage={true} />
@@ -83,4 +84,4 @@ class Playlist extends Component {
   }
 }
 
-export default withRouter(Playlist);
+export default withRouter(PlaylistComponent);

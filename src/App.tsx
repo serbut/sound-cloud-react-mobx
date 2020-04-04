@@ -11,12 +11,12 @@ import Callback from './components/Callback';
 import Explore from './components/Explore';
 import PageNotFound from './components/PageNotFound';
 import Player from './components/Player/Player';
-// import Playlist from './components/Playlist/Playlist';
+import Playlist from './components/Playlist/Playlist';
 import ScrollToTopBtn from './components/ScrollToTopBtn';
-// import Search from './components/Search/Search';
+import Search from './components/Search/Search';
 import Stream from './components/Stream';
 import Track from './components/Track/Track';
-// import User from './components/User/User';
+import User from './components/User/User';
 import AudioService from './services/AudioService';
 import KeyboardShortcutsService from './services/KeyboardShortcutsService';
 import { StoresContext } from './stores-context';
@@ -54,18 +54,18 @@ class App extends React.Component {
               <Route path="/explore">
                 <Explore />
               </Route>
-              {/*  <Route path="/search">*/}
-              {/*    <Search />*/}
-              {/*  </Route>*/}
+              <Route path="/search">
+                <Search />
+              </Route>
               <Route path="/users/:user/tracks/:track">
                 <Track />
               </Route>
-              {/*  <Route path="/users/:user/playlists/:playlist">*/}
-              {/*    <Playlist />*/}
-              {/*  </Route>*/}
-              {/*  <Route path="/users/:user">*/}
-              {/*    <User />*/}
-              {/*  </Route>*/}
+              <Route path="/users/:user/playlists/:playlist">
+                <Playlist />
+              </Route>
+              <Route path="/users/:user">
+                <User />
+              </Route>
               <Route path="*">
                 <PageNotFound />
               </Route>

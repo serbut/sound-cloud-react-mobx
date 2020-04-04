@@ -50,13 +50,13 @@ const DataGrid = ({
   isLoading,
   isLastPage,
   error,
-  loadMore,
+  loadMore = () => {},
 }: {
   data: Array<Track | User | Playlist>;
-  isLoading: boolean;
+  isLoading?: boolean;
   isLastPage: boolean;
-  error: string | null;
-  loadMore: Function;
+  error?: string | null;
+  loadMore?: Function;
 }) => {
   if (!data.length && isLoading) {
     return (

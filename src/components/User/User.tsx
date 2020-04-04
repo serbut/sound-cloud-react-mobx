@@ -1,26 +1,27 @@
-import './User.less';
-
 import { CircularProgress } from '@material-ui/core';
 import { action, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import React from 'react';
-import { withRouter } from 'react-router-dom';
+import { RouteComponentProps, withRouter } from 'react-router-dom';
 
 import { loadUser, loadUserWebProfiles } from '../../api';
+import { User } from '../../models/user';
 import Error from '../Error';
 import UserView from '../User/UserView';
 
+type Props = RouteComponentProps<{ user: string; playlist: string }>;
+
 @observer
-class User extends React.Component {
-  @observable user;
-  @observable isLoading = false;
-  @observable error;
+class UserComponent extends React.Component<Props> {
+  @observable user: User | undefined;
+  @observable isLoading: boolean = false;
+  @observable error: string | undefined;
 
   componentDidMount() {
     this.loadUser();
   }
 
-  componentDidUpdate(prevProps) {
+  componentDidUpdate(prevProps: Props) {
     if (prevProps.match.params.user !== this.props.match.params.user) {
       this.loadUser();
     }
@@ -31,8 +32,8 @@ class User extends React.Component {
 
     loadUser(this.props.match.params.user)
       .then((user) => (this.user = user))
-      .then(() => loadUserWebProfiles(this.user.id))
-      .then((profiles) => (this.user.webProfiles = profiles))
+      .then(() => loadUserWebProfiles((this.user as User).id))
+      .then((profiles) => ((this.user as User).webProfiles = profiles))
       .then(() => (this.isLoading = false))
       .catch(
         action(() => {
@@ -66,9 +67,9 @@ class User extends React.Component {
         user={user}
         history={this.props.history}
         location={this.props.location}
-      ></UserView>
+      />
     );
   }
 }
 
-export default withRouter(User);
+export default withRouter(UserComponent);

@@ -1,19 +1,24 @@
 import { Avatar, Button, Typography } from '@material-ui/core';
-import { inject, observer } from 'mobx-react';
-import React from 'react';
+import { observer } from 'mobx-react';
+import React, { useContext } from 'react';
 
 import { IMAGE_SIZES } from '../../constants';
+import { User } from '../../models/user';
+import { StoresContext } from '../../stores-context';
 import { formatNumber, getImageUrl } from '../../utils';
+import './UserHeader.css';
 
-const UserHeader = ({ user, sessionStore }) => {
+const UserHeader = ({ user }: { user: User }) => {
+  const { sessionStore } = useContext(StoresContext);
+
   return (
-    <div className="user-header__row">
+    <div className="UserHeader">
       <Avatar
         alt={user.username}
         src={getImageUrl(user.avatar_url, IMAGE_SIZES.t500x500)}
         style={{ width: 250, height: 250 }}
       />
-      <div className="user-header__details">
+      <div className="UserHeader-details">
         <Typography variant="h5">Artist</Typography>
         <Typography variant="h4" gutterBottom>
           {user.username}
@@ -53,4 +58,4 @@ const UserHeader = ({ user, sessionStore }) => {
   );
 };
 
-export default inject('sessionStore')(observer(UserHeader));
+export default observer(UserHeader);

@@ -1,0 +1,8 @@
+.UserAbout-links {
+  list-style: none;
+  padding: 0;
+}
+
+.UserAbout-links li {
+  margin-bottom: 8px;
+}

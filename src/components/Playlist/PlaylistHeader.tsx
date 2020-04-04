@@ -3,21 +3,23 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 
 import { IMAGE_SIZES } from '../../constants';
+import { Playlist } from '../../models/playlist';
 import { formatDuration, fromNow, getImageUrl } from '../../utils';
+import './PlaylistHeader.css';
 
-const PlaylistHeader = ({ playlist }) => {
+const PlaylistHeader = ({ playlist }: { playlist: Playlist }) => {
   const { user } = playlist;
 
   return (
-    <div className="playlist-header">
-      <div className="container playlist-header__row">
+    <div className="PlaylistHeader">
+      <div className="container PlaylistHeader-row">
         <img
           src={getImageUrl(playlist.artwork_url, IMAGE_SIZES.t500x500)}
           alt="playlsit.title"
           width={250}
           height={250}
         />
-        <div className="playlist-header__details">
+        <div className="PlaylistHeader-details">
           <Typography variant="h5">Playlist</Typography>
           <Typography variant="h4" gutterBottom>
             {playlist.title}

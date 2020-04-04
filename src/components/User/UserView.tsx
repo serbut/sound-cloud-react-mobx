@@ -1,8 +1,10 @@
 import { Tab, Tabs } from '@material-ui/core';
+import { History, Location } from 'history';
 import { observable } from 'mobx';
 import { observer } from 'mobx-react';
 import React, { Component } from 'react';
 import { Route } from 'react-router-dom';
+import { User } from '../../models/user';
 
 import UserAbout from './UserAbout';
 import UserFollowings from './UserFollowings';
@@ -10,11 +12,16 @@ import UserHeader from './UserHeader';
 import UserLikes from './UserLikes';
 import UserPlaylists from './UserPlaylists';
 import UserTracks from './UserTracks';
+import './UserView.css';
 
 // TODO: move tabs to UserTabs component
 @observer
-class UserView extends Component {
-  @observable tabs = [];
+class UserView extends Component<{
+  user: User;
+  history: History;
+  location: Location;
+}> {
+  @observable tabs: string[] = [];
 
   componentDidMount() {
     this.getAvailableTabs();
@@ -59,9 +66,9 @@ class UserView extends Component {
     history.replace(`/users/${this.props.user.permalink}/${this.tabs[0]}`);
   }
 
-  handleTabChange = (e, i) => {
+  handleTabChange = (event: React.ChangeEvent<{}>, index: number) => {
     this.props.history.push(
-      `/users/${this.props.user.permalink}/${this.tabs[i]}`
+      `/users/${this.props.user.permalink}/${this.tabs[index]}`
     );
   };
 
@@ -72,10 +79,10 @@ class UserView extends Component {
     );
 
     return (
-      <div className="animated fadeIn">
-        <div className="user-header">
+      <div className="User animated fadeIn">
+        <div className="User-header">
           <div className="container">
-            <UserHeader user={user}></UserHeader>
+            <UserHeader user={user} />
 
             {selectedTabIndex !== -1 && (
               <Tabs value={selectedTabIndex} onChange={this.handleTabChange}>

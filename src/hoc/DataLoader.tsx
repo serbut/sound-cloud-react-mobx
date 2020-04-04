@@ -9,7 +9,7 @@ import { User } from '../models/user';
 
 @observer
 class DataLoader extends Component<{
-  url: string;
+  url?: string;
   params?: any;
   render: Function;
 }> {
@@ -30,7 +30,7 @@ class DataLoader extends Component<{
     url: prevUrl,
     params: prevParams,
   }: {
-    url: string;
+    url?: string;
     params?: any;
   }) {
     const { url, params } = this.props;

@@ -2,7 +2,7 @@ import { Typography } from '@material-ui/core';
 import { action, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import React, { Component } from 'react';
-import { withRouter } from 'react-router-dom';
+import { RouteComponentProps, withRouter } from 'react-router-dom';
 
 import {
   getSearchTracksByTagRequest,
@@ -12,10 +12,11 @@ import {
 import DataLoader from '../../hoc/DataLoader';
 import DataGrid from '../DataGrid';
 
-// TODO: fix search by tag
+type SearchProps = RouteComponentProps;
+
 @observer
-class Search extends Component {
-  @observable request = {};
+class Search extends Component<SearchProps> {
+  @observable request: { url?: string; params?: any } = {};
   @observable query = '';
   @observable where = '';
 
@@ -23,10 +24,10 @@ class Search extends Component {
     this.handlePropsChange();
   }
 
-  componentDidUpdate(prevProps) {
+  componentDidUpdate(prevProps: SearchProps) {
     if (
-      JSON.stringify(this.props.location.query) !==
-      JSON.stringify(prevProps.location.query)
+      JSON.stringify(this.props.location.search) !==
+      JSON.stringify(prevProps.location.search)
     ) {
       this.handlePropsChange();
     }
@@ -35,15 +36,15 @@ class Search extends Component {
   @action handlePropsChange() {
     const { search } = this.props.location;
     const searchParams = new URLSearchParams(search);
-    const query = (this.query = searchParams.get('q'));
-    const where = (this.where = searchParams.get('where'));
+    this.query = searchParams.get('q') || '';
+    this.where = searchParams.get('where') || '';
 
-    if (query.charAt(0) === '#') {
-      this.request = getSearchTracksByTagRequest(query.slice(1));
-    } else if (where === 'tracks') {
-      this.request = getSearchTracksRequest(query);
-    } else if (where === 'users') {
-      this.request = getSearchUsersRequest(query);
+    if (this.query.charAt(0) === '#') {
+      this.request = getSearchTracksByTagRequest(this.query.slice(1));
+    } else if (this.where === 'tracks') {
+      this.request = getSearchTracksRequest(this.query);
+    } else if (this.where === 'users') {
+      this.request = getSearchUsersRequest(this.query);
     }
   }
 
@@ -64,7 +65,7 @@ class Search extends Component {
         <DataLoader
           url={this.request.url}
           params={this.request.params}
-          render={(props) => <DataGrid {...props} />}
+          render={(props: any) => <DataGrid {...props} />}
         />
       </div>
     );
