@@ -33,9 +33,7 @@ const PlaylistCard = ({ playlist }: { playlist: Playlist }) => {
       </CardMedia>
       <CardContent>
         <Typography variant="subtitle1" noWrap title={playlist.title}>
-          <Link to={link} className="link">
-            {playlist.title}
-          </Link>
+          <Link to={link}>{playlist.title}</Link>
         </Typography>
       </CardContent>
     </Card>

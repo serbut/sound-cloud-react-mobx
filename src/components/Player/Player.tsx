@@ -20,7 +20,7 @@ import { Link } from 'react-router-dom';
 import { StoresContext } from '../../stores-context';
 
 import { getImageUrl } from '../../utils';
-import './Player.less';
+import './Player.css';
 import PlayerQueue from './PlayerQueue';
 import VolumeControl from './VolumeControl';
 
@@ -40,72 +40,78 @@ class Player extends React.Component {
       playerStore: store,
       playerStore: { track },
     } = this.context;
-    // const color = 'blue';
 
-    if (!track) return null;
+    if (!track) {
+      return null;
+    }
 
     const progressPercent = Math.round(
       (store.progress / (track.duration / 1000)) * 100
     );
+
+    // TODO: remove?
+    // const color = 'blue';
     // const bufferedPercent = Math.round(
     //     (store.buffered / (track.duration / 1000)) * 100
     // );
     // const bgGradient = `linear-gradient(to right, transparent 0%, ${color} ${progressPercent}%, transparent ${progressPercent}%)`;
 
     return (
-      <div className="player">
+      <div className="Player">
         <LinearProgress
           variant="determinate"
           value={progressPercent}
-          className="player__progress-bar"
+          className="Player-progress-bar"
         />
         {/*onChange={(e, value) => store.setProgress(value)}*/}
 
-        {/*<div className='player__bg-progress'
+        {/*//TODO: remove?*/}
+        {/*<div className="Player-bg-progress"
           style={{background: bgGradient}}>
           <img src={track.waveform_url} />
         </div>*/}
 
         <div
-          className={'player__preloader' + (store.isLoading ? ' visible' : '')}
+          className={'Player-preloader' + (store.isLoading ? ' visible' : '')}
         >
           <CircularProgress />
         </div>
 
-        <div className="player__inner">
-          <div className="player__group player__group--left">
+        <div className="Player-inner">
+          <div className="Player-group-left">
             <img
-              className="player__track-artwork"
+              className="Player-track-artwork"
               src={getImageUrl(track.artwork_url)}
               width={64}
               height={64}
               alt="Track artwork"
             />
-            <div className="player__track-details">
-              <Typography variant="subtitle2" noWrap>
+            <div className="Player-track-details">
+              <Typography variant="subtitle1" noWrap>
                 <Link
                   to={`/users/${track.user.permalink}/tracks/${track.permalink}`}
                   title={track.title}
-                  className="link"
                 >
                   {track.title}
                 </Link>
+                <IconButton
+                  size="small"
+                  color={sessionStore.isLiked(track) ? 'primary' : 'default'}
+                  onClick={() => sessionStore.toggleLike(track)}
+                  style={{ marginLeft: 5 }}
+                >
+                  <Favorite fontSize="inherit" />
+                </IconButton>
               </Typography>
-              <Typography variant="subtitle1" noWrap>
-                <Link to={`/users/${track.user.permalink}`} className="link">
+              <Typography variant="subtitle2" noWrap>
+                <Link to={`/users/${track.user.permalink}`}>
                   {track.user.username}
                 </Link>
               </Typography>
             </div>
           </div>
 
-          <div className="player__group player__group--center">
-            <IconButton
-              color={sessionStore.isLiked(track) ? 'primary' : 'default'}
-              onClick={() => sessionStore.toggleLike(track)}
-            >
-              <Favorite />
-            </IconButton>
+          <div className="Player-group-center">
             <IconButton
               color={store.loop ? 'primary' : 'default'}
               onClick={() => store.toggleLoop()}
@@ -135,7 +141,7 @@ class Player extends React.Component {
             </IconButton>
           </div>
 
-          <div className="player__group player__group--right">
+          <div className="Player-group-right">
             <VolumeControl />
 
             <IconButton
@@ -144,6 +150,7 @@ class Player extends React.Component {
             >
               <QueueMusic />
             </IconButton>
+
             <PlayerQueue />
           </div>
         </div>

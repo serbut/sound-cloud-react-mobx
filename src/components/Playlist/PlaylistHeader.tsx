@@ -26,8 +26,10 @@ const PlaylistHeader = ({ playlist }: { playlist: Playlist }) => {
           </Typography>
           <Typography variant="subtitle1">
             by{' '}
-            <Link to={`/users/${user.permalink}`} className="link link--blue">
-              {user.username}
+            <Link to={`/users/${user.permalink}`}>
+              <Typography color="primary" display="inline">
+                {user.username}
+              </Typography>
             </Link>
           </Typography>
           <Typography variant="body1">

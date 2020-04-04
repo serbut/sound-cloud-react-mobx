@@ -8,19 +8,19 @@ import {
 import { observer } from 'mobx-react';
 import React, { useContext } from 'react';
 import { StoresContext } from '../../stores-context';
-import './VolumeControl.less';
+import './VolumeControl.css';
 
 const VolumeContol = () => {
   const { playerStore, viewStore } = useContext(StoresContext);
 
   return (
     <div
-      className="volume-slider-wrap"
+      className="VolumeControl"
       onMouseOver={() => (viewStore.volumeControlOpen = true)}
       onMouseOut={() => (viewStore.volumeControlOpen = false)}
     >
       <Card
-        className={`volume-slider ${
+        className={`VolumeControl-inner ${
           viewStore.volumeControlOpen ? 'visible' : ''
         }`}
       >

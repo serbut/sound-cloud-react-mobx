@@ -13,7 +13,7 @@ const UserCard = ({ user }: { user: User }) => {
 
   return (
     <div className="UserCard">
-      <Link to={link} className="link">
+      <Link to={link}>
         <Avatar
           alt={user.username}
           src={getImageUrl(user.avatar_url, IMAGE_SIZES.t500x500)}
@@ -22,9 +22,7 @@ const UserCard = ({ user }: { user: User }) => {
       </Link>
       <div className="UserCard-content">
         <Typography variant="subtitle2" align="center">
-          <Link to={link} className="link">
-            {user.username}
-          </Link>
+          <Link to={link}>{user.username}</Link>
         </Typography>
         {user.followers_count && (
           <Typography variant="caption" component="p" align="center">

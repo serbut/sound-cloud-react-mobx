@@ -37,8 +37,10 @@ const CommentComponent = ({
       <ListItemText
         primary={
           <span>
-            <Link to={`/${comment.user.permalink}`} className="link link--blue">
-              {comment.user.username}
+            <Link to={`/${comment.user.permalink}`}>
+              <Typography color="primary" display="inline">
+                {comment.user.username}
+              </Typography>
             </Link>
             <Typography variant="caption">
               {' '}

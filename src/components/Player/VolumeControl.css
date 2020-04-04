@@ -1,0 +1,20 @@
+.VolumeControl {
+  position: relative;
+}
+
+.VolumeControl-inner {
+  position: fixed;
+  right: 75px;
+  bottom: 80px;
+
+  width: 48px;
+  height: 125px;
+
+  transition: 0.25s;
+  overflow: visible !important;
+}
+
+.VolumeControl-inner:not(.visible) {
+  opacity: 0;
+  visibility: hidden;
+}

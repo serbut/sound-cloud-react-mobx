@@ -9,18 +9,17 @@ import {
   ListItemText,
 } from '@material-ui/core';
 import { VolumeUp } from '@material-ui/icons';
-import { inject, observer } from 'mobx-react';
+import { observer } from 'mobx-react';
 import React from 'react';
 import { Track } from '../../models/track';
 import { StoresContext } from '../../stores-context';
 
 import { getImageUrl, isElementInViewport } from '../../utils';
-import './PlayerQueue.less';
+import './PlayerQueue.css';
 
 const PER_PAGE = 30;
 
 // TODO: use dialog, maybe fullscreen dialog
-@inject('viewStore', 'playerStore')
 @observer
 class PlayerQueue extends React.Component {
   static contextType = StoresContext;
@@ -38,7 +37,7 @@ class PlayerQueue extends React.Component {
     style.paddingRight = '17px';
 
     const el = document.querySelector(
-      `.player-queue [data-id='${this.context.playerStore.track.id}']`
+      `.PlayerQueue [data-id='${this.context.playerStore.track.id}']`
     );
     el && !isElementInViewport(el) && el.scrollIntoView();
   }
@@ -54,9 +53,9 @@ class PlayerQueue extends React.Component {
     // const loading = playerStore.queue.isLoading ? 'loading...' : '';
 
     return (
-      <div className="player-queue" onClick={(e) => e.stopPropagation()}>
+      <div className="PlayerQueue" onClick={(e) => e.stopPropagation()}>
         <Card>
-          <div className="player-queue__inner">
+          <div className="PlayerQueue-inner">
             <List>
               {items.slice(from, to).map((track: Track, i: number) => (
                 <ListItem

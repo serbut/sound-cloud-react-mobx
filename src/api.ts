@@ -31,9 +31,10 @@ const getWithClientID = (url: string, params = {}) =>
 
 const formatNextHref = (href: string) => {
   if (!href.includes('client_id') && !href.includes('oauth_token')) {
-    return href + getToken()
-      ? `&oauth_token=${getToken()}`
-      : `&client_id=${CLIENT_ID}`;
+    return (
+      href +
+      (getToken() ? `&oauth_token=${getToken()}` : `&client_id=${CLIENT_ID}`)
+    );
   } else {
     return href;
   }

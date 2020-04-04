@@ -1,6 +1,7 @@
 import { IconButton } from '@material-ui/core';
 import { KeyboardArrowUp } from '@material-ui/icons';
 import React, { Component } from 'react';
+import './ScrollToTopBtn.css';
 
 class ScrollToTopBtn extends Component {
   state = {
@@ -30,7 +31,7 @@ class ScrollToTopBtn extends Component {
   render() {
     if (this.state.scrollToTopVisible)
       return (
-        <div className="scroll-to-top-btn">
+        <div className="ScrollToTopBtn">
           <IconButton color="primary" onClick={this.handleScrollToTopClick}>
             <KeyboardArrowUp />
           </IconButton>

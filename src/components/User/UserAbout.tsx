@@ -31,8 +31,8 @@ const renderLinks = (links: { url: string; title: string }[]) => {
       <ul className="UserAbout-links">
         {links.map((el, i) => (
           <li key={i}>
-            <a href={el.url} className="link link--blue">
-              {el.title}
+            <a href={el.url}>
+              <Typography color="primary">{el.title}</Typography>
             </a>
           </li>
         ))}
