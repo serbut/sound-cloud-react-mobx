@@ -1,4 +1,4 @@
 // TODO
 export interface User {
-    [key: string]: any;
+  [key: string]: any;
 }

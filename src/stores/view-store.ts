@@ -21,7 +21,10 @@ export class ViewState {
   temporarilyShowVolumeControl() {
     this.volumeControlOpen = true;
     clearTimeout(this.timeoutID);
-    this.timeoutID = window.setTimeout(() => (this.volumeControlOpen = false), 1000);
+    this.timeoutID = window.setTimeout(
+      () => (this.volumeControlOpen = false),
+      1000
+    );
   }
 }
 

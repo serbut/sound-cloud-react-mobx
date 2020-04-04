@@ -50,7 +50,7 @@ class PlayerQueue extends React.Component {
     // const loading = playerStore.queue.isLoading ? 'loading...' : '';
 
     return (
-      <div className="player-queue" onClick={e => e.stopPropagation()}>
+      <div className="player-queue" onClick={(e) => e.stopPropagation()}>
         <Card>
           <div className="player-queue__inner">
             <List>

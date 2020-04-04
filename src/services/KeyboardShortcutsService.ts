@@ -1,15 +1,15 @@
 import key from 'keymaster';
-import {PlayerStore} from '../stores/player-store';
-import {SessionStore} from '../stores/session-store';
-import {ViewState} from '../stores/view-store';
+import { PlayerStore } from '../stores/player-store';
+import { SessionStore } from '../stores/session-store';
+import { ViewState } from '../stores/view-store';
 
 export default class KeyboardShortcutsService {
   constructor(
-      playerStore: PlayerStore,
-      viewStore: ViewState,
-      sessionStore: SessionStore
+    playerStore: PlayerStore,
+    viewStore: ViewState,
+    sessionStore: SessionStore
   ) {
-    key('space', e => {
+    key('space', (e) => {
       e.preventDefault();
       playerStore.playTrack();
     });
@@ -31,7 +31,10 @@ export default class KeyboardShortcutsService {
       viewStore.temporarilyShowVolumeControl();
     });
     key('s', () => playerStore.toggleShuffle());
-    key('l', () => playerStore.track && sessionStore.toggleLike(playerStore.track));
+    key(
+      'l',
+      () => playerStore.track && sessionStore.toggleLike(playerStore.track)
+    );
     key('p', () => viewStore.togglePlaylist());
   }
 }

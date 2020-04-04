@@ -1,8 +1,8 @@
-import {autorun} from 'mobx';
-import {IReactionDisposer} from 'mobx/lib/internal';
+import { autorun } from 'mobx';
+import { IReactionDisposer } from 'mobx/lib/internal';
 
-import {formatStreamUrl} from '../api';
-import {PlayerStore} from '../stores/player-store';
+import { formatStreamUrl } from '../api';
+import { PlayerStore } from '../stores/player-store';
 
 export default class AudioService {
   private readonly store: PlayerStore;
@@ -28,8 +28,13 @@ export default class AudioService {
     this.audio.addEventListener('canplaythrough', () =>
       store.setIsLoading(false)
     );
-    this.audio.addEventListener('timeupdate', e =>
-        e.target && store.setProgress(Math.round((e.target as HTMLMediaElement).currentTime))
+    this.audio.addEventListener(
+      'timeupdate',
+      (e) =>
+        e.target &&
+        store.setProgress(
+          Math.round((e.target as HTMLMediaElement).currentTime)
+        )
     );
     // this.audio.addEventListener('progress',
     // e => store.setBuffered(Math.round(e.target.buffered.end(e.target.buffered.length - 1))));

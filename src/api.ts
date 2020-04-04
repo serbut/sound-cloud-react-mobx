@@ -31,7 +31,9 @@ const getWithClientID = (url: string, params = {}) =>
 
 const formatNextHref = (href: string) => {
   if (!href.includes('client_id') && !href.includes('oauth_token')) {
-    return href + getToken() ? `&oauth_token=${getToken()}` : `&client_id=${CLIENT_ID}`;
+    return href + getToken()
+      ? `&oauth_token=${getToken()}`
+      : `&client_id=${CLIENT_ID}`;
   } else {
     return href;
   }
@@ -58,10 +60,13 @@ export const loadTrack = (user: string, track: string) =>
   getWithClientID(resolve(`/${user}/${track}`));
 export const loadUserWebProfiles = (userId: string) =>
   SC.get(`/users/${userId}/web-profiles`);
-export const followUser = (userId: string) => SC.put(`/me/followings/${userId}`);
-export const unfollowUser = (userId: string) => SC.delete(`/me/followings/${userId}`);
+export const followUser = (userId: string) =>
+  SC.put(`/me/followings/${userId}`);
+export const unfollowUser = (userId: string) =>
+  SC.delete(`/me/followings/${userId}`);
 export const addLike = (trackId: string) => SC.put(`/me/favorites/${trackId}`);
-export const removeLike = (trackId: string) => SC.delete(`/me/favorites/${trackId}`);
+export const removeLike = (trackId: string) =>
+  SC.delete(`/me/favorites/${trackId}`);
 
 export const addComment = (trackId: string, body: string, timestamp: string) =>
   SC.post(`/tracks/${trackId}/comments`, { comment: { body, timestamp } });
@@ -87,11 +92,14 @@ export const getMeFollowingsIds = () =>
   }).then((data: any) => data.collection.map((el: any) => el.id));
 
 export const getUserTracksUrl = (userId: string) => `/users/${userId}/tracks`;
-export const getUserFollowingsUrl = (userId: string) => `/users/${userId}/followings`;
+export const getUserFollowingsUrl = (userId: string) =>
+  `/users/${userId}/followings`;
 export const getUserLikesUrl = (userId: string) => `/users/${userId}/favorites`;
-export const getUserPlaylistsUrl = (userId: string) => `/users/${userId}/playlists`;
+export const getUserPlaylistsUrl = (userId: string) =>
+  `/users/${userId}/playlists`;
 export const USER_PLAYLISTS_PARAMS = { representation: 'compact' };
-export const getTrackCommentsUrl = (trackId: string) => `tracks/${trackId}/comments`;
+export const getTrackCommentsUrl = (trackId: string) =>
+  `tracks/${trackId}/comments`;
 
 export const getSearchTracksByTagRequest = (tags: string) => ({
   url: '/tracks',

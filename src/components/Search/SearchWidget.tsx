@@ -14,7 +14,7 @@ class SearchWidget extends Component {
     this.textInput.input.value = '';
   }
 
-  handleSearchClick = e => {
+  handleSearchClick = (e) => {
     if (this.state.focused) {
       return this.handleSubmit(e);
     }
@@ -25,7 +25,7 @@ class SearchWidget extends Component {
 
   handleCloseClick = () => this.setState({ focused: false });
 
-  handleSubmit = e => {
+  handleSubmit = (e) => {
     e.preventDefault();
     const q = this.textInput.input.value;
     if (q !== '') {
@@ -57,7 +57,7 @@ class SearchWidget extends Component {
         <Input
           className="search-input"
           placeholder="Search"
-          ref={input => (this.textInput = input)}
+          ref={(input) => (this.textInput = input)}
         />
       </form>
     );

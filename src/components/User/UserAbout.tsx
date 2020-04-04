@@ -1,7 +1,7 @@
 import { Typography } from '@material-ui/core';
 import React from 'react';
 
-const renderDescription = description => {
+const renderDescription = (description) => {
   if (!description) {
     return '';
   }
@@ -16,7 +16,7 @@ const renderDescription = description => {
   );
 };
 
-const renderLinks = links => {
+const renderLinks = (links) => {
   if (!links || links.length === 0) {
     return '';
   }

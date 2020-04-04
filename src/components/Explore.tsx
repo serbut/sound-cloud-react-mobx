@@ -81,7 +81,7 @@ const Explore = () => {
         <DataLoader
           url={url}
           params={requestParams}
-          render={props => <DataGrid {...props} />}
+          render={(props) => <DataGrid {...props} />}
         />
       </div>
     </div>

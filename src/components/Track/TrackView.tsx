@@ -7,7 +7,7 @@ import Comments from '../Comments/Comments';
 import TrackHeader from './TrackHeader';
 
 const TrackView = ({ track, history }) => {
-  const handleTagClick = q => {
+  const handleTagClick = (q) => {
     const searchParams = new URLSearchParams();
     searchParams.append('q', q);
     searchParams.append('where', 'tracks');

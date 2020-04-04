@@ -27,7 +27,7 @@ import VolumeControl from './VolumeControl';
 @inject('sessionStore', 'viewStore', 'playerStore')
 @observer
 class Player extends React.Component {
-  onQueueClick = e => {
+  onQueueClick = (e) => {
     e.stopPropagation();
     this.props.viewStore.togglePlaylist(e);
   };

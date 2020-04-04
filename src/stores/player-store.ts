@@ -1,9 +1,9 @@
-import {action, observable} from 'mobx';
-import {createTransformer} from 'mobx-utils';
+import { action, observable } from 'mobx';
+import { createTransformer } from 'mobx-utils';
 
-import {getNextHref} from '../api';
-import {Track} from '../models/track';
-import {Queue} from './player-queue';
+import { getNextHref } from '../api';
+import { Track } from '../models/track';
+import { Queue } from './player-queue';
 
 const TIME_STEP = 15;
 const VOLUME_STEP = 0.25;
@@ -47,7 +47,10 @@ export class PlayerStore {
       this.queue.nextHref = getNextHref();
     }
 
-    if (this.queue.trackIndex && this.queue.trackIndex + 5 >= this.queue.items.length)
+    if (
+      this.queue.trackIndex &&
+      this.queue.trackIndex + 5 >= this.queue.items.length
+    )
       this.queue.loadMore();
   }
 

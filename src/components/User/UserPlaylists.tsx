@@ -9,7 +9,7 @@ const UserPlaylists = ({ user }) => {
     <DataLoader
       url={getUserPlaylistsUrl(user.id)}
       params={USER_PLAYLISTS_PARAMS}
-      render={props => <DataGrid {...props} />}
+      render={(props) => <DataGrid {...props} />}
     />
   );
 };

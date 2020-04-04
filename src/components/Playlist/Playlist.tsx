@@ -39,7 +39,7 @@ class Playlist extends Component {
 
     loadPlaylist(user, playlist)
       .then(
-        action(playlist => {
+        action((playlist) => {
           this.playlist = playlist;
           this.isLoading = false;
         })

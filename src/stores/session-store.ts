@@ -1,10 +1,17 @@
-import {computed, IObservableArray, observable} from 'mobx';
+import { computed, IObservableArray, observable } from 'mobx';
 import SC from 'soundcloud';
 
-import {addLike, followUser, getMeFollowingsIds, getMeLikesIds, removeLike, unfollowUser,} from '../api';
-import {TOKEN_KEY, USER_KEY} from '../config';
-import {Track} from '../models/track';
-import {User} from '../models/user';
+import {
+  addLike,
+  followUser,
+  getMeFollowingsIds,
+  getMeLikesIds,
+  removeLike,
+  unfollowUser,
+} from '../api';
+import { TOKEN_KEY, USER_KEY } from '../config';
+import { Track } from '../models/track';
+import { User } from '../models/user';
 
 export class SessionStore {
   @observable user: User | null = null;
@@ -61,7 +68,9 @@ export class SessionStore {
       .then(() => getMeLikesIds())
       .then((userLikesIds: any) => (this.userLikesIds = userLikesIds))
       .then(() => getMeFollowingsIds())
-      .then((userFollowingsIds: any) => (this.userFollowingsIds = userFollowingsIds))
+      .then(
+        (userFollowingsIds: any) => (this.userFollowingsIds = userFollowingsIds)
+      )
       .catch(() => {
         // TODO: add error handler
       });

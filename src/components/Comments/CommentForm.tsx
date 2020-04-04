@@ -8,11 +8,11 @@ import React, { Component } from 'react';
 class CommentForm extends Component {
   @observable commentBody = '';
 
-  handleInputChange = e => {
+  handleInputChange = (e) => {
     this.commentBody = e.target.value;
   };
 
-  handleFormSubmit = e => {
+  handleFormSubmit = (e) => {
     e.preventDefault();
 
     if (!this.commentBody) {

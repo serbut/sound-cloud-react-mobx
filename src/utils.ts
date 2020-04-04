@@ -1,7 +1,7 @@
 import moment from 'moment';
 
 import { IMAGE_SIZES } from './constants';
-import {Track} from './models/track';
+import { Track } from './models/track';
 const BAD_URL = '//a1.sndcdn.com/images/';
 const PREVIEW_DURATION = 30000;
 
@@ -67,8 +67,9 @@ export function fromNow(createdAt: string) {
 export function getTags(text: string) {
   if (!text) return [];
 
-  return (text.match(/\w+|"[^"]+"/g) || [])
-      .map(tag => '#' + tag.replace(/"/g, ''));
+  return (text.match(/\w+|"[^"]+"/g) || []).map(
+    (tag) => '#' + tag.replace(/"/g, '')
+  );
 }
 
 export const isPreview = (track: Track) => track.duration === PREVIEW_DURATION;
@@ -79,8 +80,9 @@ export function formatText(text: string) {
   if (text)
     return text
       .split('\n')
-      .filter((row, i, arr) =>
-        !(row === '' && (arr[i - 1] === '' || i === arr.length - 1))
+      .filter(
+        (row, i, arr) =>
+          !(row === '' && (arr[i - 1] === '' || i === arr.length - 1))
       );
 }
 

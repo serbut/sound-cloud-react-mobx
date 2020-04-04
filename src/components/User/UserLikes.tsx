@@ -6,13 +6,13 @@ import DataLoader from '../../hoc/DataLoader';
 import DataGrid from '../DataGrid';
 
 let UserLikes = ({ user, sessionStore }) => {
-  const filterData = data => {
+  const filterData = (data) => {
     if (
       sessionStore.isLoggedIn &&
       user.id === sessionStore.user.id &&
       sessionStore.userLikesIds.length
     ) {
-      return data.filter(el => sessionStore.userLikesIds.includes(el.id));
+      return data.filter((el) => sessionStore.userLikesIds.includes(el.id));
     } else {
       return data;
     }

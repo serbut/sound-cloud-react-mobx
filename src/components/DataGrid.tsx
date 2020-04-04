@@ -73,7 +73,7 @@ const DataGrid = ({ data, isLoading, isLastPage, error, loadMore }) => {
 
     return (
       <div key={key} style={{ ...style, ...rowStyle }}>
-        {rowData.map(item => (
+        {rowData.map((item) => (
           <div key={item.id} className="animated fadeIn" style={cellStyle}>
             {item.kind === 'user' ? (
               <UserCard user={item} />

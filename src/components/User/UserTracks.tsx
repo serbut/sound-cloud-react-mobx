@@ -8,7 +8,7 @@ const UserTracks = ({ user }) => {
   return (
     <DataLoader
       url={getUserTracksUrl(user.id)}
-      render={props => <DataGrid {...props} />}
+      render={(props) => <DataGrid {...props} />}
     />
   );
 };

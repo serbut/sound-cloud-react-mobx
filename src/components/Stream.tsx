@@ -8,7 +8,7 @@ import DataGrid from './DataGrid';
 @observer
 class Stream extends React.Component {
   formatData(data) {
-    return data.filter(el => el.origin).map(el => el.origin);
+    return data.filter((el) => el.origin).map((el) => el.origin);
   }
 
   render() {

@@ -8,7 +8,7 @@ const UserFollowings = ({ user }) => {
   return (
     <DataLoader
       url={getUserFollowingsUrl(user.id)}
-      render={props => <DataGrid {...props} />}
+      render={(props) => <DataGrid {...props} />}
     />
   );
 };

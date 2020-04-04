@@ -35,7 +35,7 @@ class Track extends React.Component {
     this.isLoading = true;
 
     loadTrack(user, track)
-      .then(track => {
+      .then((track) => {
         this.track = track;
         this.isLoading = false;
       })

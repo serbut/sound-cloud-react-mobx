@@ -64,7 +64,7 @@ class Search extends Component {
         <DataLoader
           url={this.request.url}
           params={this.request.params}
-          render={props => <DataGrid {...props} />}
+          render={(props) => <DataGrid {...props} />}
         />
       </div>
     );

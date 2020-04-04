@@ -12,7 +12,7 @@ import Comment from './SingleComment';
 @inject('sessionStore', 'playerStore')
 @observer
 class Comments extends Component {
-  addComment = commentBody => {
+  addComment = (commentBody) => {
     const { playerStore, sessionStore, trackId } = this.props;
     const timestamp =
       playerStore.track && playerStore.track.id === trackId
@@ -27,7 +27,7 @@ class Comments extends Component {
     );
   };
 
-  removeComment = comment => {
+  removeComment = (comment) => {
     removeComment(comment.track_id, comment.id);
     // .then(res => comments.remove(comment)); TODO: removeComment
   };
@@ -48,7 +48,7 @@ class Comments extends Component {
             <div>
               <InfiniteScrollify load={loadMore}>
                 <List>
-                  {comments.map(comment => (
+                  {comments.map((comment) => (
                     <Comment
                       key={comment.id}
                       comment={comment}

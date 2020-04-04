@@ -17,7 +17,7 @@ import { Link, useHistory, useLocation } from 'react-router-dom';
 
 import { APP_TITLE } from '../config';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   grow: {
     flexGrow: 1,
   },
@@ -81,7 +81,7 @@ const AppBarComponent = ({ sessionStore }) => {
   const isMenuOpen = Boolean(anchorEl);
   const menuId = 'profile-menu';
 
-  const handleProfileMenuOpen = event => {
+  const handleProfileMenuOpen = (event) => {
     setAnchorEl(event.currentTarget);
   };
 
@@ -98,11 +98,11 @@ const AppBarComponent = ({ sessionStore }) => {
     setAnchorEl(null);
   };
 
-  const handleSearchInputChange = ev => {
+  const handleSearchInputChange = (ev) => {
     setQuery(ev.target.value);
   };
 
-  const handleSearchSubmit = ev => {
+  const handleSearchSubmit = (ev) => {
     ev.preventDefault();
 
     if (query.length >= 3) {

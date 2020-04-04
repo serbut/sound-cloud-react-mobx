@@ -30,9 +30,9 @@ class User extends React.Component {
     this.isLoading = true;
 
     loadUser(this.props.match.params.user)
-      .then(user => (this.user = user))
+      .then((user) => (this.user = user))
       .then(() => loadUserWebProfiles(this.user.id))
-      .then(profiles => (this.user.webProfiles = profiles))
+      .then((profiles) => (this.user.webProfiles = profiles))
       .then(() => (this.isLoading = false))
       .catch(
         action(() => {

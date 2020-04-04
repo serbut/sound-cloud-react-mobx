@@ -25,7 +25,7 @@ class UserView extends Component {
     const TABS = ['tracks', 'playlists', 'likes', 'followings', 'about'];
     const { user } = this.props;
 
-    this.tabs = TABS.filter(tab => {
+    this.tabs = TABS.filter((tab) => {
       switch (tab) {
         case 'tracks':
           return user.track_count > 0;
@@ -67,7 +67,7 @@ class UserView extends Component {
 
   render() {
     const { user, location } = this.props;
-    const selectedTabIndex = this.tabs.findIndex(tab =>
+    const selectedTabIndex = this.tabs.findIndex((tab) =>
       location.pathname.includes(tab)
     );
 

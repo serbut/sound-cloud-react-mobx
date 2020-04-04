@@ -1,4 +1,4 @@
 // TODO:
 export interface Track {
-    [key: string]: any;
+  [key: string]: any;
 }

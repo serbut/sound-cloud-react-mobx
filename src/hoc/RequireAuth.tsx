@@ -1,7 +1,7 @@
 import { inject, observer } from 'mobx-react';
 import React, { Component } from 'react';
 
-export default function(InnerComponent) {
+export default function (InnerComponent) {
   @inject('sessionStore')
   @observer
   class RequireAuth extends Component {

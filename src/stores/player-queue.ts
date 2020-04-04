@@ -1,9 +1,9 @@
-import {action, computed, observable} from 'mobx';
+import { action, computed, observable } from 'mobx';
 
-import {loadMore} from '../api';
-import {Track} from '../models/track';
-import {isPreview} from '../utils';
-import {PlayerStore} from './player-store';
+import { loadMore } from '../api';
+import { Track } from '../models/track';
+import { isPreview } from '../utils';
+import { PlayerStore } from './player-store';
 
 export class Queue {
   @observable originItems: Track[] = [];
@@ -18,7 +18,7 @@ export class Queue {
 
   @computed get items() {
     if (this.player.skipPreviews)
-      return this.originItems.filter(el => !isPreview(el));
+      return this.originItems.filter((el) => !isPreview(el));
     else return this.originItems;
   }
 
@@ -26,7 +26,7 @@ export class Queue {
     if (this.player.track) {
       // TODO
       // @ts-ignore
-      return this.items.findIndex(i => i.id === this.player.track.id);
+      return this.items.findIndex((i) => i.id === this.player.track.id);
     }
     return null;
   }
@@ -54,7 +54,7 @@ export class Queue {
 
     this.isLoading = true;
     loadMore(this.nextHref).then(
-      action(data => {
+      action((data) => {
         this.filterData(data.collection).forEach((el: Track) =>
           this.originItems.push(el)
         );
@@ -67,11 +67,11 @@ export class Queue {
   private filterData(data: Track[]) {
     return data
       .filter(
-        el =>
+        (el) =>
           (Object.prototype.hasOwnProperty.call(el, 'origin') && el.origin) ||
           true
       )
-      .filter(el => el.type === 'track' || el.type === 'track-repost')
-      .map(el => el.origin || el);
+      .filter((el) => el.type === 'track' || el.type === 'track-repost')
+      .map((el) => el.origin || el);
   }
 }

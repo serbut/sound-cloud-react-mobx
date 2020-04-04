@@ -41,8 +41,8 @@ class DataLoader extends Component {
     this.isLoading = true;
 
     loadData(url, params)
-      .then(data => this.onSuccess(data))
-      .catch(err => this.onError(err));
+      .then((data) => this.onSuccess(data))
+      .catch((err) => this.onError(err));
   };
 
   loadMore = () => {
@@ -54,13 +54,13 @@ class DataLoader extends Component {
     this.isLoading = true;
 
     loadMore(nextHref)
-      .then(data => {
+      .then((data) => {
         // TODO: why we need this check ?
         if (nextHref === this.nextHref) {
           this.onSuccess(data);
         }
       })
-      .catch(err => this.onError(err));
+      .catch((err) => this.onError(err));
   };
 
   @action clearData = () => {
@@ -76,7 +76,7 @@ class DataLoader extends Component {
       return;
     }
 
-    data.collection.forEach(el => this.data.push(el));
+    data.collection.forEach((el) => this.data.push(el));
     this.nextHref = data.next_href;
     this.isLoading = false;
   }
