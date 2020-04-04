@@ -1,7 +1,14 @@
 import key from 'keymaster';
+import {PlayerStore} from '../stores/player-store';
+import {SessionStore} from '../stores/session-store';
+import {ViewState} from '../stores/view-store';
 
 export default class KeyboardShortcutsService {
-  constructor(playerStore, viewStore, sessionStore) {
+  constructor(
+      playerStore: PlayerStore,
+      viewStore: ViewState,
+      sessionStore: SessionStore
+  ) {
     key('space', e => {
       e.preventDefault();
       playerStore.playTrack();
@@ -12,19 +19,19 @@ export default class KeyboardShortcutsService {
     key('shift+left', () => playerStore.playPrev());
     key('shift+up', () => {
       playerStore.increaseVolume();
-      this.showVolumeControl();
+      viewStore.temporarilyShowVolumeControl();
     });
     key('shift+down', () => {
       playerStore.decreaseVolume();
-      this.showVolumeControl();
+      viewStore.temporarilyShowVolumeControl();
     });
     key('shift+l', () => playerStore.toggleLoop());
     key('m', () => {
       playerStore.toggleMuted();
-      viewStore.temprorarilyShowVolumeControl();
+      viewStore.temporarilyShowVolumeControl();
     });
     key('s', () => playerStore.toggleShuffle());
-    key('l', () => sessionStore.toggleLike(playerStore.track));
+    key('l', () => playerStore.track && sessionStore.toggleLike(playerStore.track));
     key('p', () => viewStore.togglePlaylist());
   }
 }

@@ -1,38 +1,37 @@
-import { action, extendObservable } from 'mobx';
-import { createTransformer } from 'mobx-utils';
+import {action, observable} from 'mobx';
+import {createTransformer} from 'mobx-utils';
 
-import { getNextHref } from '../api';
-import { Queue } from './player-queue';
+import {getNextHref} from '../api';
+import {Track} from '../models/track';
+import {Queue} from './player-queue';
 
 const TIME_STEP = 15;
 const VOLUME_STEP = 0.25;
 
-class PlayerStore {
-  constructor() {
-    this.queue = new Queue(this);
+export class PlayerStore {
+  private queue = new Queue(this);
 
-    extendObservable(this, {
-      track: null,
-      isLoading: false,
-      isPlaying: false,
-      progress: 0,
-      buffered: 0,
-      volume: 1,
-      muted: false,
-      loop: false,
-      shuffle: false,
-      skipPreviews: true,
-    });
-  }
+  @observable track: Track | null = null;
+  @observable isLoading = false;
+  @observable isPlaying = false;
+  @observable progress = 0;
+  @observable buffered = 0;
+  @observable volume = 1;
+  @observable muted = false;
+  @observable loop = false;
+  @observable shuffle = false;
+  @observable skipPreviews = true;
+
+  private volumeBeforeMuted = 0;
 
   isSelected = createTransformer(
-    track =>
+    (track: Track) =>
       this.track &&
       this.track.id === track.id &&
       (this.isPlaying ? 'isPlaying' : 'isPaused')
   );
 
-  @action playTrack(track = this.track, queue) {
+  @action playTrack(track = this.track, queue?: Track[]) {
     if (!track) return;
 
     if (this.track && this.track.id === track.id) {
@@ -48,7 +47,7 @@ class PlayerStore {
       this.queue.nextHref = getNextHref();
     }
 
-    if (this.queue.trackIndex + 5 >= this.queue.items.length)
+    if (this.queue.trackIndex && this.queue.trackIndex + 5 >= this.queue.items.length)
       this.queue.loadMore();
   }
 
@@ -63,27 +62,27 @@ class PlayerStore {
     this.playTrack(nextTrack);
   }
 
-  setIsLoading(value) {
+  setIsLoading(value: boolean) {
     this.isLoading = value;
   }
 
-  setProgress(value) {
+  setProgress(value: number) {
     this.progress = value;
   }
 
-  setBuffered(value) {
+  setBuffered(value: number) {
     this.buffered = value;
   }
 
   toggleMuted() {
     if (!this.muted) {
-      this._volume = this.volume;
+      this.volumeBeforeMuted = this.volume;
       this.volume = 0;
       this.muted = true;
       return;
     }
 
-    this.volume = this._volume;
+    this.volume = this.volumeBeforeMuted;
     this.muted = false;
   }
 
@@ -95,12 +94,16 @@ class PlayerStore {
     this.loop = !this.loop;
   }
 
-  setVolume(value) {
+  setVolume(value: number) {
     this.muted = false;
     this.volume = value;
   }
 
   stepForward(offset = TIME_STEP) {
+    if (!this.track) {
+      return;
+    }
+
     const timeLeft = this.track.duration / 1000 - this.progress;
 
     if (!this.isPlaying) return;

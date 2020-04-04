@@ -1,13 +1,18 @@
-import { action, computed, observable } from 'mobx';
+import {action, computed, observable} from 'mobx';
 
-import { loadMore } from '../api';
-import { isPreview } from '../utils';
+import {loadMore} from '../api';
+import {Track} from '../models/track';
+import {isPreview} from '../utils';
+import {PlayerStore} from './player-store';
 
 export class Queue {
-  @observable originItems = [];
-  @observable isLoading;
+  @observable originItems: Track[] = [];
+  @observable isLoading = false;
+  public nextHref: string | null = null;
 
-  constructor(player) {
+  private player: PlayerStore;
+
+  constructor(player: PlayerStore) {
     this.player = player;
   }
 
@@ -18,14 +23,25 @@ export class Queue {
   }
 
   @computed get trackIndex() {
-    return this.items.findIndex(i => i.id === this.player.track.id);
+    if (this.player.track) {
+      // TODO
+      // @ts-ignore
+      return this.items.findIndex(i => i.id === this.player.track.id);
+    }
+    return null;
   }
 
   @computed get prevTrack() {
+    if (!this.trackIndex) {
+      return null;
+    }
     return this.items[this.trackIndex - 1];
   }
 
   @computed get nextTrack() {
+    if (!this.trackIndex) {
+      return null;
+    }
     return this.items[this.trackIndex + 1];
   }
 
@@ -39,7 +55,7 @@ export class Queue {
     this.isLoading = true;
     loadMore(this.nextHref).then(
       action(data => {
-        this._filterData(data.collection).forEach(el =>
+        this.filterData(data.collection).forEach((el: Track) =>
           this.originItems.push(el)
         );
         this.nextHref = data.next_href;
@@ -48,7 +64,7 @@ export class Queue {
     );
   }
 
-  _filterData(data) {
+  private filterData(data: Track[]) {
     return data
       .filter(
         el =>

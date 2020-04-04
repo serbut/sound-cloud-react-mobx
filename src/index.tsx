@@ -4,6 +4,10 @@ import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 
+import './api';
+import 'react-virtualized/styles.css';
+// import './styles/index.less';
+
 ReactDOM.render(
   <React.StrictMode>
     <App />

@@ -1,8 +1,10 @@
 import { observable } from 'mobx';
 
-class ViewState {
+export class ViewState {
   @observable playlistOpen = false;
   @observable volumeControlOpen = false;
+
+  private timeoutID: number | undefined;
 
   constructor() {
     window.addEventListener('click', () => {
@@ -16,10 +18,10 @@ class ViewState {
     this.playlistOpen = !this.playlistOpen;
   }
 
-  temprorarilyShowVolumeControl() {
+  temporarilyShowVolumeControl() {
     this.volumeControlOpen = true;
-    clearTimeout(this._timerId);
-    this._timerId = setTimeout(() => (this.volumeControlOpen = false), 1000);
+    clearTimeout(this.timeoutID);
+    this.timeoutID = window.setTimeout(() => (this.volumeControlOpen = false), 1000);
   }
 }
 
