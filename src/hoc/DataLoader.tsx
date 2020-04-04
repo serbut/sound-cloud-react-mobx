@@ -3,13 +3,20 @@ import { observer } from 'mobx-react';
 import { Component } from 'react';
 
 import { loadData, loadMore } from '../api';
+import { Playlist } from '../models/playlist';
+import { Track } from '../models/track';
+import { User } from '../models/user';
 
 @observer
-class DataLoader extends Component {
-  @observable.shallow data = [];
+class DataLoader extends Component<{
+  url: string;
+  params?: any;
+  render: Function;
+}> {
+  @observable.shallow data: Array<Track | User | Playlist> = [];
   @observable isLoading = false;
-  @observable nextHref;
-  @observable error;
+  @observable nextHref: string | null = null;
+  @observable error: string | null = null;
 
   @computed get isLastPage() {
     return !this.nextHref;
@@ -19,7 +26,13 @@ class DataLoader extends Component {
     this.loadData();
   }
 
-  componentDidUpdate({ url: prevUrl, params: prevParams }) {
+  componentDidUpdate({
+    url: prevUrl,
+    params: prevParams,
+  }: {
+    url: string;
+    params?: any;
+  }) {
     const { url, params } = this.props;
 
     if (
@@ -41,8 +54,8 @@ class DataLoader extends Component {
     this.isLoading = true;
 
     loadData(url, params)
-      .then((data) => this.onSuccess(data))
-      .catch((err) => this.onError(err));
+      .then((data: any) => this.onSuccess(data))
+      .catch(() => this.onError());
   };
 
   loadMore = () => {
@@ -51,16 +64,20 @@ class DataLoader extends Component {
     }
 
     const nextHref = this.nextHref;
-    this.isLoading = true;
 
-    loadMore(nextHref)
-      .then((data) => {
+    if (!this.nextHref) {
+      return;
+    }
+
+    loadMore(nextHref as string)
+      .then((data: any) => {
         // TODO: why we need this check ?
         if (nextHref === this.nextHref) {
           this.onSuccess(data);
         }
       })
-      .catch((err) => this.onError(err));
+      .catch(() => this.onError());
+    this.isLoading = true;
   };
 
   @action clearData = () => {
@@ -69,14 +86,14 @@ class DataLoader extends Component {
     this.nextHref = null;
   };
 
-  @action onSuccess(data) {
+  @action onSuccess(data: any) {
     if (!data.collection.length) {
       this.nextHref = null;
       this.isLoading = false;
       return;
     }
 
-    data.collection.forEach((el) => this.data.push(el));
+    data.collection.forEach((el: any) => this.data.push(el));
     this.nextHref = data.next_href;
     this.isLoading = false;
   }

@@ -1,26 +1,26 @@
-import './UserCard.less';
-
 import { Avatar, Typography } from '@material-ui/core';
 import { observer } from 'mobx-react';
 import React from 'react';
 import { Link } from 'react-router-dom';
 
 import { IMAGE_SIZES } from '../../constants';
+import { User } from '../../models/user';
 import { formatNumber, getImageUrl } from '../../utils';
+import './UserCard.css';
 
-const UserCard = ({ user }) => {
+const UserCard = ({ user }: { user: User }) => {
   const link = `/users/${user.permalink}`;
 
   return (
-    <div className="user-card">
+    <div className="UserCard">
       <Link to={link} className="link">
         <Avatar
           alt={user.username}
           src={getImageUrl(user.avatar_url, IMAGE_SIZES.t500x500)}
-          className="user-card__avatar"
+          className="UserCard-avatar"
         />
       </Link>
-      <div className="user-card__content">
+      <div className="UserCard-content">
         <Typography variant="subtitle2" align="center">
           <Link to={link} className="link">
             {user.username}

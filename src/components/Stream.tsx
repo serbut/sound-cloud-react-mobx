@@ -7,8 +7,8 @@ import DataGrid from './DataGrid';
 
 @observer
 class Stream extends React.Component {
-  formatData(data) {
-    return data.filter((el) => el.origin).map((el) => el.origin);
+  formatData(data: any[]) {
+    return data.filter((i: any) => i.origin).map((i: any) => i.origin);
   }
 
   render() {
@@ -16,7 +16,8 @@ class Stream extends React.Component {
       <div className="container" style={{ paddingTop: 48 }}>
         <DataLoader
           url={'me/activities/tracks/affiliated'}
-          render={({ data, ...other }) => (
+          render={({ data, ...other }: { data: any; ohter: any }) => (
+            // @ts-ignore
             <DataGrid data={this.formatData(data)} {...other} />
           )}
         />

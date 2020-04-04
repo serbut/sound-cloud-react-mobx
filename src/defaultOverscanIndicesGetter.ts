@@ -17,6 +17,12 @@ export default function defaultOverscanIndicesGetter({
   // scrollDirection,
   startIndex,
   stopIndex,
+}: {
+  cellCount: number;
+  overscanCellsCount: number;
+  // scrollDirection,
+  startIndex: number;
+  stopIndex: number;
 }) {
   const overscanStartIndex = startIndex - overscanCellsCount;
   const overscanStopIndex = stopIndex + overscanCellsCount;

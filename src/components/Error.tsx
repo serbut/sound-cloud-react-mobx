@@ -1,9 +1,9 @@
 import { Button, Typography } from '@material-ui/core';
 import React from 'react';
 
-const Error = ({ children }) => {
+const Error = ({ children }: { children: React.Component | string }) => {
   const handleClick = () => {
-    location.reload();
+    window.location.reload();
   };
 
   return (

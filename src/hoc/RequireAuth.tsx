@@ -1,8 +1,7 @@
-import { inject, observer } from 'mobx-react';
+import { observer } from 'mobx-react';
 import React, { Component } from 'react';
 
-export default function (InnerComponent) {
-  @inject('sessionStore')
+export default function (InnerComponent: any) {
   @observer
   class RequireAuth extends Component {
     // TODO: fix
@@ -17,7 +16,7 @@ export default function (InnerComponent) {
     // }
 
     render() {
-      this.props.sessionStore.isLoggedIn;
+      // this.props.sessionStore.isLoggedIn;
 
       return <InnerComponent {...this.props} />;
     }

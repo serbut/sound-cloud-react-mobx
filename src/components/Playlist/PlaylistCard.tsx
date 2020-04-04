@@ -1,27 +1,27 @@
-import './PlaylistCard.less';
-
 import { Card, CardContent, CardMedia, Typography } from '@material-ui/core';
 import { PlaylistPlay } from '@material-ui/icons';
 import React from 'react';
 import { Link } from 'react-router-dom';
 
 import { IMAGE_SIZES } from '../../constants';
+import { Playlist } from '../../models/playlist';
 import { getImageUrl } from '../../utils';
+import './PlaylistCard.css';
 
-const PlaylistCard = ({ playlist }) => {
+const PlaylistCard = ({ playlist }: { playlist: Playlist }) => {
   const link = `/users/${playlist.user.permalink}/playlists/${playlist.permalink}`;
 
   return (
-    <Card className="playlist-card">
-      <CardMedia className="playlist-card__media">
+    <Card className="PlaylistCard">
+      <CardMedia className="PlaylistCard-media">
         <Link to={link}>
           <img
             src={getImageUrl(playlist.artwork_url, IMAGE_SIZES.t500x500)}
             alt={playlist.title}
           />
-          <div className="playlist-card__overlay">
+          <div className="PlaylistCard-overlay">
             <Typography
-              type="subtitle"
+              variant="subtitle1"
               color="inherit"
               style={{ marginRight: 4 }}
             >
@@ -32,7 +32,7 @@ const PlaylistCard = ({ playlist }) => {
         </Link>
       </CardMedia>
       <CardContent>
-        <Typography type="subtitle" noWrap title={playlist.title}>
+        <Typography variant="subtitle1" noWrap title={playlist.title}>
           <Link to={link} className="link">
             {playlist.title}
           </Link>

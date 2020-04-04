@@ -1,5 +1,3 @@
-import './TrackCard.less';
-
 import {
   Card,
   CardContent,
@@ -8,15 +6,28 @@ import {
   Typography,
 } from '@material-ui/core';
 import { Pause, PlayArrow } from '@material-ui/icons';
-import { inject, observer } from 'mobx-react';
-import React from 'react';
+import { observer } from 'mobx-react';
+import React, { useContext } from 'react';
 import { Link } from 'react-router-dom';
 
 import { IMAGE_SIZES } from '../../constants';
+import { Track } from '../../models/track';
+import { StoresContext } from '../../stores-context';
 import { formatNumber, fromNow, getImageUrl, isPreview } from '../../utils';
+import './TrackCard.css';
 
 // TODO: split into 2 components: TrackCard & TrackCardContent
-const TrackCard = ({ track, compact, playerStore, tracks = [track] }) => {
+const TrackCard = ({
+  track,
+  compact = false,
+  tracks = [track],
+}: {
+  track: Track;
+  compact?: boolean;
+  tracks?: Track[];
+}) => {
+  const { playerStore } = useContext(StoresContext);
+
   const handlePlayClick = () => {
     playerStore.playTrack(track, tracks.slice());
   };
@@ -26,20 +37,16 @@ const TrackCard = ({ track, compact, playerStore, tracks = [track] }) => {
   return (
     <Card
       className={
-        'track-card' +
+        'TrackCard' +
         (!compact && playerStore.isSelected(track) ? ' active' : '')
       }
     >
       <CardMedia
-        className="track-card__media"
-        image={getImageUrl(
-          track.artwork_url,
-          IMAGE_SIZES.t500x500,
-          track.title
-        )}
+        className="TrackCard-media"
+        image={getImageUrl(track.artwork_url, IMAGE_SIZES.t500x500)}
         title={track.title}
       >
-        <div className="track-card__overlay">
+        <div className="TrackCard-overlay">
           <IconButton
             onClick={handlePlayClick}
             aria-label={isPlaying ? 'pause' : 'play'}
@@ -52,7 +59,7 @@ const TrackCard = ({ track, compact, playerStore, tracks = [track] }) => {
           </IconButton>
         </div>
         {isPreview(track) && (
-          <div className="track-card__overlay2">
+          <div className="TrackCard-overlay2">
             <Typography>Preview</Typography>
           </div>
         )}
@@ -63,13 +70,12 @@ const TrackCard = ({ track, compact, playerStore, tracks = [track] }) => {
           <Typography variant="subtitle2" noWrap>
             <Link
               to={`/users/${track.user.permalink}/tracks/${track.permalink}`}
-              className="link"
             >
               {track.title}
             </Link>
           </Typography>
           <Typography variant="body2" noWrap>
-            <Link to={`/users/${track.user.permalink}`} className="link">
+            <Link to={`/users/${track.user.permalink}`}>
               {track.user.username}
             </Link>
           </Typography>
@@ -85,4 +91,4 @@ const TrackCard = ({ track, compact, playerStore, tracks = [track] }) => {
   );
 };
 
-export default inject('playerStore')(observer(TrackCard));
+export default observer(TrackCard);

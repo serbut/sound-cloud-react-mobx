@@ -1,9 +1,18 @@
 import { CircularProgress, Typography } from '@material-ui/core';
 import { observer } from 'mobx-react';
 import React from 'react';
-import { InfiniteLoader, List, WindowScroller } from 'react-virtualized';
+import {
+  Index,
+  InfiniteLoader,
+  List,
+  ListRowProps,
+  WindowScroller,
+} from 'react-virtualized';
 
-import overscanIndicesGetter from '../defaultOverscanIndicesGetter.js';
+import overscanIndicesGetter from '../defaultOverscanIndicesGetter';
+import { Playlist } from '../models/playlist';
+import { Track } from '../models/track';
+import { User } from '../models/user';
 import Error from './Error';
 import PlaylistCard from './Playlist/PlaylistCard';
 import TrackCard from './Track/TrackCard';
@@ -16,7 +25,7 @@ const WIDTH = CELL_WIDTH * CELLS_IN_ROW;
 
 const cellStyle = {
   flex: '0 0 auto',
-  boxSizing: 'border-box',
+  boxSizing: 'border-box' as 'border-box',
   padding: 8,
   width: CELL_WIDTH,
 };
@@ -36,7 +45,19 @@ const loaderContainerStyle = {
   alignItems: 'center',
 };
 
-const DataGrid = ({ data, isLoading, isLastPage, error, loadMore }) => {
+const DataGrid = ({
+  data,
+  isLoading,
+  isLastPage,
+  error,
+  loadMore,
+}: {
+  data: Array<Track | User | Playlist>;
+  isLoading: boolean;
+  isLastPage: boolean;
+  error: string | null;
+  loadMore: Function;
+}) => {
   if (!data.length && isLoading) {
     return (
       <div className="loader-wrap">
@@ -56,9 +77,9 @@ const DataGrid = ({ data, isLoading, isLastPage, error, loadMore }) => {
   const loadedRowCount = Math.ceil(data.length / CELLS_IN_ROW);
   const rowCount = isLastPage ? loadedRowCount : loadedRowCount + 1;
 
-  const isRowLoaded = ({ index }) => loadedRowCount > index;
+  const isRowLoaded = ({ index }: Index) => loadedRowCount > index;
 
-  const rowRenderer = ({ key, index, style }) => {
+  const rowRenderer = ({ key, index, style }: ListRowProps) => {
     const from = index * CELLS_IN_ROW;
     const to = from + CELLS_IN_ROW;
     const rowData = data.slice(from, to);

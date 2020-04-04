@@ -1,11 +1,9 @@
-@import '../../styles/vars.less';
-
-.track-card__media {
+.TrackCard-media {
   position: relative;
   padding-top: 100%;
 }
 
-.track-card__overlay {
+.TrackCard-overlay {
   position: absolute;
   top: 0;
   bottom: 0;
@@ -17,16 +15,15 @@
   justify-content: center;
   align-items: center;
 
-  background: hsla(0, 0%, 6.7%, .8);
-  transition: .3s;
-
-  .track-card:not(:hover):not(.active) & {
-    opacity: 0;
-    visibility: hidden;
-  }
+  background: hsla(0, 0%, 6.7%, 0.8);
+  transition: 0.3s;
+}
+.TrackCard:not(:hover):not(.active) .TrackCard-overlay {
+  opacity: 0;
+  visibility: hidden;
 }
 
-.track-card__overlay2 {
+.TrackCard-overlay2 {
   position: absolute;
   bottom: 0;
   left: 0;
@@ -35,5 +32,5 @@
 
   color: rgba(255, 255, 255, 0.8);
   text-align: right;
-  background: hsla(0, 0%, 6.7%, .8);
+  background: hsla(0, 0%, 6.7%, 0.8);
 }

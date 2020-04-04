@@ -8,13 +8,13 @@ import {
 } from 'react-router-dom';
 import AppBar from './components/AppBar';
 import Callback from './components/Callback';
-// import Explore from './components/Explore';
+import Explore from './components/Explore';
 import PageNotFound from './components/PageNotFound';
 import Player from './components/Player/Player';
 // import Playlist from './components/Playlist/Playlist';
 import ScrollToTopBtn from './components/ScrollToTopBtn';
 // import Search from './components/Search/Search';
-// import Stream from './components/Stream';
+import Stream from './components/Stream';
 // import Track from './components/Track/Track';
 // import User from './components/User/User';
 import AudioService from './services/AudioService';
@@ -48,12 +48,12 @@ class App extends React.Component {
               <Route path="/callback">
                 <Callback />
               </Route>
-              {/*  <Route path="/stream">*/}
-              {/*    <Stream />*/}
-              {/*  </Route>*/}
-              {/*  <Route path="/explore">*/}
-              {/*    <Explore />*/}
-              {/*  </Route>*/}
+              <Route path="/stream">
+                <Stream />
+              </Route>
+              <Route path="/explore">
+                <Explore />
+              </Route>
               {/*  <Route path="/search">*/}
               {/*    <Search />*/}
               {/*  </Route>*/}

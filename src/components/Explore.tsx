@@ -7,7 +7,9 @@ import { getSearchTracksByTagRequest } from '../api';
 import DataLoader from '../hoc/DataLoader';
 import DataGrid from './DataGrid';
 
-export const GENRES_MAP = {
+export const GENRES_MAP: {
+  [key: string]: string;
+} = {
   ambient: 'Ambient',
   deephouse: 'Deep House',
   electronic: 'Electronic',
@@ -20,7 +22,7 @@ export const GENRES_MAP = {
   'drum&bass': 'Drum & Bass',
 };
 
-const GENRES_LIST = [];
+const GENRES_LIST: string[] = [];
 
 for (const key in GENRES_MAP) {
   GENRES_LIST.push(key);
@@ -30,8 +32,6 @@ const Explore = () => {
   const history = useHistory();
   const location = useLocation();
   const genre = new URLSearchParams(location.search).get('genre');
-  const currentTabIndex = GENRES_LIST.indexOf(genre);
-  const { url, params: requestParams } = getSearchTracksByTagRequest(genre);
 
   useEffect(() => {
     // TODO: somehow improve this maybe?
@@ -40,15 +40,15 @@ const Explore = () => {
 
     if (!genre) {
       history.replace({
-        path: '/explore',
+        pathname: '/explore',
         search: searchParams.toString(),
       });
     }
-  }, []);
+  });
 
-  const handleChange = (e, i) => {
+  const handleChange = (event: React.ChangeEvent<{}>, index: number) => {
     const searchParams = new URLSearchParams();
-    searchParams.append('genre', GENRES_LIST[i]);
+    searchParams.append('genre', GENRES_LIST[index]);
 
     history.push({
       pathname: '/explore',
@@ -60,6 +60,9 @@ const Explore = () => {
     return null;
   }
 
+  const currentTabIndex = GENRES_LIST.indexOf(genre);
+  const { url, params: requestParams } = getSearchTracksByTagRequest(genre);
+
   return (
     <div>
       {currentTabIndex !== -1 && (
@@ -70,7 +73,7 @@ const Explore = () => {
             value={currentTabIndex}
             onChange={handleChange}
           >
-            {GENRES_LIST.map((el, i) => (
+            {GENRES_LIST.map((el: string, i) => (
               <Tab key={i} label={GENRES_MAP[el]} />
             ))}
           </Tabs>
@@ -81,7 +84,7 @@ const Explore = () => {
         <DataLoader
           url={url}
           params={requestParams}
-          render={(props) => <DataGrid {...props} />}
+          render={(props: any) => <DataGrid {...props} />}
         />
       </div>
     </div>
