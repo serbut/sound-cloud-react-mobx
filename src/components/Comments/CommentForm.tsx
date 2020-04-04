@@ -5,15 +5,15 @@ import React, { Component } from 'react';
 
 // TODO: add validation
 @observer
-class CommentForm extends Component {
+class CommentForm extends Component<{ addComment: Function }> {
   @observable commentBody = '';
 
-  handleInputChange = (e) => {
-    this.commentBody = e.target.value;
+  handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    this.commentBody = event.target.value;
   };
 
-  handleFormSubmit = (e) => {
-    e.preventDefault();
+  handleFormSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
 
     if (!this.commentBody) {
       return;

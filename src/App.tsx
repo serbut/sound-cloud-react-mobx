@@ -15,7 +15,7 @@ import Player from './components/Player/Player';
 import ScrollToTopBtn from './components/ScrollToTopBtn';
 // import Search from './components/Search/Search';
 import Stream from './components/Stream';
-// import Track from './components/Track/Track';
+import Track from './components/Track/Track';
 // import User from './components/User/User';
 import AudioService from './services/AudioService';
 import KeyboardShortcutsService from './services/KeyboardShortcutsService';
@@ -57,9 +57,9 @@ class App extends React.Component {
               {/*  <Route path="/search">*/}
               {/*    <Search />*/}
               {/*  </Route>*/}
-              {/*  <Route path="/users/:user/tracks/:track">*/}
-              {/*    <Track />*/}
-              {/*  </Route>*/}
+              <Route path="/users/:user/tracks/:track">
+                <Track />
+              </Route>
               {/*  <Route path="/users/:user/playlists/:playlist">*/}
               {/*    <Playlist />*/}
               {/*  </Route>*/}

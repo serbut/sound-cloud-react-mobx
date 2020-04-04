@@ -1,19 +1,23 @@
 import { CircularProgress, List, Typography } from '@material-ui/core';
-import { inject, observer } from 'mobx-react';
+import { observer } from 'mobx-react';
 import React, { Component } from 'react';
 
 import { addComment, getTrackCommentsUrl, removeComment } from '../../api';
 import DataLoader from '../../hoc/DataLoader';
-import InfiniteScrollify from '../../hoc/InfiniteScrollify';
+import InfiniteScroll from '../../hoc/InfiniteScrollify';
+import { Comment } from '../../models/comment';
+import { StoresContext } from '../../stores-context';
 import Error from '../Error';
 import CommentForm from './CommentForm';
-import Comment from './SingleComment';
+import CommentComponent from './SingleComment';
 
-@inject('sessionStore', 'playerStore')
 @observer
-class Comments extends Component {
-  addComment = (commentBody) => {
-    const { playerStore, sessionStore, trackId } = this.props;
+class Comments extends Component<{ trackId: string }> {
+  static contextType = StoresContext;
+
+  addComment = (commentBody: string) => {
+    const { playerStore, sessionStore } = this.context;
+    const { trackId } = this.props;
     const timestamp =
       playerStore.track && playerStore.track.id === trackId
         ? playerStore.progress * 1000
@@ -27,7 +31,7 @@ class Comments extends Component {
     );
   };
 
-  removeComment = (comment) => {
+  removeComment = (comment: Comment) => {
     removeComment(comment.track_id, comment.id);
     // .then(res => comments.remove(comment)); TODO: removeComment
   };
@@ -39,24 +43,34 @@ class Comments extends Component {
     return (
       <div>
         <Typography variant="h5">Leave a comment</Typography>
-        <CommentForm addComment={addComment}></CommentForm>
+        <CommentForm addComment={addComment} />
         <br />
 
         <DataLoader
           url={getTrackCommentsUrl(trackId)}
-          render={({ data: comments, isLoading, loadMore, error }) => (
+          render={({
+            data: comments,
+            isLoading,
+            loadMore,
+            error,
+          }: {
+            data: any;
+            isLoading: boolean;
+            loadMore: Function;
+            error: string | null;
+          }) => (
             <div>
-              <InfiniteScrollify load={loadMore}>
+              <InfiniteScroll load={loadMore}>
                 <List>
-                  {comments.map((comment) => (
-                    <Comment
+                  {comments.map((comment: Comment) => (
+                    <CommentComponent
                       key={comment.id}
                       comment={comment}
                       removeComment={removeComment}
                     />
                   ))}
                 </List>
-              </InfiniteScrollify>
+              </InfiniteScroll>
 
               {isLoading && (
                 <div className="loader-wrap">

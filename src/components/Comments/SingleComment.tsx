@@ -8,14 +8,24 @@ import {
   Typography,
 } from '@material-ui/core';
 import { Delete } from '@material-ui/icons';
-import { inject, observer } from 'mobx-react';
-import React from 'react';
+import { observer } from 'mobx-react';
+import React, { useContext } from 'react';
 import { Link } from 'react-router-dom';
 
 import { IMAGE_SIZES } from '../../constants';
+import { Comment } from '../../models/comment';
+import { StoresContext } from '../../stores-context';
 import { formatDuration, fromNow, getImageUrl } from '../../utils';
 
-const Comment = ({ comment, removeComment, sessionStore }) => {
+const CommentComponent = ({
+  comment,
+  removeComment,
+}: {
+  comment: Comment;
+  removeComment: Function;
+}) => {
+  const { sessionStore } = useContext(StoresContext);
+
   return (
     <ListItem divider>
       <ListItemAvatar>
@@ -42,7 +52,7 @@ const Comment = ({ comment, removeComment, sessionStore }) => {
         }
         secondary={comment.body}
       />
-      {sessionStore.isLoggedIn && sessionStore.user.id === comment.user.id && (
+      {sessionStore.user && sessionStore.user.id === comment.user.id && (
         <ListItemSecondaryAction>
           <IconButton color="secondary" onClick={() => removeComment(comment)}>
             <Delete />
@@ -53,4 +63,4 @@ const Comment = ({ comment, removeComment, sessionStore }) => {
   );
 };
 
-export default inject('sessionStore')(observer(Comment));
+export default observer(CommentComponent);

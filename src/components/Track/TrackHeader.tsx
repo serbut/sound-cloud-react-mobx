@@ -1,29 +1,35 @@
 import { Button, Typography } from '@material-ui/core';
-import { inject, observer } from 'mobx-react';
-import React from 'react';
+import { observer } from 'mobx-react';
+import React, { useContext } from 'react';
 import { Link } from 'react-router-dom';
+import { Track } from '../../models/track';
+import { StoresContext } from '../../stores-context';
 
 import { formatDuration, formatNumber, fromNow } from '../../utils';
 import TrackCard from './TrackCard';
+import './TrackHeader.css';
 
-const TrackHeader = ({ track, sessionStore }) => {
+const TrackHeader = ({ track }: { track: Track }) => {
+  const { sessionStore } = useContext(StoresContext);
   const { user } = track;
 
   return (
-    <div className="track-header">
-      <div className="track-header__row container">
-        <div className="track-header__artwork">
+    <div className="TrackHeader">
+      <div className="TrackHeader-row container">
+        <div className="TrackHeader-artwork">
           <TrackCard track={track} compact />
         </div>
-        <div className="track-header__details">
+        <div className="TrackHeader-details">
           <Typography variant="h5">Single</Typography>
           <Typography variant="h4" gutterBottom>
             {track.title}
           </Typography>
           <Typography variant="subtitle1">
             by{' '}
-            <Link to={`/users/${user.permalink}`} className="link link--blue">
-              {user.username}
+            <Link to={`/users/${user.permalink}`}>
+              <Typography color="primary" display="inline">
+                {user.username}
+              </Typography>
             </Link>
           </Typography>
           <Typography variant="body1" gutterBottom>
@@ -63,4 +69,4 @@ const TrackHeader = ({ track, sessionStore }) => {
   );
 };
 
-export default inject('sessionStore')(observer(TrackHeader));
+export default observer(TrackHeader);

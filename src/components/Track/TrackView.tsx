@@ -1,15 +1,18 @@
 import { Chip, Typography } from '@material-ui/core';
+import { History } from 'history';
 import { observer } from 'mobx-react';
 import React from 'react';
+import { Track } from '../../models/track';
 
 import { getTags } from '../../utils';
 import Comments from '../Comments/Comments';
 import TrackHeader from './TrackHeader';
+import './TrackView.css';
 
-const TrackView = ({ track, history }) => {
-  const handleTagClick = (q) => {
+const TrackView = ({ track, history }: { track: Track; history: History }) => {
+  const handleTagClick = (event: string) => {
     const searchParams = new URLSearchParams();
-    searchParams.append('q', q);
+    searchParams.append('q', event);
     searchParams.append('where', 'tracks');
 
     history.push({
@@ -20,16 +23,16 @@ const TrackView = ({ track, history }) => {
 
   return (
     <div className="animated fadeIn">
-      <TrackHeader track={track}></TrackHeader>
+      <TrackHeader track={track} />
 
       <div className="container">
         {track.description && (
           <pre>
-            <Typography>{track.description}</Typography>
+            <Typography variant="body2">{track.description}</Typography>
           </pre>
         )}
         {track.tag_list && (
-          <div className="track-tags">
+          <div className="Track-tags">
             {getTags(track.tag_list).map((el, i) => (
               <Chip
                 key={i}

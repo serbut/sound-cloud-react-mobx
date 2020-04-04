@@ -1,6 +1,8 @@
 import { Component } from 'react';
 
-export default class InfiniteScrollComponent extends Component {
+export default class InfiniteScrollComponent extends Component<{
+  load: Function;
+}> {
   componentDidMount() {
     window.addEventListener('scroll', this.onScroll, false);
   }

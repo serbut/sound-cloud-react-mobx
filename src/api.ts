@@ -68,8 +68,11 @@ export const addLike = (trackId: string) => SC.put(`/me/favorites/${trackId}`);
 export const removeLike = (trackId: string) =>
   SC.delete(`/me/favorites/${trackId}`);
 
-export const addComment = (trackId: string, body: string, timestamp: string) =>
-  SC.post(`/tracks/${trackId}/comments`, { comment: { body, timestamp } });
+export const addComment = (
+  trackId: string,
+  body: string,
+  timestamp: number | null
+) => SC.post(`/tracks/${trackId}/comments`, { comment: { body, timestamp } });
 
 export const removeComment = (trackId: string, commentId: string) =>
   SC.delete(`/tracks/${trackId}/comments/${commentId}`);
