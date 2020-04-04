@@ -67,7 +67,7 @@ const AppBarComponent = () => {
   };
 
   return (
-    <AppBar position="fixed">
+    <AppBar position="static">
       <Toolbar>
         <Typography variant="h6" color="inherit" className={classes.title}>
           {APP_TITLE}

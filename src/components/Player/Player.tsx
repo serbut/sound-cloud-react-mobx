@@ -1,5 +1,3 @@
-import './Player.less';
-
 import {
   CircularProgress,
   IconButton,
@@ -16,20 +14,23 @@ import {
   SkipNext,
   SkipPrevious,
 } from '@material-ui/icons';
-import { inject, observer } from 'mobx-react';
+import { observer } from 'mobx-react';
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { StoresContext } from '../../stores-context';
 
 import { getImageUrl } from '../../utils';
+import './Player.less';
 import PlayerQueue from './PlayerQueue';
 import VolumeControl from './VolumeControl';
 
-@inject('sessionStore', 'viewStore', 'playerStore')
 @observer
 class Player extends React.Component {
-  onQueueClick = (e) => {
-    e.stopPropagation();
-    this.props.viewStore.togglePlaylist(e);
+  static contextType = StoresContext;
+
+  onQueueClick = (event: React.MouseEvent<HTMLElement>) => {
+    event.stopPropagation();
+    this.context.viewStore.togglePlaylist();
   };
 
   render() {
@@ -38,7 +39,7 @@ class Player extends React.Component {
       sessionStore,
       playerStore: store,
       playerStore: { track },
-    } = this.props;
+    } = this.context;
     // const color = 'blue';
 
     if (!track) return null;
@@ -78,6 +79,7 @@ class Player extends React.Component {
               src={getImageUrl(track.artwork_url)}
               width={64}
               height={64}
+              alt="Track artwork"
             />
             <div className="player__track-details">
               <Typography variant="subtitle2" noWrap>

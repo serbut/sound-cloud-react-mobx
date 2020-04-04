@@ -1,5 +1,3 @@
-import './PlayerQueue.less';
-
 import {
   Avatar,
   Card,
@@ -13,8 +11,11 @@ import {
 import { VolumeUp } from '@material-ui/icons';
 import { inject, observer } from 'mobx-react';
 import React from 'react';
+import { Track } from '../../models/track';
+import { StoresContext } from '../../stores-context';
 
 import { getImageUrl, isElementInViewport } from '../../utils';
+import './PlayerQueue.less';
 
 const PER_PAGE = 30;
 
@@ -22,25 +23,28 @@ const PER_PAGE = 30;
 @inject('viewStore', 'playerStore')
 @observer
 class PlayerQueue extends React.Component {
-  componentDidUpdate(prevProps) {
+  static contextType = StoresContext;
+
+  componentDidUpdate() {
     const { style } = document.body;
 
-    if (!prevProps.viewStore.playlistOpen) {
-      style.overflow = null;
-      style.paddingRight = null;
+    if (!this.context.viewStore.playlistOpen) {
+      style.overflow = '';
+      style.paddingRight = '';
       return;
     }
 
     style.overflow = 'hidden';
     style.paddingRight = '17px';
+
     const el = document.querySelector(
-      `.player-queue [data-id='${this.props.playerStore.track.id}']`
+      `.player-queue [data-id='${this.context.playerStore.track.id}']`
     );
     el && !isElementInViewport(el) && el.scrollIntoView();
   }
 
   render() {
-    const { playerStore, viewStore } = this.props;
+    const { playerStore, viewStore } = this.context;
 
     if (!viewStore.playlistOpen) return null;
 
@@ -54,7 +58,7 @@ class PlayerQueue extends React.Component {
         <Card>
           <div className="player-queue__inner">
             <List>
-              {items.slice(from, to).map((track, i) => (
+              {items.slice(from, to).map((track: Track, i: number) => (
                 <ListItem
                   key={track.permalink + i}
                   button

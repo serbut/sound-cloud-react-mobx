@@ -1,5 +1,3 @@
-import './VolumeControl.less';
-
 import { Card, CardContent, IconButton } from '@material-ui/core';
 import {
   VolumeDown,
@@ -7,10 +5,14 @@ import {
   VolumeOff,
   VolumeUp,
 } from '@material-ui/icons';
-import { inject, observer } from 'mobx-react';
-import React from 'react';
+import { observer } from 'mobx-react';
+import React, { useContext } from 'react';
+import { StoresContext } from '../../stores-context';
+import './VolumeControl.less';
 
-const VolumeContol = ({ playerStore: store, viewStore }) => {
+const VolumeContol = () => {
+  const { playerStore, viewStore } = useContext(StoresContext);
+
   return (
     <div
       className="volume-slider-wrap"
@@ -22,15 +24,15 @@ const VolumeContol = ({ playerStore: store, viewStore }) => {
           viewStore.volumeControlOpen ? 'visible' : ''
         }`}
       >
-        <CardContent>{store.volume}</CardContent>
+        <CardContent>{playerStore.volume}</CardContent>
       </Card>
 
-      <IconButton onClick={() => store.toggleMuted()}>
-        {store.muted ? (
+      <IconButton onClick={() => playerStore.toggleMuted()}>
+        {playerStore.muted ? (
           <VolumeOff />
-        ) : store.volume === 1 ? (
+        ) : playerStore.volume === 1 ? (
           <VolumeUp />
-        ) : store.volume === 0 ? (
+        ) : playerStore.volume === 0 ? (
           <VolumeMute />
         ) : (
           <VolumeDown />
@@ -40,4 +42,4 @@ const VolumeContol = ({ playerStore: store, viewStore }) => {
   );
 };
 
-export default inject('playerStore', 'viewStore')(observer(VolumeContol));
+export default observer(VolumeContol);
