@@ -3,7 +3,7 @@ import { PlaylistPlay } from '@material-ui/icons';
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-import { IMAGE_SIZES } from '../../constants';
+import { ImageSize } from '../../enums';
 import { Playlist } from '../../models/playlist';
 import { getImageUrl } from '../../utils';
 import './PlaylistCard.css';
@@ -16,7 +16,7 @@ const PlaylistCard = ({ playlist }: { playlist: Playlist }) => {
       <CardMedia className="PlaylistCard-media">
         <Link to={link}>
           <img
-            src={getImageUrl(playlist.artwork_url, IMAGE_SIZES.t500x500)}
+            src={getImageUrl(playlist.artwork_url, ImageSize.t500x500)}
             alt={playlist.title}
           />
           <div className="PlaylistCard-overlay">

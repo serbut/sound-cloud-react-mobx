@@ -1,9 +1,9 @@
 import { Typography } from '@material-ui/core';
 import React from 'react';
-import { User } from '../../models/user';
+import { UserWithWebProfiles } from './User';
 import './UserAbout.css';
 
-const renderDescription = (description: string) => {
+const renderDescription = (description: string | null) => {
   if (!description) {
     return '';
   }
@@ -41,7 +41,7 @@ const renderLinks = (links: { url: string; title: string }[]) => {
   );
 };
 
-const UserAbout = ({ user }: { user: User }) => (
+const UserAbout = ({ user }: { user: UserWithWebProfiles }) => (
   <div>
     {renderDescription(user.description)}
     <br />

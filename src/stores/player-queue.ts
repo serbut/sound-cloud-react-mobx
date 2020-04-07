@@ -1,6 +1,7 @@
 import { action, computed, observable } from 'mobx';
 
-import { loadMore } from '../api';
+import { CollectionItem, loadMore } from '../api';
+import { CollectionItemType } from '../enums';
 import { Track } from '../models/track';
 import { isPreview } from '../utils';
 import { PlayerStore } from './player-store';
@@ -8,7 +9,7 @@ import { PlayerStore } from './player-store';
 export class Queue {
   @observable originItems: Track[] = [];
   @observable isLoading = false;
-  public nextHref: string | null = null;
+  public nextHref: string | null | undefined;
 
   private player: PlayerStore;
 
@@ -53,10 +54,10 @@ export class Queue {
     if (this.isLoading || !this.nextHref) return;
 
     this.isLoading = true;
-    loadMore(this.nextHref).then(
+    loadMore<Track | CollectionItem>(this.nextHref).then(
       action((data) => {
-        this.filterData(data.collection).forEach((el: Track) =>
-          this.originItems.push(el)
+        Queue.filterData(data.collection).forEach((track: Track) =>
+          this.originItems.push(track)
         );
         this.nextHref = data.next_href;
         this.isLoading = false;
@@ -64,14 +65,20 @@ export class Queue {
     );
   }
 
-  private filterData(data: Track[]) {
+  private static filterData(data: (Track | CollectionItem)[]) {
     return data
-      .filter(
-        (el) =>
-          (Object.prototype.hasOwnProperty.call(el, 'origin') && el.origin) ||
-          true
-      )
-      .filter((el) => el.type === 'track' || el.type === 'track-repost')
-      .map((el) => el.origin || el);
+      .map((item) => {
+        if ('origin' in item) {
+          if (
+            item.type === CollectionItemType.Track ||
+            item.type === CollectionItemType.TrackRepost
+          ) {
+            return item.origin;
+          }
+          return null;
+        }
+        return item;
+      })
+      .filter(Boolean) as Track[];
   }
 }

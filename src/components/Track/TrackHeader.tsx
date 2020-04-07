@@ -39,9 +39,8 @@ const TrackHeader = ({ track }: { track: Track }) => {
             <br />
             {formatNumber(track.playback_count)} plays{' '}
             <span className="bullet">&bull;</span>
-            {formatNumber(
-              track.favoritings_count || track.likes_count
-            )} likes <span className="bullet">&bull;</span>
+            {formatNumber(track.favoritings_count)} likes{' '}
+            <span className="bullet">&bull;</span>
             {formatNumber(track.reposts_count)} reposts{' '}
             <span className="bullet">&bull;</span>
             {formatNumber(track.comment_count)} comments

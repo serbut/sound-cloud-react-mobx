@@ -1,5 +1,6 @@
 import { observer } from 'mobx-react';
 import React from 'react';
+import { CollectionItem } from '../api';
 
 import DataLoader from '../hoc/DataLoader';
 import RequireAuth from '../hoc/RequireAuth';
@@ -7,8 +8,8 @@ import DataGrid from './DataGrid';
 
 @observer
 class Stream extends React.Component {
-  formatData(data: any[]) {
-    return data.filter((i: any) => i.origin).map((i: any) => i.origin);
+  formatData(data: CollectionItem[]) {
+    return data.filter((i) => i.origin).map((i: any) => i.origin);
   }
 
   render() {

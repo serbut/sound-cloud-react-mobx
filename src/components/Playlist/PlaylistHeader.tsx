@@ -2,7 +2,7 @@ import { Typography } from '@material-ui/core';
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-import { IMAGE_SIZES } from '../../constants';
+import { ImageSize } from '../../enums';
 import { Playlist } from '../../models/playlist';
 import { formatDuration, fromNow, getImageUrl } from '../../utils';
 import './PlaylistHeader.css';
@@ -14,7 +14,7 @@ const PlaylistHeader = ({ playlist }: { playlist: Playlist }) => {
     <div className="PlaylistHeader">
       <div className="container PlaylistHeader-row">
         <img
-          src={getImageUrl(playlist.artwork_url, IMAGE_SIZES.t500x500)}
+          src={getImageUrl(playlist.artwork_url, ImageSize.t500x500)}
           alt="playlsit.title"
           width={250}
           height={250}

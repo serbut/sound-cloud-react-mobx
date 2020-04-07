@@ -3,7 +3,7 @@ import { observer } from 'mobx-react';
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-import { IMAGE_SIZES } from '../../constants';
+import { ImageSize } from '../../enums';
 import { User } from '../../models/user';
 import { formatNumber, getImageUrl } from '../../utils';
 import './UserCard.css';
@@ -16,7 +16,7 @@ const UserCard = ({ user }: { user: User }) => {
       <Link to={link}>
         <Avatar
           alt={user.username}
-          src={getImageUrl(user.avatar_url, IMAGE_SIZES.t500x500)}
+          src={getImageUrl(user.avatar_url, ImageSize.t500x500)}
           className="UserCard-avatar"
         />
       </Link>

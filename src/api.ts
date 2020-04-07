@@ -2,6 +2,36 @@ import axios from 'axios';
 import SC from 'soundcloud';
 
 import { CLIENT_ID, REDIRECT_URI, TOKEN_KEY } from './config';
+import { CollectionItemType } from './enums';
+import { Playlist } from './models/playlist';
+import { Track } from './models/track';
+import { User } from './models/user';
+import { UserWebProfile } from './models/user-web-profile';
+
+export interface CollectionItem {
+  origin: Track | Playlist | null;
+  tags: null;
+  created_at: string;
+  type: CollectionItemType;
+}
+
+export interface Collection<T> {
+  collection: T[];
+  next_href?: string;
+  future_href?: string;
+}
+
+export interface StatusResponse {
+  status: string;
+}
+
+export interface Error {
+  error_message: string;
+}
+
+export interface ErrorResponse {
+  errors: Error[];
+}
 
 const getToken = () => localStorage.getItem(TOKEN_KEY);
 const BASE_URL = '//api.soundcloud.com';
@@ -40,7 +70,7 @@ const formatNextHref = (href: string) => {
   }
 };
 
-export const loadData = (href: string, params: {}) =>
+export const loadData = <T>(href: string, params: {}): Promise<Collection<T>> =>
   SC.get(href, { limit: PAGE_SIZE, linked_partitioning: 1, ...params }).then(
     (data: any) => {
       nextHref = data.next_href;
@@ -48,37 +78,50 @@ export const loadData = (href: string, params: {}) =>
     }
   );
 
-export const loadMore = (nextHref: string) =>
+export const loadMore = <T>(nextHref: string): Promise<Collection<T>> =>
   axios.get(formatNextHref(nextHref)).then(({ data }) => {
     nextHref = data.next_href;
     return data;
   });
 
-export const loadUser = (user: string) => getWithClientID(resolve(`/${user}`));
-export const loadPlaylist = (user: string, playlist: string) =>
-  getWithClientID(resolve(`/${user}/sets/${playlist}`));
-export const loadTrack = (user: string, track: string) =>
+export const loadUser = (user: string): Promise<User> =>
+  getWithClientID(resolve(`/${user}`));
+
+export const loadPlaylist = (
+  user: string,
+  playlist: string
+): Promise<Playlist> => getWithClientID(resolve(`/${user}/sets/${playlist}`));
+
+export const loadTrack = (user: string, track: string): Promise<Track> =>
   getWithClientID(resolve(`/${user}/${track}`));
-export const loadUserWebProfiles = (userId: string) =>
-  SC.get(`/users/${userId}/web-profiles`);
-export const followUser = (userId: string) =>
+
+export const loadUserWebProfiles = (
+  userId: number
+): Promise<UserWebProfile[]> => SC.get(`/users/${userId}/web-profiles`);
+
+export const followUser = (userId: number): Promise<User> =>
   SC.put(`/me/followings/${userId}`);
-export const unfollowUser = (userId: string) =>
+
+export const unfollowUser = (userId: number): Promise<StatusResponse> =>
   SC.delete(`/me/followings/${userId}`);
-export const addLike = (trackId: string) => SC.put(`/me/favorites/${trackId}`);
-export const removeLike = (trackId: string) =>
+
+export const addLike = (trackId: number): Promise<StatusResponse> =>
+  SC.put(`/me/favorites/${trackId}`);
+
+export const removeLike = (trackId: number): Promise<StatusResponse> =>
   SC.delete(`/me/favorites/${trackId}`);
 
 export const addComment = (
-  trackId: string,
+  trackId: number,
   body: string,
   timestamp: number | null
-) => SC.post(`/tracks/${trackId}/comments`, { comment: { body, timestamp } });
+): Promise<Comment> =>
+  SC.post(`/tracks/${trackId}/comments`, { comment: { body, timestamp } });
 
-export const removeComment = (trackId: string, commentId: string) =>
+export const removeComment = (trackId: number, commentId: number) =>
   SC.delete(`/tracks/${trackId}/comments/${commentId}`);
 
-export const getMeLikesIds = () =>
+export const getMeLikesIds = (): Promise<number[]> =>
   axios
     .get(`${BASE_URL}/e1/me/track_likes/ids`, {
       params: {
@@ -89,20 +132,25 @@ export const getMeLikesIds = () =>
     })
     .then(({ data }) => data.collection);
 
-export const getMeFollowingsIds = () =>
+export const getMeFollowingsIds = (): Promise<number[]> =>
   SC.get('me/followings', {
     limit: 5000,
     linked_partitioning: 1,
   }).then((data: any) => data.collection.map((el: any) => el.id));
 
-export const getUserTracksUrl = (userId: string) => `/users/${userId}/tracks`;
-export const getUserFollowingsUrl = (userId: string) =>
+export const getUserTracksUrl = (userId: number) => `/users/${userId}/tracks`;
+
+export const getUserFollowingsUrl = (userId: number) =>
   `/users/${userId}/followings`;
-export const getUserLikesUrl = (userId: string) => `/users/${userId}/favorites`;
-export const getUserPlaylistsUrl = (userId: string) =>
+
+export const getUserLikesUrl = (userId: number) => `/users/${userId}/favorites`;
+
+export const getUserPlaylistsUrl = (userId: number) =>
   `/users/${userId}/playlists`;
+
 export const USER_PLAYLISTS_PARAMS = { representation: 'compact' };
-export const getTrackCommentsUrl = (trackId: string) =>
+
+export const getTrackCommentsUrl = (trackId: number) =>
   `tracks/${trackId}/comments`;
 
 export const getSearchTracksByTagRequest = (tags: string) => ({

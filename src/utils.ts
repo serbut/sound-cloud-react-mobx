@@ -1,7 +1,8 @@
 import moment from 'moment';
 
-import { IMAGE_SIZES } from './constants';
+import { ImageSize } from './enums';
 import { Track } from './models/track';
+
 const BAD_URL = '//a1.sndcdn.com/images/';
 const PREVIEW_DURATION = 30000;
 
@@ -25,15 +26,15 @@ export function isElementInViewport(el: Element) {
   );
 }
 
-export function getImageUrl(url: string, size = IMAGE_SIZES.large) {
+export function getImageUrl(url: string, size = ImageSize.large) {
   if (!url || url.includes(BAD_URL)) {
     return '//placehold.it/1x1';
   }
 
-  return url.replace(IMAGE_SIZES.large, size);
+  return url.replace(ImageSize.large, size);
 }
 
-export function formatDuration(ms: string) {
+export function formatDuration(ms: number) {
   const duration = moment.duration(ms);
 
   if (duration.asHours() > 1)

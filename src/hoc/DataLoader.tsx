@@ -2,7 +2,7 @@ import { action, computed, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { Component } from 'react';
 
-import { loadData, loadMore } from '../api';
+import { Collection, loadData, loadMore } from '../api';
 import { Playlist } from '../models/playlist';
 import { Track } from '../models/track';
 import { User } from '../models/user';
@@ -15,7 +15,7 @@ class DataLoader extends Component<{
 }> {
   @observable.shallow data: Array<Track | User | Playlist> = [];
   @observable isLoading = false;
-  @observable nextHref: string | null = null;
+  @observable nextHref: string | undefined | null;
   @observable error: string | null = null;
 
   @computed get isLastPage() {
@@ -53,8 +53,8 @@ class DataLoader extends Component<{
 
     this.isLoading = true;
 
-    loadData(url, params)
-      .then((data: any) => this.onSuccess(data))
+    loadData<any>(url, params)
+      .then((data) => this.onSuccess(data))
       .catch(() => this.onError());
   };
 
@@ -69,7 +69,7 @@ class DataLoader extends Component<{
       return;
     }
 
-    loadMore(nextHref as string)
+    loadMore<any>(nextHref as string)
       .then((data: any) => {
         // TODO: why we need this check ?
         if (nextHref === this.nextHref) {
@@ -86,7 +86,7 @@ class DataLoader extends Component<{
     this.nextHref = null;
   };
 
-  @action onSuccess(data: any) {
+  @action onSuccess(data: Collection<any>) {
     if (!data.collection.length) {
       this.nextHref = null;
       this.isLoading = false;

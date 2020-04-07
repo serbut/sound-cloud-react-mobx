@@ -6,14 +6,19 @@ import { RouteComponentProps, withRouter } from 'react-router-dom';
 
 import { loadUser, loadUserWebProfiles } from '../../api';
 import { User } from '../../models/user';
+import { UserWebProfile } from '../../models/user-web-profile';
 import Error from '../Error';
 import UserView from '../User/UserView';
 
 type Props = RouteComponentProps<{ user: string; playlist: string }>;
 
+export interface UserWithWebProfiles extends User {
+  webProfiles: UserWebProfile[];
+}
+
 @observer
 class UserComponent extends React.Component<Props> {
-  @observable user: User | undefined;
+  @observable user: UserWithWebProfiles | undefined;
   @observable isLoading: boolean = false;
   @observable error: string | undefined;
 
@@ -31,12 +36,21 @@ class UserComponent extends React.Component<Props> {
     this.isLoading = true;
 
     loadUser(this.props.match.params.user)
-      .then((user) => (this.user = user))
-      .then(() => loadUserWebProfiles((this.user as User).id))
-      .then((profiles) => ((this.user as User).webProfiles = profiles))
-      .then(() => (this.isLoading = false))
+      .then((user) =>
+        loadUserWebProfiles((user as User).id).then((profiles) => ({
+          user,
+          profiles,
+        }))
+      )
+      .then(
+        action(({ user, profiles }) => {
+          this.user = { ...user, webProfiles: profiles };
+          this.isLoading = false;
+        })
+      )
       .catch(
-        action(() => {
+        action((err) => {
+          console.error(err);
           this.error = 'Failed to load user';
           this.isLoading = false;
         })

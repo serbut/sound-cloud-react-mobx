@@ -10,7 +10,7 @@ import { observer } from 'mobx-react';
 import React, { useContext } from 'react';
 import { Link } from 'react-router-dom';
 
-import { IMAGE_SIZES } from '../../constants';
+import { ImageSize } from '../../enums';
 import { Track } from '../../models/track';
 import { StoresContext } from '../../stores-context';
 import { formatNumber, fromNow, getImageUrl, isPreview } from '../../utils';
@@ -43,7 +43,7 @@ const TrackCard = ({
     >
       <CardMedia
         className="TrackCard-media"
-        image={getImageUrl(track.artwork_url, IMAGE_SIZES.t500x500)}
+        image={getImageUrl(track.artwork_url, ImageSize.t500x500)}
         title={track.title}
       >
         <div className="TrackCard-overlay">
@@ -80,8 +80,7 @@ const TrackCard = ({
             </Link>
           </Typography>
           <Typography variant="caption">
-            {formatNumber(track.likes_count || track.favoritings_count) +
-              ' likes'}
+            {formatNumber(track.favoritings_count) + ' likes'}
             <span className="bullet">&bull;</span>
             {fromNow(track.created_at)}
           </Typography>

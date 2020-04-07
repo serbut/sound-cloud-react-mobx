@@ -45,6 +45,17 @@ const loaderContainerStyle = {
   alignItems: 'center',
 };
 
+const renderCard = (item: Track | User | Playlist, data: any[]) => {
+  switch (item.kind) {
+    case 'track':
+      return <TrackCard track={item} tracks={data} />;
+    case 'user':
+      return <UserCard user={item} />;
+    case 'playlist':
+      return <PlaylistCard playlist={item} />;
+  }
+};
+
 const DataGrid = ({
   data,
   isLoading,
@@ -96,13 +107,7 @@ const DataGrid = ({
       <div key={key} style={{ ...style, ...rowStyle }}>
         {rowData.map((item) => (
           <div key={item.id} className="animated fadeIn" style={cellStyle}>
-            {item.kind === 'user' ? (
-              <UserCard user={item} />
-            ) : item.kind === 'playlist' ? (
-              <PlaylistCard playlist={item} />
-            ) : item.kind === 'track' ? (
-              <TrackCard track={item} tracks={data} />
-            ) : null}
+            {renderCard(item, data)}
           </div>
         ))}
       </div>

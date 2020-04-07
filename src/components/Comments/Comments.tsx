@@ -12,7 +12,7 @@ import CommentForm from './CommentForm';
 import CommentComponent from './SingleComment';
 
 @observer
-class Comments extends Component<{ trackId: string }> {
+class Comments extends Component<{ trackId: number }> {
   static contextType = StoresContext;
 
   addComment = (commentBody: string) => {

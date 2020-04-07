@@ -15,8 +15,8 @@ import { User } from '../models/user';
 
 export class SessionStore {
   @observable user: User | null = null;
-  @observable userLikesIds: IObservableArray<string> = observable.array();
-  @observable userFollowingsIds: IObservableArray<string> = observable.array();
+  @observable userLikesIds: IObservableArray<number> = observable.array();
+  @observable userFollowingsIds: IObservableArray<number> = observable.array();
 
   constructor() {
     if (localStorage.getItem(TOKEN_KEY)) {

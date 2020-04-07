@@ -2,7 +2,7 @@ import { Avatar, Button, Typography } from '@material-ui/core';
 import { observer } from 'mobx-react';
 import React, { useContext } from 'react';
 
-import { IMAGE_SIZES } from '../../constants';
+import { ImageSize } from '../../enums';
 import { User } from '../../models/user';
 import { StoresContext } from '../../stores-context';
 import { formatNumber, getImageUrl } from '../../utils';
@@ -15,7 +15,7 @@ const UserHeader = ({ user }: { user: User }) => {
     <div className="UserHeader">
       <Avatar
         alt={user.username}
-        src={getImageUrl(user.avatar_url, IMAGE_SIZES.t500x500)}
+        src={getImageUrl(user.avatar_url, ImageSize.t500x500)}
         style={{ width: 250, height: 250 }}
       />
       <div className="UserHeader-details">

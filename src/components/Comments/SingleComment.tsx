@@ -12,7 +12,7 @@ import { observer } from 'mobx-react';
 import React, { useContext } from 'react';
 import { Link } from 'react-router-dom';
 
-import { IMAGE_SIZES } from '../../constants';
+import { ImageSize } from '../../enums';
 import { Comment } from '../../models/comment';
 import { StoresContext } from '../../stores-context';
 import { formatDuration, fromNow, getImageUrl } from '../../utils';
@@ -30,7 +30,7 @@ const CommentComponent = ({
     <ListItem divider>
       <ListItemAvatar>
         <Avatar
-          src={getImageUrl(comment.user.avatar_url, IMAGE_SIZES.badge)}
+          src={getImageUrl(comment.user.avatar_url, ImageSize.badge)}
           alt={comment.user.username}
         />
       </ListItemAvatar>

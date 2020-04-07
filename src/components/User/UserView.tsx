@@ -4,7 +4,7 @@ import { observable } from 'mobx';
 import { observer } from 'mobx-react';
 import React, { Component } from 'react';
 import { Route } from 'react-router-dom';
-import { User } from '../../models/user';
+import { UserWithWebProfiles } from './User';
 
 import UserAbout from './UserAbout';
 import UserFollowings from './UserFollowings';
@@ -17,7 +17,7 @@ import './UserView.css';
 // TODO: move tabs to UserTabs component
 @observer
 class UserView extends Component<{
-  user: User;
+  user: UserWithWebProfiles;
   history: History;
   location: Location;
 }> {
