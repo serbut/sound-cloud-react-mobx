@@ -1,0 +1,16 @@
+.UserHeader {
+  display: flex;
+  align-items: center;
+  padding: 30px 0;
+}
+
+.UserHeader-details {
+  padding: 0 24px;
+}
+
+.UserHeader-visual {
+  display: block;
+  margin: 0 auto;
+  max-width: 100%;
+  height: auto;
+}

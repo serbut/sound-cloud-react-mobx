@@ -1,0 +1,36 @@
+.TrackCard-media {
+  position: relative;
+  padding-top: 100%;
+}
+
+.TrackCard-overlay {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 1;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  background: hsla(0, 0%, 6.7%, 0.8);
+  transition: 0.3s;
+}
+.TrackCard:not(:hover):not(.active) .TrackCard-overlay {
+  opacity: 0;
+  visibility: hidden;
+}
+
+.TrackCard-overlay2 {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 16px;
+
+  color: rgba(255, 255, 255, 0.8);
+  text-align: right;
+  background: hsla(0, 0%, 6.7%, 0.8);
+}

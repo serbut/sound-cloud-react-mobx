@@ -1,0 +1,74 @@
+.Player {
+  position: fixed;
+  z-index: 1;
+  bottom: 0;
+  left: 0;
+  right: 0;
+
+  background: #fff;
+  backface-visibility: hidden;
+}
+
+/*.Player-bg-progress {*/
+/*  position: absolute;*/
+/*  z-index: -1;*/
+/*  top: 0;*/
+/*  bottom: 0;*/
+/*  left: 64px;*/
+/*  right: 0;*/
+/*}*/
+
+/*.Player-bg-progress img {*/
+/*  width: 100%;*/
+/*  height: 100%;*/
+/*}*/
+
+.Player-preloader {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 64px;
+  height: 64px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: rgba(255, 255, 255, 0.4);
+}
+
+.Player-preloader:not(.visible) {
+  display: none;
+}
+
+.Player-inner {
+  display: flex;
+}
+
+.Player-group-left {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  padding-right: 24px;
+}
+
+.Player-group-center {
+  display: flex;
+  align-items: center;
+}
+
+.Player-group-right {
+  display: flex;
+  flex: 1;
+  justify-content: flex-end;
+  align-items: center;
+  padding-right: 24px;
+}
+
+.Player-track-artwork {
+  margin-right: 12px;
+}
+
+.Player-track-details {
+  max-width: 350px;
+}

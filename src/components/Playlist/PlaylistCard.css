@@ -1,0 +1,29 @@
+.PlaylistCard-media {
+  position: relative;
+  padding-top: 100%;
+  background: lightgray;
+}
+
+.PlaylistCard-media img {
+  position: absolute;
+  top: 0;
+
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+.PlaylistCard-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 16px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  color: rgba(255, 255, 255, 0.8);
+  background: hsla(0, 0%, 6.7%, 0.8);
+}
