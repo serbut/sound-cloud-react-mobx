@@ -4,10 +4,10 @@ import SC from 'soundcloud';
 import {
   addLike,
   followUser,
-  getMeFollowingsIds,
-  getMeLikesIds,
+  getMyFollowingsIds,
+  getMyLikesIds,
   removeLike,
-  unfollowUser,
+  stopFollowingUser,
 } from '../api';
 import { TOKEN_KEY, USER_KEY } from '../config';
 import { Track } from '../models/track';
@@ -65,9 +65,9 @@ export class SessionStore {
         this.user = user;
         localStorage.setItem(USER_KEY, JSON.stringify(user));
       })
-      .then(() => getMeLikesIds())
+      .then(() => getMyLikesIds())
       .then((userLikesIds: any) => (this.userLikesIds = userLikesIds))
-      .then(() => getMeFollowingsIds())
+      .then(() => getMyFollowingsIds())
       .then(
         (userFollowingsIds: any) => (this.userFollowingsIds = userFollowingsIds)
       )
@@ -94,7 +94,9 @@ export class SessionStore {
     }
 
     if (this.isFollowing(user)) {
-      unfollowUser(user.id).then(() => this.userFollowingsIds.remove(user.id));
+      stopFollowingUser(user.id).then(() =>
+        this.userFollowingsIds.remove(user.id)
+      );
     } else {
       followUser(user.id).then(() => this.userFollowingsIds.unshift(user.id));
     }

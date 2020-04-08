@@ -1,6 +1,6 @@
 import { observer } from 'mobx-react';
 import React from 'react';
-import { CollectionItem } from '../api';
+import { CollectionItem, STREAM_URL } from '../api';
 
 import DataLoader from '../hoc/DataLoader';
 import RequireAuth from '../hoc/RequireAuth';
@@ -16,7 +16,7 @@ class Stream extends React.Component {
     return (
       <div className="container" style={{ paddingTop: 48 }}>
         <DataLoader
-          url={'me/activities/tracks/affiliated'}
+          url={STREAM_URL}
           render={({ data, ...other }: { data: any; ohter: any }) => (
             // @ts-ignore
             <DataGrid data={this.formatData(data)} {...other} />
