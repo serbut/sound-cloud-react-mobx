@@ -1,76 +1,54 @@
 import { CircularProgress } from '@material-ui/core';
-import { observable } from 'mobx';
 import { observer } from 'mobx-react';
-import React from 'react';
-import { RouteComponentProps, withRouter } from 'react-router-dom';
+import React, { useContext, useEffect, useState } from 'react';
+import { useHistory, useParams } from 'react-router-dom';
 import { AppContext } from '../../app-context';
 
 import { Track } from '../../models/track';
 import Error from '../Error';
 import TrackView from '../Track/TrackView';
 
-type TrackProps = RouteComponentProps<{ user: string; track: string }>;
+const TrackComponent = () => {
+  const { api } = useContext(AppContext);
+  const { user: userID, track: trackID } = useParams();
+  const history = useHistory();
+  const [track, setTrack] = useState<Track | undefined>();
+  const [isLoading, setLoading] = useState<boolean>();
+  const [error, setError] = useState<boolean>();
 
-@observer
-class TrackComponent extends React.Component<TrackProps> {
-  static contextType = AppContext;
-  context!: React.ContextType<typeof AppContext>;
-
-  @observable track: Track | undefined;
-  @observable isLoading: boolean = false;
-  @observable error: string | undefined;
-
-  componentDidMount() {
-    this.loadTrack();
-  }
-
-  componentDidUpdate(prevProps: TrackProps) {
-    const { user: nextUser, track: nextTrack } = prevProps.match.params;
-    const { user, track } = this.props.match.params;
-
-    if (nextUser !== user || nextTrack !== track) {
-      this.loadTrack();
-    }
-  }
-
-  loadTrack() {
-    const { user, track } = this.props.match.params;
-
-    this.isLoading = true;
-
-    this.context.api
-      .loadTrack(user, track)
-      .then((track) => {
-        this.track = track;
-        this.isLoading = false;
-      })
-      .catch(() => {
-        this.error = 'Failed to load track';
-        this.isLoading = false;
-      });
-  }
-
-  render() {
-    const { track, isLoading, error } = this;
-
-    if (isLoading) {
-      return (
-        <div className="loader-wrap">
-          <CircularProgress />
-        </div>
-      );
+  useEffect(() => {
+    if (!userID || !trackID) {
+      return;
     }
 
-    if (error) {
-      return <Error>{error}</Error>;
-    }
+    setError(false);
+    setLoading(true);
 
-    if (!track) {
-      return null;
-    }
+    api
+      .loadTrack(userID, trackID)
+      .then((track) => setTrack(track))
+      .catch(() => setError(true))
+      .finally(() => setLoading(false));
+  }, [userID, trackID, api]);
 
-    return <TrackView track={track} history={this.props.history} />;
+  if (isLoading) {
+    return (
+      // TODO: create Loader component
+      <div className="loader-wrap">
+        <CircularProgress />
+      </div>
+    );
   }
-}
 
-export default withRouter(TrackComponent);
+  if (error) {
+    return <Error>Failed to load track</Error>;
+  }
+
+  if (!track) {
+    return null;
+  }
+
+  return <TrackView track={track} history={history} />;
+};
+
+export default observer(TrackComponent);
