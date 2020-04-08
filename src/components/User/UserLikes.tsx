@@ -1,13 +1,13 @@
 import React, { useContext } from 'react';
 
 import { getUserLikesUrl } from '../../api';
+import { AppContext } from '../../app-context';
 import DataLoader from '../../hoc/DataLoader';
 import { User } from '../../models/user';
-import { StoresContext } from '../../stores-context';
 import DataGrid from '../DataGrid';
 
 const UserLikes = ({ user }: { user: User }) => {
-  const { sessionStore } = useContext(StoresContext);
+  const { sessionStore } = useContext(AppContext);
 
   const filterData = (data: any[]) => {
     if (

@@ -3,17 +3,18 @@ import { observer } from 'mobx-react';
 import React, { Component } from 'react';
 
 import { addComment, getTrackCommentsUrl, removeComment } from '../../api';
+import { AppContext } from '../../app-context';
 import DataLoader from '../../hoc/DataLoader';
 import InfiniteScroll from '../../hoc/InfiniteScrollify';
 import { Comment } from '../../models/comment';
-import { StoresContext } from '../../stores-context';
 import Error from '../Error';
 import CommentForm from './CommentForm';
 import CommentComponent from './SingleComment';
 
 @observer
 class Comments extends Component<{ trackId: number }> {
-  static contextType = StoresContext;
+  static contextType = AppContext;
+  context!: React.ContextType<typeof AppContext>;
 
   addComment = (commentBody: string) => {
     const { playerStore, sessionStore } = this.context;

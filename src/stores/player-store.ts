@@ -9,7 +9,7 @@ const TIME_STEP = 15;
 const VOLUME_STEP = 0.25;
 
 export class PlayerStore {
-  private queue = new Queue(this);
+  queue = new Queue(this);
 
   @observable track: Track | null = null;
   @observable isLoading = false;

@@ -12,13 +12,13 @@ import { AccountCircle, Search } from '@material-ui/icons';
 import { observer } from 'mobx-react';
 import React, { useContext } from 'react';
 import { Link, useHistory, useLocation } from 'react-router-dom';
+import { AppContext } from '../app-context';
 
 import { APP_TITLE } from '../config';
-import { StoresContext } from '../stores-context';
 import { useStyles } from './AppBarStyles';
 
 const AppBarComponent = () => {
-  const { sessionStore } = useContext(StoresContext);
+  const { sessionStore } = useContext(AppContext);
   const classes = useStyles();
   const history = useHistory();
   const { pathname } = useLocation();

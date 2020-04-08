@@ -7,11 +7,11 @@ import {
 } from '@material-ui/icons';
 import { observer } from 'mobx-react';
 import React, { useContext } from 'react';
-import { StoresContext } from '../../stores-context';
+import { AppContext } from '../../app-context';
 import './VolumeControl.css';
 
 const VolumeContol = () => {
-  const { playerStore, viewStore } = useContext(StoresContext);
+  const { playerStore, viewStore } = useContext(AppContext);
 
   return (
     <div

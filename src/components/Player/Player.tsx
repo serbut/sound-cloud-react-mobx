@@ -17,7 +17,7 @@ import {
 import { observer } from 'mobx-react';
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { StoresContext } from '../../stores-context';
+import { AppContext } from '../../app-context';
 
 import { getImageUrl } from '../../utils';
 import './Player.css';
@@ -26,7 +26,8 @@ import VolumeControl from './VolumeControl';
 
 @observer
 class Player extends React.Component {
-  static contextType = StoresContext;
+  static contextType = AppContext;
+  context!: React.ContextType<typeof AppContext>;
 
   onQueueClick = (event: React.MouseEvent<HTMLElement>) => {
     event.stopPropagation();

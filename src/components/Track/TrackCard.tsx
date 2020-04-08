@@ -9,10 +9,10 @@ import { Pause, PlayArrow } from '@material-ui/icons';
 import { observer } from 'mobx-react';
 import React, { useContext } from 'react';
 import { Link } from 'react-router-dom';
+import { AppContext } from '../../app-context';
 
 import { ImageSize } from '../../enums';
 import { Track } from '../../models/track';
-import { StoresContext } from '../../stores-context';
 import { formatNumber, fromNow, getImageUrl, isPreview } from '../../utils';
 import './TrackCard.css';
 
@@ -26,7 +26,7 @@ const TrackCard = ({
   compact?: boolean;
   tracks?: Track[];
 }) => {
-  const { playerStore } = useContext(StoresContext);
+  const { playerStore } = useContext(AppContext);
 
   const handlePlayClick = () => {
     playerStore.playTrack(track, tracks.slice());

@@ -5,6 +5,7 @@ import React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 
 import { loadUser, loadUserWebProfiles } from '../../api';
+import { AppContext } from '../../app-context';
 import { User } from '../../models/user';
 import { UserWebProfile } from '../../models/user-web-profile';
 import Error from '../Error';
@@ -18,6 +19,9 @@ export interface UserWithWebProfiles extends User {
 
 @observer
 class UserComponent extends React.Component<Props> {
+  static contextType = AppContext;
+  context!: React.ContextType<typeof AppContext>;
+
   @observable user: UserWithWebProfiles | undefined;
   @observable isLoading: boolean = false;
   @observable error: string | undefined;

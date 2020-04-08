@@ -1,15 +1,15 @@
 import { Avatar, Button, Typography } from '@material-ui/core';
 import { observer } from 'mobx-react';
 import React, { useContext } from 'react';
+import { AppContext } from '../../app-context';
 
 import { ImageSize } from '../../enums';
 import { User } from '../../models/user';
-import { StoresContext } from '../../stores-context';
 import { formatNumber, getImageUrl } from '../../utils';
 import './UserHeader.css';
 
 const UserHeader = ({ user }: { user: User }) => {
-  const { sessionStore } = useContext(StoresContext);
+  const { sessionStore } = useContext(AppContext);
 
   return (
     <div className="UserHeader">

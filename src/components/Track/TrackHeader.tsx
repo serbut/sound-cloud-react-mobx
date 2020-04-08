@@ -2,15 +2,15 @@ import { Button, Typography } from '@material-ui/core';
 import { observer } from 'mobx-react';
 import React, { useContext } from 'react';
 import { Link } from 'react-router-dom';
+import { AppContext } from '../../app-context';
 import { Track } from '../../models/track';
-import { StoresContext } from '../../stores-context';
 
 import { formatDuration, formatNumber, fromNow } from '../../utils';
 import TrackCard from './TrackCard';
 import './TrackHeader.css';
 
 const TrackHeader = ({ track }: { track: Track }) => {
-  const { sessionStore } = useContext(StoresContext);
+  const { sessionStore } = useContext(AppContext);
   const { user } = track;
 
   return (

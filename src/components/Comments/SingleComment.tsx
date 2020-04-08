@@ -11,10 +11,10 @@ import { Delete } from '@material-ui/icons';
 import { observer } from 'mobx-react';
 import React, { useContext } from 'react';
 import { Link } from 'react-router-dom';
+import { AppContext } from '../../app-context';
 
 import { ImageSize } from '../../enums';
 import { Comment } from '../../models/comment';
-import { StoresContext } from '../../stores-context';
 import { formatDuration, fromNow, getImageUrl } from '../../utils';
 
 const CommentComponent = ({
@@ -24,7 +24,7 @@ const CommentComponent = ({
   comment: Comment;
   removeComment: Function;
 }) => {
-  const { sessionStore } = useContext(StoresContext);
+  const { sessionStore } = useContext(AppContext);
 
   return (
     <ListItem divider>

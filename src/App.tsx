@@ -6,6 +6,8 @@ import {
   Route,
   Switch,
 } from 'react-router-dom';
+import * as api from './api';
+import { AppContext } from './app-context';
 import AppBar from './components/AppBar';
 import Callback from './components/Callback';
 import Explore from './components/Explore';
@@ -19,15 +21,15 @@ import Track from './components/Track/Track';
 import User from './components/User/User';
 import AudioService from './services/AudioService';
 import KeyboardShortcutsService from './services/KeyboardShortcutsService';
-import { StoresContext } from './stores-context';
 import playerStore from './stores/player-store';
 import sessionStore from './stores/session-store';
 import viewStore from './stores/view-store';
 
-const stores = {
+const context = {
   playerStore,
   viewStore,
   sessionStore,
+  api,
 };
 
 class App extends React.Component {
@@ -38,7 +40,7 @@ class App extends React.Component {
 
   render() {
     return (
-      <StoresContext.Provider value={stores}>
+      <AppContext.Provider value={context}>
         <Router>
           <div style={{ paddingBottom: playerStore.track ? 64 : 0 }}>
             <AppBar />
@@ -75,7 +77,7 @@ class App extends React.Component {
             <ScrollToTopBtn />
           </div>
         </Router>
-      </StoresContext.Provider>
+      </AppContext.Provider>
     );
   }
 }
