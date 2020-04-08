@@ -1,6 +1,7 @@
 import axios from 'axios';
 import SC from 'soundcloud';
-import { BASE_URL, getToken, StatusResponse } from './index';
+import { StatusResponse } from '../models/api';
+import { BASE_URL, getToken } from './index';
 
 export const getMyLikesIds = (): Promise<number[]> =>
   axios

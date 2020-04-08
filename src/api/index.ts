@@ -19,7 +19,6 @@ export const getWithClientID = <T>(url: string, params: Object = {}) =>
     })
     .then(({ data }: { data: T }) => data);
 
-export * from '../models/api';
 export * from './collections';
 export * from './tracks';
 export * from './users';

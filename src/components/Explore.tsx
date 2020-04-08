@@ -1,9 +1,9 @@
 import { Paper, Tab, Tabs } from '@material-ui/core';
 import { observer } from 'mobx-react';
-import React, { useEffect } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
+import { AppContext } from '../app-context';
 
-import { getSearchTracksByTagRequest } from '../api';
 import DataLoader from '../hoc/DataLoader';
 import DataGrid from './DataGrid';
 
@@ -31,6 +31,7 @@ for (const key in GENRES_MAP) {
 const Explore = () => {
   const history = useHistory();
   const location = useLocation();
+  const { api } = useContext(AppContext);
   const genre = new URLSearchParams(location.search).get('genre');
 
   useEffect(() => {
@@ -61,7 +62,7 @@ const Explore = () => {
   }
 
   const currentTabIndex = GENRES_LIST.indexOf(genre);
-  const { url, params: requestParams } = getSearchTracksByTagRequest(genre);
+  const { url, params: requestParams } = api.getSearchTracksByTagRequest(genre);
 
   return (
     <div>

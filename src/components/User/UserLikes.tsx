@@ -1,13 +1,12 @@
 import React, { useContext } from 'react';
 
-import { getUserLikesUrl } from '../../api';
 import { AppContext } from '../../app-context';
 import DataLoader from '../../hoc/DataLoader';
 import { User } from '../../models/user';
 import DataGrid from '../DataGrid';
 
 const UserLikes = ({ user }: { user: User }) => {
-  const { sessionStore } = useContext(AppContext);
+  const { sessionStore, api } = useContext(AppContext);
 
   const filterData = (data: any[]) => {
     if (
@@ -23,7 +22,7 @@ const UserLikes = ({ user }: { user: User }) => {
 
   return (
     <DataLoader
-      url={getUserLikesUrl(user.id)}
+      url={api.getUserLikesUrl(user.id)}
       render={({ data, ...props }: { data: any[]; props: any }) => (
         // @ts-ignore
         <DataGrid data={filterData(data)} {...props} />

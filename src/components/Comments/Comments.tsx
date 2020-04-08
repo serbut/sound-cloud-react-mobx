@@ -2,7 +2,6 @@ import { CircularProgress, List, Typography } from '@material-ui/core';
 import { observer } from 'mobx-react';
 import React, { Component } from 'react';
 
-import { addComment, getTrackCommentsUrl, removeComment } from '../../api';
 import { AppContext } from '../../app-context';
 import DataLoader from '../../hoc/DataLoader';
 import InfiniteScroll from '../../hoc/InfiniteScrollify';
@@ -17,7 +16,7 @@ class Comments extends Component<{ trackId: number }> {
   context!: React.ContextType<typeof AppContext>;
 
   addComment = (commentBody: string) => {
-    const { playerStore, sessionStore } = this.context;
+    const { playerStore, sessionStore, api } = this.context;
     const { trackId } = this.props;
     const timestamp =
       playerStore.track && playerStore.track.id === trackId
@@ -26,14 +25,14 @@ class Comments extends Component<{ trackId: number }> {
 
     (sessionStore.isLoggedIn ? Promise.resolve() : sessionStore.login()).then(
       () => {
-        addComment(trackId, commentBody, timestamp);
+        api.addComment(trackId, commentBody, timestamp);
         // .then(res => comments.unshift(res)); TODO: addComment
       }
     );
   };
 
   removeComment = (comment: Comment) => {
-    removeComment(comment.track_id, comment.id);
+    this.context.api.removeComment(comment.track_id, comment.id);
     // .then(res => comments.remove(comment)); TODO: removeComment
   };
 
@@ -48,7 +47,7 @@ class Comments extends Component<{ trackId: number }> {
         <br />
 
         <DataLoader
-          url={getTrackCommentsUrl(trackId)}
+          url={this.context.api.getTrackCommentsUrl(trackId)}
           render={({
             data: comments,
             isLoading,

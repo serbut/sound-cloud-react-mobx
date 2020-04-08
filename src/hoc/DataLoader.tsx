@@ -1,8 +1,9 @@
 import { action, computed, observable } from 'mobx';
 import { observer } from 'mobx-react';
-import { Component } from 'react';
+import React, { Component } from 'react';
+import { AppContext } from '../app-context';
 
-import { Collection, loadData, loadMore } from '../api';
+import { Collection } from '../models/api';
 import { Playlist } from '../models/playlist';
 import { Track } from '../models/track';
 import { User } from '../models/user';
@@ -13,6 +14,9 @@ class DataLoader extends Component<{
   params?: any;
   render: Function;
 }> {
+  static contextType = AppContext;
+  context!: React.ContextType<typeof AppContext>;
+
   @observable.shallow data: Array<Track | User | Playlist> = [];
   @observable isLoading = false;
   @observable nextHref: string | undefined | null;
@@ -53,7 +57,8 @@ class DataLoader extends Component<{
 
     this.isLoading = true;
 
-    loadData<any>(url, params)
+    this.context.api
+      .loadData<any>(url, params)
       .then((data) => this.onSuccess(data))
       .catch(() => this.onError());
   };
@@ -69,7 +74,8 @@ class DataLoader extends Component<{
       return;
     }
 
-    loadMore<any>(nextHref as string)
+    this.context.api
+      .loadMore<any>(nextHref as string)
       .then((data: any) => {
         // TODO: why we need this check ?
         if (nextHref === this.nextHref) {

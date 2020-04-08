@@ -1,15 +1,17 @@
-import React from 'react';
+import React, { useContext } from 'react';
 
-import { getUserPlaylistsUrl, USER_PLAYLISTS_PARAMS } from '../../api';
+import { AppContext } from '../../app-context';
 import DataLoader from '../../hoc/DataLoader';
 import { User } from '../../models/user';
 import DataGrid from '../DataGrid';
 
 const UserPlaylists = ({ user }: { user: User }) => {
+  const { api } = useContext(AppContext);
+
   return (
     <DataLoader
-      url={getUserPlaylistsUrl(user.id)}
-      params={USER_PLAYLISTS_PARAMS}
+      url={api.getUserPlaylistsUrl(user.id)}
+      params={api.USER_PLAYLISTS_PARAMS}
       render={(props: any) => <DataGrid {...props} />}
     />
   );

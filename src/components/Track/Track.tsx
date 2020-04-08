@@ -3,8 +3,8 @@ import { observable } from 'mobx';
 import { observer } from 'mobx-react';
 import React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
+import { AppContext } from '../../app-context';
 
-import { loadTrack } from '../../api';
 import { Track } from '../../models/track';
 import Error from '../Error';
 import TrackView from '../Track/TrackView';
@@ -13,6 +13,9 @@ type TrackProps = RouteComponentProps<{ user: string; track: string }>;
 
 @observer
 class TrackComponent extends React.Component<TrackProps> {
+  static contextType = AppContext;
+  context!: React.ContextType<typeof AppContext>;
+
   @observable track: Track | undefined;
   @observable isLoading: boolean = false;
   @observable error: string | undefined;
@@ -35,7 +38,8 @@ class TrackComponent extends React.Component<TrackProps> {
 
     this.isLoading = true;
 
-    loadTrack(user, track)
+    this.context.api
+      .loadTrack(user, track)
       .then((track) => {
         this.track = track;
         this.isLoading = false;

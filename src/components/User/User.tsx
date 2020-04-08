@@ -4,7 +4,6 @@ import { observer } from 'mobx-react';
 import React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 
-import { loadUser, loadUserWebProfiles } from '../../api';
 import { AppContext } from '../../app-context';
 import { User } from '../../models/user';
 import { UserWebProfile } from '../../models/user-web-profile';
@@ -37,6 +36,8 @@ class UserComponent extends React.Component<Props> {
   }
 
   loadUser() {
+    const { loadUser, loadUserWebProfiles } = this.context.api;
+
     this.isLoading = true;
 
     loadUser(this.props.match.params.user)

@@ -1,14 +1,16 @@
-import React from 'react';
+import React, { useContext } from 'react';
 
-import { getUserTracksUrl } from '../../api';
+import { AppContext } from '../../app-context';
 import DataLoader from '../../hoc/DataLoader';
 import { User } from '../../models/user';
 import DataGrid from '../DataGrid';
 
 const UserTracks = ({ user }: { user: User }) => {
+  const { api } = useContext(AppContext);
+
   return (
     <DataLoader
-      url={getUserTracksUrl(user.id)}
+      url={api.getUserTracksUrl(user.id)}
       render={(props: any) => <DataGrid {...props} />}
     />
   );

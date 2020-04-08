@@ -1,7 +1,8 @@
 import { action, computed, observable } from 'mobx';
 
-import { CollectionItem, loadMore } from '../api';
+import { loadMore } from '../api';
 import { CollectionItemType } from '../enums';
+import { CollectionItem } from '../models/api';
 import { Track } from '../models/track';
 import { isPreview } from '../utils';
 import { PlayerStore } from './player-store';

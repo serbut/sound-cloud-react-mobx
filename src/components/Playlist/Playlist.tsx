@@ -3,8 +3,8 @@ import { action, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import React, { Component } from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
+import { AppContext } from '../../app-context';
 
-import { loadPlaylist } from '../../api';
 import { Playlist } from '../../models/playlist';
 import DataGrid from '../DataGrid';
 import Error from '../Error';
@@ -14,6 +14,9 @@ type Props = RouteComponentProps<{ user: string; playlist: string }>;
 
 @observer
 class PlaylistComponent extends Component<Props> {
+  static contextType = AppContext;
+  context!: React.ContextType<typeof AppContext>;
+
   @observable playlist: Playlist | undefined;
   @observable isLoading: boolean = false;
   @observable error: string | undefined;
@@ -38,7 +41,8 @@ class PlaylistComponent extends Component<Props> {
 
     this.isLoading = true;
 
-    loadPlaylist(user, playlist)
+    this.context.api
+      .loadPlaylist(user, playlist)
       .then(
         action((playlist) => {
           this.playlist = playlist;

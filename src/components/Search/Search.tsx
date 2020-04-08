@@ -3,12 +3,8 @@ import { action, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import React, { Component } from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
+import { AppContext } from '../../app-context';
 
-import {
-  getSearchTracksByTagRequest,
-  getSearchTracksRequest,
-  getSearchUsersRequest,
-} from '../../api';
 import DataLoader from '../../hoc/DataLoader';
 import DataGrid from '../DataGrid';
 
@@ -16,6 +12,9 @@ type SearchProps = RouteComponentProps;
 
 @observer
 class Search extends Component<SearchProps> {
+  static contextType = AppContext;
+  context!: React.ContextType<typeof AppContext>;
+
   @observable request: { url?: string; params?: any } = {};
   @observable query = '';
   @observable where = '';
@@ -34,6 +33,11 @@ class Search extends Component<SearchProps> {
   }
 
   @action handlePropsChange() {
+    const {
+      getSearchTracksByTagRequest,
+      getSearchTracksRequest,
+      getSearchUsersRequest,
+    } = this.context.api;
     const { search } = this.props.location;
     const searchParams = new URLSearchParams(search);
     this.query = searchParams.get('q') || '';
