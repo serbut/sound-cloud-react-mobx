@@ -4,9 +4,9 @@ import { CLIENT_ID } from '../config';
 import { Collection } from '../models/api';
 import { getToken, PAGE_SIZE } from './index';
 
-let nextHref: string | undefined; // TODO: remove this
+let _nextHref: string | undefined; // TODO: remove this
 
-export const getNextHref = () => nextHref; // TODO: remove this
+export const getNextHref = () => _nextHref; // TODO: remove this
 
 const formatNextHref = (href: string) => {
   if (!href.includes('client_id') && !href.includes('oauth_token')) {
@@ -19,16 +19,18 @@ const formatNextHref = (href: string) => {
   }
 };
 
-export const loadData = <T>(href: string, params: {}): Promise<Collection<T>> =>
-  SC.get(href, { limit: PAGE_SIZE, linked_partitioning: 1, ...params }).then(
-    (data: any) => {
-      nextHref = data.next_href;
-      return data;
-    }
-  );
+export const loadData = <T>(href: string, params: {}) =>
+  SC.get<Collection<T>>(href, {
+    limit: PAGE_SIZE,
+    linked_partitioning: 1,
+    ...params,
+  }).then((data) => {
+    _nextHref = data.next_href;
+    return data;
+  });
 
-export const loadMore = <T>(nextHref: string): Promise<Collection<T>> =>
-  axios.get(formatNextHref(nextHref)).then(({ data }) => {
-    nextHref = data.next_href;
+export const loadMore = <T>(nextHref: string) =>
+  axios.get<Collection<T>>(formatNextHref(nextHref)).then(({ data }) => {
+    _nextHref = data.next_href;
     return data;
   });

@@ -6,6 +6,7 @@ import { getWithClientID, resolve } from './index';
 export const loadUser = (user: string) =>
   getWithClientID<User>(resolve(`/${user}`));
 
-export const loadUserWebProfiles = (
-  userId: number
-): Promise<UserWebProfile[]> => SC.get(`/users/${userId}/web-profiles`);
+export const loadUserWebProfiles = (userId: number) =>
+  SC.get<UserWebProfile[]>(`/users/${userId}/web-profiles`);
+
+export const getMe = () => SC.get<User>('/me');

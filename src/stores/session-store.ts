@@ -1,11 +1,12 @@
 import { computed, IObservableArray, observable } from 'mobx';
-import SC from 'soundcloud';
 
 import {
   addLike,
   followUser,
+  getMe,
   getMyFollowingsIds,
   getMyLikesIds,
+  login,
   removeLike,
   stopFollowingUser,
 } from '../api';
@@ -15,8 +16,8 @@ import { User } from '../models/user';
 
 export class SessionStore {
   @observable user: User | null = null;
-  @observable userLikesIds: IObservableArray<number> = observable.array();
-  @observable userFollowingsIds: IObservableArray<number> = observable.array();
+  @observable userLikesIds: number[] = observable.array();
+  @observable userFollowingsIds: number[] = observable.array();
 
   constructor() {
     if (localStorage.getItem(TOKEN_KEY)) {
@@ -42,10 +43,9 @@ export class SessionStore {
   }
 
   login() {
-    return SC.connect()
-      .then((res: any) => {
-        localStorage.setItem(TOKEN_KEY, res.oauth_token);
-
+    return login()
+      .then((token) => {
+        localStorage.setItem(TOKEN_KEY, token);
         return this.getMe();
       })
       .catch(() => {
@@ -60,45 +60,59 @@ export class SessionStore {
   }
 
   getMe() {
-    return SC.get('/me')
-      .then((user: User) => {
+    return getMe()
+      .then((user) => {
         this.user = user;
         localStorage.setItem(USER_KEY, JSON.stringify(user));
       })
       .then(() => getMyLikesIds())
-      .then((userLikesIds: any) => (this.userLikesIds = userLikesIds))
+      .then((userLikesIds) => (this.userLikesIds = userLikesIds))
       .then(() => getMyFollowingsIds())
-      .then(
-        (userFollowingsIds: any) => (this.userFollowingsIds = userFollowingsIds)
-      )
+      .then((userFollowingsIds) => (this.userFollowingsIds = userFollowingsIds))
       .catch(() => {
         // TODO: add error handler
       });
   }
 
-  toggleLike(track: Track) {
+  toggleLike(track: Track): Promise<any> {
     if (!this.isLoggedIn) {
       return this.login().then(() => this.toggleLike(track));
     }
 
     if (this.isLiked(track)) {
-      removeLike(track.id).then(() => this.userLikesIds.remove(track.id));
+      return removeLike(track.id)
+        .then(() => (this.userLikesIds as IObservableArray).remove(track.id))
+        .catch(() => {
+          // TODO: add error handling
+        });
     } else {
-      addLike(track.id).then(() => this.userLikesIds.unshift(track.id));
+      return addLike(track.id)
+        .then(() => this.userLikesIds.unshift(track.id))
+        .catch(() => {
+          // TODO: add error handling
+        });
     }
   }
 
-  toggleFollowing(user: User) {
+  toggleFollowing(user: User): Promise<any> {
     if (!this.isLoggedIn) {
       return this.login().then(() => this.toggleFollowing(user));
     }
 
     if (this.isFollowing(user)) {
-      stopFollowingUser(user.id).then(() =>
-        this.userFollowingsIds.remove(user.id)
-      );
+      return stopFollowingUser(user.id)
+        .then(() =>
+          (this.userFollowingsIds as IObservableArray).remove(user.id)
+        )
+        .catch(() => {
+          // TODO: add error handling
+        });
     } else {
-      followUser(user.id).then(() => this.userFollowingsIds.unshift(user.id));
+      return followUser(user.id)
+        .then(() => this.userFollowingsIds.unshift(user.id))
+        .catch(() => {
+          // TODO: add error handling
+        });
     }
   }
 }

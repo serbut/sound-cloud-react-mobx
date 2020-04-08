@@ -13,10 +13,10 @@ export const getMyLikesIds = (): Promise<number[]> =>
     })
     .then(({ data }) => data.collection);
 
-export const addLike = (trackId: number): Promise<StatusResponse> =>
-  SC.put(`/me/favorites/${trackId}`);
+export const addLike = (trackId: number) =>
+  SC.put<StatusResponse>(`/me/favorites/${trackId}`);
 
-export const removeLike = (trackId: number): Promise<StatusResponse> =>
-  SC.delete(`/me/favorites/${trackId}`);
+export const removeLike = (trackId: number) =>
+  SC.delete<StatusResponse>(`/me/favorites/${trackId}`);
 
 export const getUserLikesUrl = (userId: number) => `/users/${userId}/favorites`;
