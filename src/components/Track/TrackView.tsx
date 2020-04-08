@@ -1,7 +1,7 @@
 import { Chip, Typography } from '@material-ui/core';
-import { History } from 'history';
 import { observer } from 'mobx-react';
 import React from 'react';
+import { useHistory } from 'react-router-dom';
 import { Track } from '../../models/track';
 
 import { getTags } from '../../utils';
@@ -9,7 +9,9 @@ import Comments from '../Comments/Comments';
 import TrackHeader from './TrackHeader';
 import './TrackView.css';
 
-const TrackView = ({ track, history }: { track: Track; history: History }) => {
+const TrackView = ({ track }: { track: Track }) => {
+  const history = useHistory();
+
   const handleTagClick = (event: string) => {
     const searchParams = new URLSearchParams();
     searchParams.append('q', event);

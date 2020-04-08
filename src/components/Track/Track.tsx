@@ -1,7 +1,7 @@
 import { CircularProgress } from '@material-ui/core';
 import { observer } from 'mobx-react';
 import React, { useContext, useEffect, useState } from 'react';
-import { useHistory, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { AppContext } from '../../app-context';
 
 import { Track } from '../../models/track';
@@ -11,7 +11,6 @@ import TrackView from '../Track/TrackView';
 const TrackComponent = () => {
   const { api } = useContext(AppContext);
   const { user: userID, track: trackID } = useParams();
-  const history = useHistory();
   const [track, setTrack] = useState<Track | undefined>();
   const [isLoading, setLoading] = useState<boolean>();
   const [error, setError] = useState<boolean>();
@@ -48,7 +47,7 @@ const TrackComponent = () => {
     return null;
   }
 
-  return <TrackView track={track} history={history} />;
+  return <TrackView track={track} />;
 };
 
 export default observer(TrackComponent);
