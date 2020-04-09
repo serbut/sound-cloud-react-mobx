@@ -1,11 +1,8 @@
 import { Tab, Tabs } from '@material-ui/core';
-import { History, Location } from 'history';
-import { observable } from 'mobx';
 import { observer } from 'mobx-react';
-import React, { Component } from 'react';
-import { Route } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { Route, useHistory, useLocation } from 'react-router-dom';
 import { UserWithWebProfiles } from './User';
-
 import UserAbout from './UserAbout';
 import UserFollowings from './UserFollowings';
 import UserHeader from './UserHeader';
@@ -15,45 +12,42 @@ import UserTracks from './UserTracks';
 import './UserView.css';
 
 // TODO: move tabs to UserTabs component
-@observer
-class UserView extends Component<{
-  user: UserWithWebProfiles;
-  history: History;
-  location: Location;
-}> {
-  @observable tabs: string[] = [];
+const UserView = ({ user }: { user: UserWithWebProfiles }) => {
+  const history = useHistory();
+  const location = useLocation();
+  const [tabs, setTabs] = useState<string[]>([]);
 
-  componentDidMount() {
-    this.getAvailableTabs();
-    this.redirectToFirstAvailableTabIfNoneIsSelected();
-  }
+  useEffect(() => {
+    const tabs = [];
 
-  getAvailableTabs() {
-    const TABS = ['tracks', 'playlists', 'likes', 'followings', 'about'];
-    const { user } = this.props;
+    if (user.track_count > 0) {
+      tabs.push('tracks');
+    }
+    if (user.playlist_count > 0) {
+      tabs.push('playlists');
+    }
+    if (user.public_favorites_count > 0) {
+      tabs.push('likes');
+    }
+    if (user.followings_count > 0) {
+      tabs.push('followings');
+    }
+    if (user.description || user.webProfiles.length > 0) {
+      tabs.push('about');
+    }
 
-    this.tabs = TABS.filter((tab) => {
-      switch (tab) {
-        case 'tracks':
-          return user.track_count > 0;
-        case 'playlists':
-          return user.playlist_count > 0;
-        case 'likes':
-          return user.public_favorites_count > 0;
-        case 'followings':
-          return user.followings_count > 0;
-        case 'about':
-          return user.description || user.webProfiles.length > 0;
-        default:
-          return true;
-      }
-    });
-  }
+    setTabs(tabs);
+  }, [
+    user.track_count,
+    user.playlist_count,
+    user.public_favorites_count,
+    user.followings_count,
+    user.description,
+    user.webProfiles.length,
+  ]);
 
-  redirectToFirstAvailableTabIfNoneIsSelected() {
-    const { history, location } = this.props;
-
-    if (this.tabs.length === 0) {
+  useEffect(() => {
+    if (tabs.length === 0) {
       return;
     }
 
@@ -63,62 +57,61 @@ class UserView extends Component<{
       return;
     }
 
-    history.replace(`/users/${this.props.user.permalink}/${this.tabs[0]}`);
-  }
+    history.replace(`/users/${user.permalink}/${tabs[0]}`);
+  }, [tabs, history, location.pathname, user.permalink]);
 
-  handleTabChange = (event: React.ChangeEvent<{}>, index: number) => {
-    this.props.history.push(
-      `/users/${this.props.user.permalink}/${this.tabs[index]}`
-    );
+  const handleTabChange = (event: React.ChangeEvent<{}>, index: number) => {
+    const tab = tabs && tabs[index];
+
+    if (tab) {
+      tab && history.push(`/users/${user.permalink}/${tab}`);
+    }
   };
 
-  render() {
-    const { user, location } = this.props;
-    const selectedTabIndex = this.tabs.findIndex((tab) =>
-      location.pathname.includes(tab)
-    );
+  const selectedTabIndex = tabs.findIndex((tab) =>
+    location.pathname.includes(tab)
+  );
 
-    return (
-      <div className="User animated fadeIn">
-        <div className="User-header">
-          <div className="container">
-            <UserHeader user={user} />
-
-            {selectedTabIndex !== -1 && (
-              <Tabs value={selectedTabIndex} onChange={this.handleTabChange}>
-                {this.tabs.map((el, i) => (
-                  <Tab key={i} label={el} />
-                ))}
-              </Tabs>
-            )}
-          </div>
-        </div>
-
+  return (
+    <div className="User animated fadeIn">
+      <div className="User-header">
         <div className="container">
-          <Route
-            path="/users/:user/tracks"
-            render={() => <UserTracks user={user} />}
-          />
-          <Route
-            path="/users/:user/playlists"
-            render={() => <UserPlaylists user={user} />}
-          />
-          <Route
-            path="/users/:user/likes"
-            render={() => <UserLikes user={user} />}
-          />
-          <Route
-            path="/users/:user/followings"
-            render={() => <UserFollowings user={user} />}
-          />
-          <Route
-            path="/users/:user/about"
-            component={() => <UserAbout user={user} />}
-          />
+          <UserHeader user={user} />
+
+          {selectedTabIndex !== -1 && (
+            <Tabs value={selectedTabIndex} onChange={handleTabChange}>
+              {tabs.map((el, i) => (
+                <Tab key={i} label={el} />
+              ))}
+            </Tabs>
+          )}
         </div>
       </div>
-    );
-  }
-}
 
-export default UserView;
+      <div className="container">
+        <Route
+          path="/users/:user/tracks"
+          render={() => <UserTracks user={user} />}
+        />
+        <Route
+          path="/users/:user/playlists"
+          render={() => <UserPlaylists user={user} />}
+        />
+        <Route
+          path="/users/:user/likes"
+          render={() => <UserLikes user={user} />}
+        />
+        <Route
+          path="/users/:user/followings"
+          render={() => <UserFollowings user={user} />}
+        />
+        <Route
+          path="/users/:user/about"
+          component={() => <UserAbout user={user} />}
+        />
+      </div>
+    </div>
+  );
+};
+
+export default observer(UserView);
