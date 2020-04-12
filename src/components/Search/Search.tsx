@@ -42,7 +42,7 @@ const Search = () => {
 
       <DataLoader
         url={request.url}
-        params={request.params}
+        params={JSON.stringify(request.params)}
         render={(props: any) => <DataGrid {...props} />}
       />
     </div>
