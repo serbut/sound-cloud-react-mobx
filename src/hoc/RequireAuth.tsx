@@ -1,9 +1,7 @@
-import { observer } from 'mobx-react';
-import React, { Component } from 'react';
+import React from 'react';
 
 export default function (InnerComponent: any) {
-  @observer
-  class RequireAuth extends Component {
+  function RequireAuth(...props: any) {
     // TODO: fix
     // componentWillMount() {
     //     if (!this.props.sessionStore.isLoggedIn)
@@ -15,11 +13,9 @@ export default function (InnerComponent: any) {
     //         this.props.router.replace('/');
     // }
 
-    render() {
-      // this.props.sessionStore.isLoggedIn;
+    // this.props.sessionStore.isLoggedIn;
 
-      return <InnerComponent {...this.props} />;
-    }
+    return <InnerComponent {...props} />;
   }
 
   return RequireAuth;
