@@ -1,37 +1,36 @@
-import { useContext, useEffect, useRef, useState } from 'react';
+import { useCallback, useContext, useEffect, useReducer, useRef } from 'react';
 import { AppContext } from '../app-context';
 import { Collection } from '../models/api';
+import { ActionType, initialState, reducer } from './DataLoader.reducer';
 
 const DataLoader = ({
   url,
-  params = JSON.stringify({}),
+  params = {},
   render,
 }: {
   url?: string;
-  params?: string;
+  params?: { [key: string]: string };
   render: Function;
 }) => {
   const { api } = useContext(AppContext);
-  const [data, setData] = useState<any[]>([]);
-  const [isLoading, setLoading] = useState<boolean>(false);
-  const [error, setError] = useState<boolean>(false);
-  const [isLastPage, setLastPage] = useState<boolean>(true);
+  const [{ data, isLoading, error, isLastPage }, dispatch] = useReducer(
+    reducer,
+    initialState
+  );
   const nextHref = useRef<string | null | undefined>();
+  const paramsAsJSON = JSON.stringify(params);
 
-  const onSuccess = (response: Collection<any>) => {
-    if (!response.collection.length && response.next_href) {
-      console.error('No data but next href exists!!!');
-    }
-
-    setLoading(false);
-    setData([...data, ...response.collection]);
-    setLastPage(!response.next_href);
-    nextHref.current = response.next_href;
+  const onSuccess = ({ collection, next_href }: Collection<any>) => {
+    dispatch({
+      type: ActionType.Success,
+      data: collection,
+      isLastPage: !next_href,
+    });
+    nextHref.current = next_href;
   };
 
   const onError = () => {
-    setError(true);
-    setLoading(false);
+    dispatch({ type: ActionType.Error });
   };
 
   useEffect(() => {
@@ -40,38 +39,32 @@ const DataLoader = ({
     }
 
     let skip = false;
-
-    setError(false);
-    setData([]);
-    setLastPage(true);
-    setLoading(true);
+    dispatch({ type: ActionType.Load });
     nextHref.current = null;
 
     api
-      .loadData<any>(url, JSON.parse(params))
+      .loadData<any>(url, JSON.parse(paramsAsJSON))
       .then((data) => !skip && onSuccess(data))
       .catch(() => onError());
 
     return () => {
       skip = true;
     };
-    // eslint-disable-next-line
-  }, [api, url, params]);
+  }, [api, url, paramsAsJSON]);
 
-  const loadMore = () => {
+  const loadMore = useCallback(() => {
     if (isLoading || isLastPage || !nextHref.current) {
       return;
     }
 
     const _nextHref = nextHref.current;
-
-    setLoading(true);
+    dispatch({ type: ActionType.LoadMore });
 
     api
       .loadMore<any>(nextHref.current)
       .then((data) => _nextHref === nextHref.current && onSuccess(data))
       .catch(() => onError());
-  };
+  }, [api, isLastPage, isLoading]);
 
   return render({
     data,

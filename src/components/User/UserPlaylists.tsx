@@ -11,7 +11,7 @@ const UserPlaylists = ({ user }: { user: User }) => {
   return (
     <DataLoader
       url={api.getUserPlaylistsUrl(user.id)}
-      params={JSON.stringify(api.USER_PLAYLISTS_PARAMS)}
+      params={api.USER_PLAYLISTS_PARAMS}
       render={(props: any) => <DataGrid {...props} />}
     />
   );

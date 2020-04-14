@@ -84,7 +84,7 @@ const Explore = () => {
       <div className="container" style={{ paddingTop: 48 + 48 }}>
         <DataLoader
           url={url}
-          params={JSON.stringify(params)}
+          params={params}
           render={(props: any) => <DataGrid {...props} />}
         />
       </div>
