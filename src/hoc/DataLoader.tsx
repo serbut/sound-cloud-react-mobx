@@ -1,125 +1,78 @@
-import { action, computed, observable } from 'mobx';
-import { observer } from 'mobx-react';
-import React, { Component } from 'react';
+import { useCallback, useContext, useEffect, useReducer, useRef } from 'react';
 import { AppContext } from '../app-context';
-
 import { Collection } from '../models/api';
-import { Playlist } from '../models/playlist';
-import { Track } from '../models/track';
-import { User } from '../models/user';
+import { ActionType, initialState, reducer } from './DataLoader.reducer';
 
-@observer
-class DataLoader extends Component<{
+const DataLoader = ({
+  url,
+  params = {},
+  render,
+}: {
   url?: string;
-  params?: any;
+  params?: { [key: string]: string };
   render: Function;
-}> {
-  static contextType = AppContext;
-  context!: React.ContextType<typeof AppContext>;
+}) => {
+  const { api } = useContext(AppContext);
+  const [{ data, isLoading, error, isLastPage }, dispatch] = useReducer(
+    reducer,
+    initialState
+  );
+  const nextHref = useRef<string | null | undefined>();
+  const paramsAsJSON = JSON.stringify(params);
 
-  @observable.shallow data: Array<Track | User | Playlist> = [];
-  @observable isLoading = false;
-  @observable nextHref: string | undefined | null;
-  @observable error: string | null = null;
+  const onSuccess = ({ collection, next_href }: Collection<any>) => {
+    dispatch({
+      type: ActionType.Success,
+      data: collection,
+      isLastPage: !next_href,
+    });
+    nextHref.current = next_href;
+  };
 
-  @computed get isLastPage() {
-    return !this.nextHref;
-  }
+  const onError = () => {
+    dispatch({ type: ActionType.Error });
+  };
 
-  componentDidMount() {
-    this.loadData();
-  }
-
-  componentDidUpdate({
-    url: prevUrl,
-    params: prevParams,
-  }: {
-    url?: string;
-    params?: any;
-  }) {
-    const { url, params } = this.props;
-
-    if (
-      url !== prevUrl ||
-      JSON.stringify(params) !== JSON.stringify(prevParams)
-    ) {
-      this.clearData();
-      this.loadData();
-    }
-  }
-
-  loadData = () => {
-    const { url, params } = this.props;
-
+  useEffect(() => {
     if (!url) {
       return;
     }
 
-    this.isLoading = true;
+    let skip = false;
+    dispatch({ type: ActionType.Load });
+    nextHref.current = null;
 
-    this.context.api
-      .loadData<any>(url, params)
-      .then((data) => this.onSuccess(data))
-      .catch(() => this.onError());
-  };
+    api
+      .loadData<any>(url, JSON.parse(paramsAsJSON))
+      .then((data) => !skip && onSuccess(data))
+      .catch(() => onError());
 
-  loadMore = () => {
-    if (this.isLoading || this.isLastPage) {
+    return () => {
+      skip = true;
+    };
+  }, [api, url, paramsAsJSON]);
+
+  const loadMore = useCallback(() => {
+    if (isLoading || isLastPage || !nextHref.current) {
       return;
     }
 
-    const nextHref = this.nextHref;
+    const _nextHref = nextHref.current;
+    dispatch({ type: ActionType.LoadMore });
 
-    if (!this.nextHref) {
-      return;
-    }
+    api
+      .loadMore<any>(nextHref.current)
+      .then((data) => _nextHref === nextHref.current && onSuccess(data))
+      .catch(() => onError());
+  }, [api, isLastPage, isLoading]);
 
-    this.context.api
-      .loadMore<any>(nextHref as string)
-      .then((data: any) => {
-        // TODO: why we need this check ?
-        if (nextHref === this.nextHref) {
-          this.onSuccess(data);
-        }
-      })
-      .catch(() => this.onError());
-    this.isLoading = true;
-  };
-
-  @action clearData = () => {
-    this.error = null;
-    this.data = [];
-    this.nextHref = null;
-  };
-
-  @action onSuccess(data: Collection<any>) {
-    if (!data.collection.length) {
-      this.nextHref = null;
-      this.isLoading = false;
-      return;
-    }
-
-    data.collection.forEach((el: any) => this.data.push(el));
-    this.nextHref = data.next_href;
-    this.isLoading = false;
-  }
-
-  @action onError() {
-    this.isLoading = false;
-    this.error = 'Failed to load data';
-  }
-
-  render() {
-    const { data, isLoading, isLastPage, error, loadMore } = this;
-
-    return this.props.render({
-      data,
-      isLoading,
-      isLastPage,
-      error,
-      loadMore,
-    });
-  }
-}
+  return render({
+    data,
+    isLoading,
+    isLastPage,
+    error,
+    loadMore,
+  });
+};
 
 export default DataLoader;

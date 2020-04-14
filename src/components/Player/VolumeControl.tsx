@@ -5,7 +5,7 @@ import {
   VolumeOff,
   VolumeUp,
 } from '@material-ui/icons';
-import { observer } from 'mobx-react';
+import { observer } from 'mobx-react-lite';
 import React, { useContext } from 'react';
 import { AppContext } from '../../app-context';
 import './VolumeControl.css';

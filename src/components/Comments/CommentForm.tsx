@@ -1,41 +1,41 @@
 import { TextField } from '@material-ui/core';
-import { observable } from 'mobx';
-import { observer } from 'mobx-react';
-import React, { Component } from 'react';
+import { observer } from 'mobx-react-lite';
+import React, { useState } from 'react';
 
 // TODO: add validation
-@observer
-class CommentForm extends Component<{ addComment: Function }> {
-  @observable commentBody = '';
+const CommentForm = ({
+  addComment,
+}: {
+  addComment: (value: string) => void;
+}) => {
+  const [value, setValue] = useState<string>('');
 
-  handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    this.commentBody = event.target.value;
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setValue(event.target.value);
   };
 
-  handleFormSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleFormSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    if (!this.commentBody) {
+    if (!value) {
       return;
     }
 
-    this.props.addComment(this.commentBody);
+    addComment(value);
 
-    this.commentBody = '';
+    setValue('');
   };
 
-  render() {
-    return (
-      <form onSubmit={this.handleFormSubmit}>
-        <TextField
-          label="Enter comment text"
-          value={this.commentBody}
-          onChange={this.handleInputChange}
-          fullWidth
-        />
-      </form>
-    );
-  }
-}
+  return (
+    <form onSubmit={handleFormSubmit}>
+      <TextField
+        label="Enter comment text"
+        value={value}
+        onChange={handleInputChange}
+        fullWidth
+      />
+    </form>
+  );
+};
 
-export default CommentForm;
+export default observer(CommentForm);

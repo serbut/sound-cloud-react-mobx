@@ -1,94 +1,72 @@
 import { CircularProgress } from '@material-ui/core';
-import { action, observable } from 'mobx';
-import { observer } from 'mobx-react';
-import React from 'react';
-import { RouteComponentProps, withRouter } from 'react-router-dom';
-
+import { action } from 'mobx';
+import { observer } from 'mobx-react-lite';
+import React, { useContext, useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
 import { AppContext } from '../../app-context';
 import { User } from '../../models/user';
 import { UserWebProfile } from '../../models/user-web-profile';
 import Error from '../Error';
 import UserView from '../User/UserView';
 
-type Props = RouteComponentProps<{ user: string; playlist: string }>;
-
 export interface UserWithWebProfiles extends User {
   webProfiles: UserWebProfile[];
 }
 
-@observer
-class UserComponent extends React.Component<Props> {
-  static contextType = AppContext;
-  context!: React.ContextType<typeof AppContext>;
+const UserComponent = () => {
+  const { api } = useContext(AppContext);
+  const { user: userID } = useParams();
+  const [user, setUser] = useState<UserWithWebProfiles | undefined>();
+  const [isLoading, setLoading] = useState<boolean>();
+  const [error, setError] = useState<boolean>();
 
-  @observable user: UserWithWebProfiles | undefined;
-  @observable isLoading: boolean = false;
-  @observable error: string | undefined;
-
-  componentDidMount() {
-    this.loadUser();
-  }
-
-  componentDidUpdate(prevProps: Props) {
-    if (prevProps.match.params.user !== this.props.match.params.user) {
-      this.loadUser();
+  useEffect(() => {
+    if (!userID) {
+      return;
     }
-  }
 
-  loadUser() {
-    const { loadUser, loadUserWebProfiles } = this.context.api;
+    setError(false);
+    setLoading(true);
 
-    this.isLoading = true;
-
-    loadUser(this.props.match.params.user)
+    api
+      .loadUser(userID)
       .then((user) =>
-        loadUserWebProfiles((user as User).id).then((profiles) => ({
+        api.loadUserWebProfiles(user.id).then((profiles) => ({
           user,
           profiles,
         }))
       )
       .then(
-        action(({ user, profiles }) => {
-          this.user = { ...user, webProfiles: profiles };
-          this.isLoading = false;
-        })
+        action(({ user, profiles }) =>
+          setUser({ ...user, webProfiles: profiles })
+        )
       )
       .catch(
         action((err) => {
           console.error(err);
-          this.error = 'Failed to load user';
-          this.isLoading = false;
+          setError(true);
         })
-      );
-  }
+      )
+      .finally(() => setLoading(false));
+  }, [userID, api]);
 
-  render() {
-    const { user, isLoading, error } = this;
-
-    if (isLoading) {
-      return (
-        <div className="loader-wrap">
-          <CircularProgress />
-        </div>
-      );
-    }
-
-    if (error) {
-      return <Error>{error}</Error>;
-    }
-
-    if (!user) {
-      return null;
-    }
-
+  if (isLoading) {
     return (
-      <UserView
-        user={user}
-        history={this.props.history}
-        location={this.props.location}
-      />
+      <div className="loader-wrap">
+        <CircularProgress />
+      </div>
     );
   }
-}
 
-export default withRouter(UserComponent);
+  if (error) {
+    return <Error>Failed to load user</Error>;
+  }
+
+  if (!user) {
+    return null;
+  }
+
+  return <UserView user={user} />;
+};
+
+export default observer(UserComponent);

@@ -1,6 +1,6 @@
 import { CircularProgress, List, Typography } from '@material-ui/core';
-import { observer } from 'mobx-react';
-import React, { Component } from 'react';
+import { observer } from 'mobx-react-lite';
+import React, { useContext } from 'react';
 
 import { AppContext } from '../../app-context';
 import DataLoader from '../../hoc/DataLoader';
@@ -10,14 +10,10 @@ import Error from '../Error';
 import CommentForm from './CommentForm';
 import CommentComponent from './SingleComment';
 
-@observer
-class Comments extends Component<{ trackId: number }> {
-  static contextType = AppContext;
-  context!: React.ContextType<typeof AppContext>;
+const Comments = ({ trackId }: { trackId: number }) => {
+  const { playerStore, sessionStore, api } = useContext(AppContext);
 
-  addComment = (commentBody: string) => {
-    const { playerStore, sessionStore, api } = this.context;
-    const { trackId } = this.props;
+  const addComment = (commentBody: string) => {
     const timestamp =
       playerStore.track && playerStore.track.id === trackId
         ? playerStore.progress * 1000
@@ -31,60 +27,56 @@ class Comments extends Component<{ trackId: number }> {
     );
   };
 
-  removeComment = (comment: Comment) => {
-    this.context.api.removeComment(comment.track_id, comment.id);
+  const removeComment = (comment: Comment) => {
+    api.removeComment(comment.track_id, comment.id);
     // .then(res => comments.remove(comment)); TODO: removeComment
   };
 
-  render() {
-    const { trackId } = this.props;
-    const { addComment, removeComment } = this;
+  return (
+    <div>
+      <Typography variant="h5">Leave a comment</Typography>
+      <CommentForm addComment={addComment} />
+      <br />
 
-    return (
-      <div>
-        <Typography variant="h5">Leave a comment</Typography>
-        <CommentForm addComment={addComment} />
-        <br />
-
-        <DataLoader
-          url={this.context.api.getTrackCommentsUrl(trackId)}
-          render={({
-            data: comments,
-            isLoading,
-            loadMore,
-            error,
-          }: {
-            data: any;
-            isLoading: boolean;
-            loadMore: Function;
-            error: string | null;
-          }) => (
-            <div>
-              <InfiniteScroll load={loadMore}>
-                <List>
-                  {comments.map((comment: Comment) => (
+      <DataLoader
+        url={api.getTrackCommentsUrl(trackId)}
+        render={({
+          data: comments,
+          isLoading,
+          loadMore,
+          error,
+        }: {
+          data: any;
+          isLoading: boolean;
+          loadMore: Function;
+          error: string | null;
+        }) => (
+          <div>
+            <InfiniteScroll load={loadMore}>
+              <List>
+                {comments &&
+                  comments.map((comment: Comment) => (
                     <CommentComponent
                       key={comment.id}
                       comment={comment}
                       removeComment={removeComment}
                     />
                   ))}
-                </List>
-              </InfiniteScroll>
+              </List>
+            </InfiniteScroll>
 
-              {isLoading && (
-                <div className="loader-wrap">
-                  <CircularProgress />
-                </div>
-              )}
+            {isLoading && (
+              <div className="loader-wrap">
+                <CircularProgress />
+              </div>
+            )}
 
-              {error && <Error>{'Failed to load comments'}</Error>}
-            </div>
-          )}
-        />
-      </div>
-    );
-  }
-}
+            {error && <Error>{'Failed to load comments'}</Error>}
+          </div>
+        )}
+      />
+    </div>
+  );
+};
 
-export default Comments;
+export default observer(Comments);

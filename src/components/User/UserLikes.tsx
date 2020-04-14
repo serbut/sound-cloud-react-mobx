@@ -10,6 +10,7 @@ const UserLikes = ({ user }: { user: User }) => {
 
   const filterData = (data: any[]) => {
     if (
+      data &&
       sessionStore.user &&
       user.id === sessionStore.user.id &&
       sessionStore.userLikesIds.length

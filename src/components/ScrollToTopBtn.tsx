@@ -1,45 +1,39 @@
 import { IconButton } from '@material-ui/core';
 import { KeyboardArrowUp } from '@material-ui/icons';
-import React, { Component } from 'react';
+import React, { useEffect, useState } from 'react';
 import './ScrollToTopBtn.css';
 
-class ScrollToTopBtn extends Component {
-  state = {
-    scrollToTopVisible: false,
-  };
+const ScrollToTopBtn = () => {
+  const [isVisible, setVisible] = useState<boolean>(false);
 
-  componentDidMount() {
-    window.addEventListener('scroll', this.handleScroll);
-  }
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.pageYOffset > 1000) {
+        setVisible(true);
+      } else {
+        setVisible(false);
+      }
+    };
 
-  componentWillUnmount() {
-    window.removeEventListener('scroll', this.handleScroll);
-  }
+    window.addEventListener('scroll', handleScroll);
 
-  handleScroll = () => {
-    if (window.pageYOffset > 1000) {
-      this.setState({ scrollToTopVisible: true });
-    } else {
-      this.setState({ scrollToTopVisible: false });
-    }
-  };
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
-  handleScrollToTopClick = () => {
+  const handleScrollToTopClick = () => {
     window.scrollTo(0, 0);
   };
 
-  render() {
-    if (this.state.scrollToTopVisible)
-      return (
-        <div className="ScrollToTopBtn">
-          <IconButton color="primary" onClick={this.handleScrollToTopClick}>
-            <KeyboardArrowUp />
-          </IconButton>
-        </div>
-      );
+  if (isVisible)
+    return (
+      <div className="ScrollToTopBtn">
+        <IconButton color="primary" onClick={handleScrollToTopClick}>
+          <KeyboardArrowUp />
+        </IconButton>
+      </div>
+    );
 
-    return null;
-  }
-}
+  return null;
+};
 
 export default ScrollToTopBtn;

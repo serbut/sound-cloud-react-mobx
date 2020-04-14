@@ -1,26 +1,25 @@
-import { Component } from 'react';
+import { FunctionComponent, ReactElement, useEffect } from 'react';
 
-export default class InfiniteScrollComponent extends Component<{
-  load: Function;
-}> {
-  componentDidMount() {
-    window.addEventListener('scroll', this.onScroll, false);
-  }
+const InfiniteScrollComponent: FunctionComponent<{ load: Function }> = ({
+  children,
+  load,
+}) => {
+  useEffect(() => {
+    const onScroll = () => {
+      if (
+        window.innerHeight + window.scrollY >=
+        document.body.offsetHeight - 200
+      ) {
+        load();
+      }
+    };
 
-  componentWillUnmount() {
-    window.removeEventListener('scroll', this.onScroll, false);
-  }
+    window.addEventListener('scroll', onScroll, false);
 
-  onScroll = () => {
-    if (
-      window.innerHeight + window.scrollY >=
-      document.body.offsetHeight - 200
-    ) {
-      this.props.load();
-    }
-  };
+    return () => window.removeEventListener('scroll', onScroll, false);
+  }, [load]);
 
-  render() {
-    return this.props.children;
-  }
-}
+  return children as ReactElement;
+};
+
+export default InfiniteScrollComponent;

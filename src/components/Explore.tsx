@@ -1,5 +1,5 @@
 import { Paper, Tab, Tabs } from '@material-ui/core';
-import { observer } from 'mobx-react';
+import { observer } from 'mobx-react-lite';
 import React, { useContext, useEffect } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
 import { AppContext } from '../app-context';
@@ -62,7 +62,7 @@ const Explore = () => {
   }
 
   const currentTabIndex = GENRES_LIST.indexOf(genre);
-  const { url, params: requestParams } = api.getSearchTracksByTagRequest(genre);
+  const { url, params } = api.getSearchTracksByTagRequest(genre);
 
   return (
     <div>
@@ -84,7 +84,7 @@ const Explore = () => {
       <div className="container" style={{ paddingTop: 48 + 48 }}>
         <DataLoader
           url={url}
-          params={requestParams}
+          params={params}
           render={(props: any) => <DataGrid {...props} />}
         />
       </div>

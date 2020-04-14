@@ -1,5 +1,5 @@
 import { CircularProgress, Typography } from '@material-ui/core';
-import { observer } from 'mobx-react';
+import { observer } from 'mobx-react-lite';
 import React from 'react';
 import {
   Index,
@@ -69,7 +69,7 @@ const DataGrid = ({
   error?: string | null;
   loadMore?: Function;
 }) => {
-  if (!data.length && isLoading) {
+  if (!data && isLoading) {
     return (
       <div className="loader-wrap">
         <CircularProgress />
@@ -77,12 +77,16 @@ const DataGrid = ({
     );
   }
 
+  if (!data && isLastPage) {
+    return <Typography variant="h2">Nothing to show</Typography>;
+  }
+
   if (error) {
     return <Error>{error}</Error>;
   }
 
-  if (!data.length && !isLoading && isLastPage) {
-    return <Typography variant="h2">Nothing to show</Typography>;
+  if (!data) {
+    return null;
   }
 
   const loadedRowCount = Math.ceil(data.length / CELLS_IN_ROW);

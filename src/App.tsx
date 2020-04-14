@@ -1,4 +1,4 @@
-import { observer } from 'mobx-react';
+import { observer } from 'mobx-react-lite';
 import React from 'react';
 import {
   BrowserRouter as Router,
@@ -25,6 +25,9 @@ import playerStore from './stores/player-store';
 import sessionStore from './stores/session-store';
 import viewStore from './stores/view-store';
 
+new AudioService(playerStore);
+new KeyboardShortcutsService(playerStore, viewStore, sessionStore);
+
 const context = {
   playerStore,
   viewStore,
@@ -32,54 +35,47 @@ const context = {
   api,
 };
 
-class App extends React.Component {
-  componentDidMount() {
-    new AudioService(playerStore);
-    new KeyboardShortcutsService(playerStore, viewStore, sessionStore);
-  }
+const App = () => {
+  return (
+    <AppContext.Provider value={context}>
+      <Router>
+        <div style={{ paddingBottom: playerStore.track ? 64 : 0 }}>
+          <AppBar />
 
-  render() {
-    return (
-      <AppContext.Provider value={context}>
-        <Router>
-          <div style={{ paddingBottom: playerStore.track ? 64 : 0 }}>
-            <AppBar />
+          <Route exact path="/" render={() => <Redirect to="/explore" />} />
+          <Switch>
+            <Route path="/callback">
+              <Callback />
+            </Route>
+            <Route path="/stream">
+              <Stream />
+            </Route>
+            <Route path="/explore">
+              <Explore />
+            </Route>
+            <Route path="/search">
+              <Search />
+            </Route>
+            <Route path="/users/:user/tracks/:track">
+              <Track />
+            </Route>
+            <Route path="/users/:user/playlists/:playlist">
+              <Playlist />
+            </Route>
+            <Route path="/users/:user">
+              <User />
+            </Route>
+            <Route path="*">
+              <PageNotFound />
+            </Route>
+          </Switch>
 
-            <Route exact path="/" render={() => <Redirect to="/explore" />} />
-            <Switch>
-              <Route path="/callback">
-                <Callback />
-              </Route>
-              <Route path="/stream">
-                <Stream />
-              </Route>
-              <Route path="/explore">
-                <Explore />
-              </Route>
-              <Route path="/search">
-                <Search />
-              </Route>
-              <Route path="/users/:user/tracks/:track">
-                <Track />
-              </Route>
-              <Route path="/users/:user/playlists/:playlist">
-                <Playlist />
-              </Route>
-              <Route path="/users/:user">
-                <User />
-              </Route>
-              <Route path="*">
-                <PageNotFound />
-              </Route>
-            </Switch>
-
-            <Player />
-            <ScrollToTopBtn />
-          </div>
-        </Router>
-      </AppContext.Provider>
-    );
-  }
-}
+          <Player />
+          <ScrollToTopBtn />
+        </div>
+      </Router>
+    </AppContext.Provider>
+  );
+};
 
 export default observer(App);
