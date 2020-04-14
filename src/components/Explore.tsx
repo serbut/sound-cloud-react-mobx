@@ -3,9 +3,9 @@ import { observer } from 'mobx-react-lite';
 import React, { useContext, useEffect } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
 import { AppContext } from '../app-context';
-
-import DataLoader from '../hoc/DataLoader';
 import DataGrid from './DataGrid';
+
+import DataLoader from './DataLoader';
 
 export const GENRES_MAP: {
   [key: string]: string;

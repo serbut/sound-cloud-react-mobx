@@ -1,9 +1,9 @@
 import React, { useContext } from 'react';
 
 import { AppContext } from '../../app-context';
-import DataLoader from '../../hoc/DataLoader';
 import { User } from '../../models/user';
 import DataGrid from '../DataGrid';
+import DataLoader from '../DataLoader';
 
 const UserPlaylists = ({ user }: { user: User }) => {
   const { api } = useContext(AppContext);

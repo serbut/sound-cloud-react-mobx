@@ -1,11 +1,11 @@
 import { observer } from 'mobx-react-lite';
 import React, { useContext } from 'react';
 import { AppContext } from '../app-context';
-
-import DataLoader from '../hoc/DataLoader';
-import RequireAuth from '../hoc/RequireAuth';
 import { CollectionItem } from '../models/api';
 import DataGrid from './DataGrid';
+
+import DataLoader from './DataLoader';
+import RequireAuth from './RequireAuth';
 
 const Stream = () => {
   const { api } = useContext(AppContext);

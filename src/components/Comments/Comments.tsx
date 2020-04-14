@@ -3,10 +3,10 @@ import { observer } from 'mobx-react-lite';
 import React, { useContext } from 'react';
 
 import { AppContext } from '../../app-context';
-import DataLoader from '../../hoc/DataLoader';
-import InfiniteScroll from '../../hoc/InfiniteScrollify';
 import { Comment } from '../../models/comment';
+import DataLoader from '../DataLoader';
 import Error from '../Error';
+import InfiniteScroll from '../InfiniteScrollify';
 import { Spinner } from '../Spinner';
 import CommentForm from './CommentForm';
 import CommentComponent from './SingleComment';

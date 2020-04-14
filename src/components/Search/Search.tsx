@@ -3,8 +3,8 @@ import { observer } from 'mobx-react-lite';
 import React, { useContext } from 'react';
 import { useLocation } from 'react-router-dom';
 import { AppContext } from '../../app-context';
-import DataLoader from '../../hoc/DataLoader';
 import DataGrid from '../DataGrid';
+import DataLoader from '../DataLoader';
 
 const Search = () => {
   const {
