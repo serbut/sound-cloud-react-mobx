@@ -1,16 +1,16 @@
 import { TextField } from '@material-ui/core';
-import { observer } from 'mobx-react-lite';
 import React, { useState } from 'react';
 
-// TODO: add validation
 const CommentForm = ({
   addComment,
 }: {
   addComment: (value: string) => void;
 }) => {
   const [value, setValue] = useState<string>('');
+  const [error, setError] = useState<string | null>(null);
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setError(null);
     setValue(event.target.value);
   };
 
@@ -18,6 +18,12 @@ const CommentForm = ({
     event.preventDefault();
 
     if (!value) {
+      setError('Please enter something.');
+      return;
+    }
+
+    if (value.length < 3) {
+      setError('Please enter minimum 3 symbols.');
       return;
     }
 
@@ -29,13 +35,15 @@ const CommentForm = ({
   return (
     <form onSubmit={handleFormSubmit}>
       <TextField
+        error={!!error}
         label="Enter comment text"
         value={value}
         onChange={handleInputChange}
         fullWidth
+        helperText={error}
       />
     </form>
   );
 };
 
-export default observer(CommentForm);
+export default CommentForm;
