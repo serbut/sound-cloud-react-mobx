@@ -10,6 +10,7 @@ export enum ActionType {
   Success = 'Success',
   Error = 'Error',
   LoadMore = 'LoadMore',
+  SetData = 'SetData',
 }
 
 type Action =
@@ -20,7 +21,8 @@ type Action =
     }
   | { type: ActionType.Error }
   | { type: ActionType.Load }
-  | { type: ActionType.LoadMore };
+  | { type: ActionType.LoadMore }
+  | { type: ActionType.SetData; data: any[] };
 
 export const initialState: State = {
   data: null,
@@ -62,6 +64,13 @@ export const reducer = (state: State, action: Action): State => {
       ...state,
       isLoading: true,
       error: false,
+    };
+  }
+
+  if (action.type === ActionType.SetData) {
+    return {
+      ...state,
+      data: action.data,
     };
   }
 
