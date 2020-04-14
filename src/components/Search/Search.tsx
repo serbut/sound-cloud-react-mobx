@@ -21,14 +21,16 @@ const Search = () => {
   const searchTag = query?.charAt(0) === '#';
   const searchUser = !searchTag && where === 'users';
   const searchTrack = !searchTag && where === 'tracks';
-  let request: { url?: string; params?: any } = {};
+  const request = searchTag
+    ? getSearchTracksByTagRequest(query.slice(1))
+    : searchUser
+    ? getSearchUsersRequest(query)
+    : searchTrack
+    ? getSearchTracksRequest(query)
+    : null;
 
-  if (searchTag) {
-    request = getSearchTracksByTagRequest(query.slice(1));
-  } else if (searchUser) {
-    request = getSearchUsersRequest(query);
-  } else if (searchTrack) {
-    request = getSearchTracksRequest(query);
+  if (!request) {
+    return null;
   }
 
   return (

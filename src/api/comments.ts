@@ -1,5 +1,6 @@
 import SC from 'soundcloud';
 import { StatusResponse } from '../models/api';
+import { Comment } from '../models/comment';
 
 export const addComment = (
   trackId: number,

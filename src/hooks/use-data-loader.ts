@@ -1,14 +1,22 @@
 import { useCallback, useContext, useEffect, useReducer, useRef } from 'react';
 import { AppContext } from '../app-context';
 import { Collection } from '../models/api';
-import { ActionType, initialState, reducer } from './use-data-loader-reducer';
+import {
+  Action,
+  ActionType,
+  initialState,
+  reducer,
+  State,
+} from './use-data-loader-reducer';
 
-const useDataLoader = (url?: string, params?: { [key: string]: string }) => {
+const useDataLoader = <T>(
+  url: string,
+  params: { [key: string]: string } = {}
+) => {
   const { api } = useContext(AppContext);
-  const [{ data, isLoading, error, isLastPage }, dispatch] = useReducer(
-    reducer,
-    initialState
-  );
+  const [{ data, isLoading, error, isLastPage }, dispatch] = useReducer<
+    (prevState: State<T>, action: Action) => State<T>
+  >(reducer, initialState);
   const nextHref = useRef<string | null | undefined>();
   const paramsAsJSON = JSON.stringify(params);
 
@@ -58,7 +66,14 @@ const useDataLoader = (url?: string, params?: { [key: string]: string }) => {
       .catch(() => onError());
   }, [api, isLastPage, isLoading]);
 
-  return [data, isLoading, isLastPage, error, loadMore];
+  const setData = useCallback((data: T[]) => {
+    dispatch({
+      type: ActionType.SetData,
+      data,
+    });
+  }, []);
+
+  return { data, isLoading, isLastPage, error, loadMore, setData };
 };
 
 export default useDataLoader;

@@ -1,18 +1,24 @@
-import { List, Typography } from '@material-ui/core';
+import { Typography } from '@material-ui/core';
 import { observer } from 'mobx-react-lite';
 import React, { useContext } from 'react';
-
 import { AppContext } from '../../app-context';
+import useDataLoader from '../../hooks/use-data-loader';
 import { Comment } from '../../models/comment';
-import DataLoader from '../DataLoader';
 import Error from '../Error';
 import InfiniteScroll from '../InfiniteScrollify';
 import { Spinner } from '../Spinner';
 import CommentForm from './CommentForm';
-import CommentComponent from './SingleComment';
+import { CommentsList } from './CommentsList';
 
 const Comments = ({ trackId }: { trackId: number }) => {
   const { playerStore, sessionStore, api } = useContext(AppContext);
+  const {
+    data: comments,
+    isLoading,
+    loadMore,
+    error,
+    setData: setComments,
+  } = useDataLoader<Comment>(api.getTrackCommentsUrl(trackId));
 
   const addComment = (commentBody: string) => {
     const timestamp =
@@ -22,15 +28,21 @@ const Comments = ({ trackId }: { trackId: number }) => {
 
     (sessionStore.isLoggedIn ? Promise.resolve() : sessionStore.login()).then(
       () => {
-        api.addComment(trackId, commentBody, timestamp);
-        // .then(res => comments.unshift(res)); TODO: addComment
+        api.addComment(trackId, commentBody, timestamp).then((comment) => {
+          if (comments) {
+            setComments([comment, ...comments]);
+          }
+        });
       }
     );
   };
 
   const removeComment = (comment: Comment) => {
-    api.removeComment(comment.track_id, comment.id);
-    // .then(res => comments.remove(comment)); TODO: removeComment
+    api.removeComment(comment.track_id, comment.id).then((response) => {
+      if (comments) {
+        setComments(comments.filter((c) => c.id !== comment.id));
+      }
+    });
   };
 
   return (
@@ -39,39 +51,15 @@ const Comments = ({ trackId }: { trackId: number }) => {
       <CommentForm addComment={addComment} />
       <br />
 
-      <DataLoader
-        url={api.getTrackCommentsUrl(trackId)}
-        render={({
-          data: comments,
-          isLoading,
-          loadMore,
-          error,
-        }: {
-          data: any;
-          isLoading: boolean;
-          loadMore: Function;
-          error: string | null;
-        }) => (
-          <div>
-            <InfiniteScroll load={loadMore}>
-              <List>
-                {comments &&
-                  comments.map((comment: Comment) => (
-                    <CommentComponent
-                      key={comment.id}
-                      comment={comment}
-                      removeComment={removeComment}
-                    />
-                  ))}
-              </List>
-            </InfiniteScroll>
+      <div>
+        <InfiniteScroll load={loadMore}>
+          <CommentsList comments={comments} removeComment={removeComment} />
+        </InfiniteScroll>
 
-            {isLoading && <Spinner />}
+        {isLoading && <Spinner />}
 
-            {error && <Error>{'Failed to load comments'}</Error>}
-          </div>
-        )}
-      />
+        {error && <Error>{'Failed to load comments'}</Error>}
+      </div>
     </div>
   );
 };

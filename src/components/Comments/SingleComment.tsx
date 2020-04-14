@@ -22,7 +22,7 @@ const CommentComponent = ({
   removeComment,
 }: {
   comment: Comment;
-  removeComment: Function;
+  removeComment: (comment: Comment) => void;
 }) => {
   const { sessionStore } = useContext(AppContext);
 

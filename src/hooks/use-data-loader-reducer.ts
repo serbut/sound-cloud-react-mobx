@@ -1,5 +1,5 @@
-type State = {
-  data: any[] | null;
+export type State<T = any> = {
+  data: T[] | null;
   isLastPage: boolean;
   isLoading: boolean;
   error: boolean;
@@ -13,7 +13,7 @@ export enum ActionType {
   SetData = 'SetData',
 }
 
-type Action =
+export type Action =
   | {
       type: ActionType.Success;
       data: any[];
@@ -31,7 +31,7 @@ export const initialState: State = {
   error: false,
 };
 
-export const reducer = (state: State, action: Action): State => {
+export const reducer = <T>(state: State<T>, action: Action): State<T> => {
   if (action.type === ActionType.Load) {
     return {
       data: null,

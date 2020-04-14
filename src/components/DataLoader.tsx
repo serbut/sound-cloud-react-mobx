@@ -5,22 +5,13 @@ const DataLoader = ({
   params = {},
   render,
 }: {
-  url?: string;
+  url: string;
   params?: { [key: string]: string };
   render: Function;
 }) => {
-  const [data, isLoading, isLastPage, error, loadMore] = useDataLoader(
-    url,
-    params
-  );
+  const all = useDataLoader<any>(url, params);
 
-  return render({
-    data,
-    isLoading,
-    isLastPage,
-    error,
-    loadMore,
-  });
+  return render(all);
 };
 
 export default DataLoader;
