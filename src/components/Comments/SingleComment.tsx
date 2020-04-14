@@ -8,7 +8,7 @@ import {
   Typography,
 } from '@material-ui/core';
 import { Delete } from '@material-ui/icons';
-import { observer } from 'mobx-react';
+import { observer } from 'mobx-react-lite';
 import React, { useContext } from 'react';
 import { Link } from 'react-router-dom';
 import { AppContext } from '../../app-context';

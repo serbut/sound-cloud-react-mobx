@@ -21,7 +21,7 @@
     "keymaster": "^1.6.2",
     "lint-staged": "^10.1.1",
     "mobx": "^5.15.4",
-    "mobx-react": "^6.1.8",
+    "mobx-react-lite": "^2.0.6",
     "mobx-utils": "^5.5.5",
     "moment": "^2.24.0",
     "prettier": "^2.0.2",

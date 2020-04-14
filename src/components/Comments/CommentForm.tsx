@@ -1,5 +1,5 @@
 import { TextField } from '@material-ui/core';
-import { observer } from 'mobx-react';
+import { observer } from 'mobx-react-lite';
 import React, { useState } from 'react';
 
 // TODO: add validation

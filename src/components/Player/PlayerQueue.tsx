@@ -9,7 +9,7 @@ import {
   ListItemText,
 } from '@material-ui/core';
 import { VolumeUp } from '@material-ui/icons';
-import { observer } from 'mobx-react';
+import { observer } from 'mobx-react-lite';
 import React, { useContext, useEffect } from 'react';
 import { AppContext } from '../../app-context';
 import { Track } from '../../models/track';

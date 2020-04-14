@@ -1,5 +1,5 @@
 import { Tab, Tabs } from '@material-ui/core';
-import { observer } from 'mobx-react';
+import { observer } from 'mobx-react-lite';
 import React, { useEffect, useState } from 'react';
 import { Route, useHistory, useLocation } from 'react-router-dom';
 import { UserWithWebProfiles } from './User';

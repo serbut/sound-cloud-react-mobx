@@ -1,5 +1,5 @@
 import { CircularProgress, List, Typography } from '@material-ui/core';
-import { observer } from 'mobx-react';
+import { observer } from 'mobx-react-lite';
 import React, { useContext } from 'react';
 
 import { AppContext } from '../../app-context';

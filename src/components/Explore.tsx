@@ -1,5 +1,5 @@
 import { Paper, Tab, Tabs } from '@material-ui/core';
-import { observer } from 'mobx-react';
+import { observer } from 'mobx-react-lite';
 import React, { useContext, useEffect } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
 import { AppContext } from '../app-context';
