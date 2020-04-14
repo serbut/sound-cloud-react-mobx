@@ -11,6 +11,9 @@ const Stream = () => {
   const { api } = useContext(AppContext);
 
   const formatData = (data: CollectionItem[]) => {
+    if (!data) {
+      return;
+    }
     return data.filter((i) => i.origin).map((i: any) => i.origin);
   };
 

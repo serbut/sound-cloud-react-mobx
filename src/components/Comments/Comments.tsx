@@ -54,13 +54,14 @@ const Comments = ({ trackId }: { trackId: number }) => {
           <div>
             <InfiniteScroll load={loadMore}>
               <List>
-                {comments.map((comment: Comment) => (
-                  <CommentComponent
-                    key={comment.id}
-                    comment={comment}
-                    removeComment={removeComment}
-                  />
-                ))}
+                {comments &&
+                  comments.map((comment: Comment) => (
+                    <CommentComponent
+                      key={comment.id}
+                      comment={comment}
+                      removeComment={removeComment}
+                    />
+                  ))}
               </List>
             </InfiniteScroll>
 
