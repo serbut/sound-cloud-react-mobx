@@ -1,13 +1,12 @@
-import { CircularProgress } from '@material-ui/core';
 import { action } from 'mobx';
 import { observer } from 'mobx-react-lite';
 import React, { useContext, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { AppContext } from '../../app-context';
-
 import { Playlist } from '../../models/playlist';
 import DataGrid from '../DataGrid';
 import Error from '../Error';
+import { Spinner } from '../Spinner';
 import PlaylistHeader from './PlaylistHeader';
 
 const PlaylistComponent = () => {
@@ -33,11 +32,7 @@ const PlaylistComponent = () => {
   }, [userID, playlistID, api]);
 
   if (isLoading) {
-    return (
-      <div className="loader-wrap">
-        <CircularProgress />
-      </div>
-    );
+    return <Spinner />;
   }
 
   if (error) {

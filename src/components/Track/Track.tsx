@@ -1,11 +1,10 @@
-import { CircularProgress } from '@material-ui/core';
 import { observer } from 'mobx-react-lite';
 import React, { useContext, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { AppContext } from '../../app-context';
-
 import { Track } from '../../models/track';
 import Error from '../Error';
+import { Spinner } from '../Spinner';
 import TrackView from '../Track/TrackView';
 
 const TrackComponent = () => {
@@ -31,23 +30,18 @@ const TrackComponent = () => {
   }, [userID, trackID, api]);
 
   if (isLoading) {
-    return (
-      // TODO: create Loader component
-      <div className="loader-wrap">
-        <CircularProgress />
-      </div>
-    );
+    return <Spinner />;
   }
 
   if (error) {
     return <Error>Failed to load track</Error>;
   }
 
-  if (!track) {
-    return null;
+  if (track) {
+    return <TrackView track={track} />;
   }
 
-  return <TrackView track={track} />;
+  return null;
 };
 
 export default observer(TrackComponent);

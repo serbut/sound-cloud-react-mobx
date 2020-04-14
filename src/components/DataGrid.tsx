@@ -15,6 +15,7 @@ import { Track } from '../models/track';
 import { User } from '../models/user';
 import Error from './Error';
 import PlaylistCard from './Playlist/PlaylistCard';
+import { Spinner } from './Spinner';
 import TrackCard from './Track/TrackCard';
 import UserCard from './User/UserCard';
 
@@ -70,11 +71,7 @@ const DataGrid = ({
   loadMore?: Function;
 }) => {
   if (!data && isLoading) {
-    return (
-      <div className="loader-wrap">
-        <CircularProgress />
-      </div>
-    );
+    return <Spinner />;
   }
 
   if (!data && isLastPage) {

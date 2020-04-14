@@ -1,4 +1,3 @@
-import { CircularProgress } from '@material-ui/core';
 import { action } from 'mobx';
 import { observer } from 'mobx-react-lite';
 import React, { useContext, useEffect, useState } from 'react';
@@ -7,6 +6,7 @@ import { AppContext } from '../../app-context';
 import { User } from '../../models/user';
 import { UserWebProfile } from '../../models/user-web-profile';
 import Error from '../Error';
+import { Spinner } from '../Spinner';
 import UserView from '../User/UserView';
 
 export interface UserWithWebProfiles extends User {
@@ -51,11 +51,7 @@ const UserComponent = () => {
   }, [userID, api]);
 
   if (isLoading) {
-    return (
-      <div className="loader-wrap">
-        <CircularProgress />
-      </div>
-    );
+    return <Spinner />;
   }
 
   if (error) {

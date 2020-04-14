@@ -26,9 +26,3 @@ a {
   max-width: 1080px;
   margin: 0 auto;
 }
-
-.loader-wrap {
-  display: flex;
-  justify-content: center;
-  padding: 48px;
-}

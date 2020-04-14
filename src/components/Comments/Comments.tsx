@@ -1,4 +1,4 @@
-import { CircularProgress, List, Typography } from '@material-ui/core';
+import { List, Typography } from '@material-ui/core';
 import { observer } from 'mobx-react-lite';
 import React, { useContext } from 'react';
 
@@ -7,6 +7,7 @@ import DataLoader from '../../hoc/DataLoader';
 import InfiniteScroll from '../../hoc/InfiniteScrollify';
 import { Comment } from '../../models/comment';
 import Error from '../Error';
+import { Spinner } from '../Spinner';
 import CommentForm from './CommentForm';
 import CommentComponent from './SingleComment';
 
@@ -65,11 +66,7 @@ const Comments = ({ trackId }: { trackId: number }) => {
               </List>
             </InfiniteScroll>
 
-            {isLoading && (
-              <div className="loader-wrap">
-                <CircularProgress />
-              </div>
-            )}
+            {isLoading && <Spinner />}
 
             {error && <Error>{'Failed to load comments'}</Error>}
           </div>
