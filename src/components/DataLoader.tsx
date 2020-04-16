@@ -6,7 +6,7 @@ const DataLoader = ({
   render,
 }: {
   url: string;
-  params?: { [key: string]: string };
+  params?: { [key: string]: string | number | boolean };
   render: Function;
 }) => {
   const all = useDataLoader<any>(url, params);

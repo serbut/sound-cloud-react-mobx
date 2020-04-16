@@ -1,53 +1,59 @@
-export type State<T = any> = {
-  data: T[] | null;
-  isLastPage: boolean;
+export type State<T> = {
+  data: T | null;
   isLoading: boolean;
   error: boolean;
+  nextHref: string | null | undefined;
+  isLastPage: boolean;
 };
 
 export enum ActionType {
   Load = 'Load',
   Success = 'Success',
   Error = 'Error',
-  LoadMore = 'LoadMore',
+  LoadNext = 'LoadNext',
   SetData = 'SetData',
 }
 
 export type Action =
   | {
       type: ActionType.Success;
-      data: any[];
-      isLastPage: boolean;
+      data: any;
+      nextHref: string | null | undefined;
     }
   | { type: ActionType.Error }
   | { type: ActionType.Load }
-  | { type: ActionType.LoadMore }
-  | { type: ActionType.SetData; data: any[] };
+  | { type: ActionType.LoadNext }
+  | { type: ActionType.SetData; data: any };
 
-export const initialState: State = {
+export const initialState: State<any> = {
   data: null,
-  isLastPage: false,
   isLoading: false,
   error: false,
+  nextHref: null,
+  isLastPage: false,
 };
 
-export const reducer = <T>(state: State<T>, action: Action): State<T> => {
+export const reducer = (state: State<any>, action: Action): State<any> => {
   if (action.type === ActionType.Load) {
     return {
       data: null,
-      isLastPage: false,
       isLoading: true,
       error: false,
+      nextHref: null,
+      isLastPage: false,
     };
   }
 
   if (action.type === ActionType.Success) {
     return {
-      ...state,
-      data: [...(state.data || []), ...action.data],
-      isLastPage: action.isLastPage,
+      data:
+        state.data && Array.isArray(state.data)
+          ? [...state.data, ...action.data]
+          : action.data,
       error: false,
       isLoading: false,
+      nextHref: action.nextHref,
+      isLastPage: !action.nextHref,
     };
   }
 
@@ -59,7 +65,7 @@ export const reducer = <T>(state: State<T>, action: Action): State<T> => {
     };
   }
 
-  if (action.type === ActionType.LoadMore) {
+  if (action.type === ActionType.LoadNext) {
     return {
       ...state,
       isLoading: true,
