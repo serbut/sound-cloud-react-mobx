@@ -8,11 +8,7 @@ import DataLoader from '../DataLoader';
 
 const Search = () => {
   const {
-    api: {
-      getSearchTracksByTagRequest,
-      getSearchTracksRequest,
-      getSearchUsersRequest,
-    },
+    api: { endpoints },
   } = useContext(AppContext);
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
@@ -21,12 +17,12 @@ const Search = () => {
   const searchTag = query?.charAt(0) === '#';
   const searchUser = !searchTag && where === 'users';
   const searchTrack = !searchTag && where === 'tracks';
-  const request = searchTag
-    ? getSearchTracksByTagRequest(query.slice(1))
+  const request: any = searchTag
+    ? { url: endpoints.tracks, params: { tags: query.slice(1) } }
     : searchUser
-    ? getSearchUsersRequest(query)
+    ? { url: endpoints.users, params: { q: query } }
     : searchTrack
-    ? getSearchTracksRequest(query)
+    ? { url: endpoints.tracks, params: { q: query } }
     : null;
 
   if (!request) {

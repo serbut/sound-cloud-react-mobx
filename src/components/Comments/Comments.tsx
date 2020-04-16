@@ -18,7 +18,7 @@ const Comments = ({ trackId }: { trackId: number }) => {
     loadMore,
     error,
     setData: setComments,
-  } = useDataLoader<Comment>(api.getTrackCommentsUrl(trackId));
+  } = useDataLoader<Comment>(api.endpoints.trackComments(trackId));
 
   const addComment = (commentBody: string) => {
     const timestamp =

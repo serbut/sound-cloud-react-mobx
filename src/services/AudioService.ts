@@ -1,7 +1,7 @@
 import { autorun } from 'mobx';
 import { IReactionDisposer } from 'mobx/lib/internal';
 
-import { formatStreamUrl } from '../api';
+import { formatStreamUrl } from '../api/utils';
 import { PlayerStore } from '../stores/player-store';
 
 export default class AudioService {

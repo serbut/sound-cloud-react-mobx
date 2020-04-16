@@ -62,7 +62,6 @@ const Explore = () => {
   }
 
   const currentTabIndex = GENRES_LIST.indexOf(genre);
-  const { url, params } = api.getSearchTracksByTagRequest(genre);
 
   return (
     <div>
@@ -83,8 +82,10 @@ const Explore = () => {
 
       <div className="container" style={{ paddingTop: 48 + 48 }}>
         <DataLoader
-          url={url}
-          params={params}
+          url={api.endpoints.tracks}
+          params={{
+            tags: genre,
+          }}
           render={(props: any) => <DataGrid {...props} />}
         />
       </div>

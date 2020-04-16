@@ -10,7 +10,7 @@ const UserFollowings = ({ user }: { user: User }) => {
 
   return (
     <DataLoader
-      url={api.getUserFollowingsUrl(user.id)}
+      url={api.endpoints.userFollowings(user.id)}
       render={(props: any) => <DataGrid {...props} />}
     />
   );

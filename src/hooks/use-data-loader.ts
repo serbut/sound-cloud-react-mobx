@@ -1,4 +1,5 @@
 import { useCallback, useContext, useEffect, useReducer, useRef } from 'react';
+import { PAGE_SIZE } from '../api';
 import { AppContext } from '../app-context';
 import { Collection } from '../models/api';
 import {
@@ -43,9 +44,13 @@ const useDataLoader = <T>(
     nextHref.current = null;
 
     api
-      .loadData<any>(url, JSON.parse(paramsAsJSON))
+      .load<any>(url, {
+        limit: PAGE_SIZE,
+        linked_partitioning: 1,
+        ...JSON.parse(paramsAsJSON),
+      })
       .then((data) => !skip && onSuccess(data))
-      .catch(() => onError());
+      .catch(() => !skip && onError());
 
     return () => {
       skip = true;
@@ -61,7 +66,7 @@ const useDataLoader = <T>(
     dispatch({ type: ActionType.LoadMore });
 
     api
-      .loadMore<any>(nextHref.current)
+      .load<any>(nextHref.current)
       .then((data) => _nextHref === nextHref.current && onSuccess(data))
       .catch(() => onError());
   }, [api, isLastPage, isLoading]);

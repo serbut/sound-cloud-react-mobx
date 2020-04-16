@@ -1,8 +1,8 @@
 import { action, computed, observable } from 'mobx';
 
-import { loadMore } from '../api';
+import { load } from '../api';
 import { CollectionItemType } from '../enums';
-import { CollectionItem } from '../models/api';
+import { Collection, CollectionItem } from '../models/api';
 import { Track } from '../models/track';
 import { isPreview } from '../utils';
 import { PlayerStore } from './player-store';
@@ -55,7 +55,7 @@ export class Queue {
     if (this.isLoading || !this.nextHref) return;
 
     this.isLoading = true;
-    loadMore<Track | CollectionItem>(this.nextHref).then(
+    load<Collection<Track | CollectionItem>>(this.nextHref).then(
       action((data) => {
         Queue.filterData(data.collection).forEach((track: Track) =>
           this.originItems.push(track)

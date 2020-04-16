@@ -2,6 +2,7 @@ import { action } from 'mobx';
 import { observer } from 'mobx-react-lite';
 import React, { useContext, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
+import { endpoints } from '../../api';
 import { AppContext } from '../../app-context';
 import { User } from '../../models/user';
 import { UserWebProfile } from '../../models/user-web-profile';
@@ -29,12 +30,14 @@ const UserComponent = () => {
     setLoading(true);
 
     api
-      .loadUser(userID)
+      .load<User>(endpoints.user(userID))
       .then((user) =>
-        api.loadUserWebProfiles(user.id).then((profiles) => ({
-          user,
-          profiles,
-        }))
+        api
+          .load<UserWebProfile[]>(endpoints.userWebProfiles(user.id))
+          .then((profiles) => ({
+            user,
+            profiles,
+          }))
       )
       .then(
         action(({ user, profiles }) =>

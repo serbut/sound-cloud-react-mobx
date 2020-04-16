@@ -20,7 +20,7 @@ const Stream = () => {
   return (
     <div className="container" style={{ paddingTop: 48 }}>
       <DataLoader
-        url={api.STREAM_URL}
+        url={api.endpoints.stream}
         render={({ data, ...other }: { data: any; other: any }) => (
           // @ts-ignore
           <DataGrid data={formatData(data)} {...other} />

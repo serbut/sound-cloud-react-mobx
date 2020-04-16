@@ -2,6 +2,7 @@ import { action } from 'mobx';
 import { observer } from 'mobx-react-lite';
 import React, { useContext, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
+import { endpoints } from '../../api';
 import { AppContext } from '../../app-context';
 import { Playlist } from '../../models/playlist';
 import DataGrid from '../DataGrid';
@@ -25,7 +26,7 @@ const PlaylistComponent = () => {
     setLoading(true);
 
     api
-      .loadPlaylist(userID, playlistID)
+      .load<Playlist>(endpoints.playlist(userID, playlistID))
       .then(action((playlist) => setPlaylist(playlist)))
       .catch(action(() => setError(true)))
       .finally(() => setLoading(false));

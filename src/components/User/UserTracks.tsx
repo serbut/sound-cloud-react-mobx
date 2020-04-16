@@ -10,7 +10,7 @@ const UserTracks = ({ user }: { user: User }) => {
 
   return (
     <DataLoader
-      url={api.getUserTracksUrl(user.id)}
+      url={api.endpoints.userTracks(user.id)}
       render={(props: any) => <DataGrid {...props} />}
     />
   );

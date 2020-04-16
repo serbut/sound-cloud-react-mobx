@@ -1,6 +1,7 @@
 import { observer } from 'mobx-react-lite';
 import React, { useContext, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
+import { endpoints } from '../../api';
 import { AppContext } from '../../app-context';
 import { Track } from '../../models/track';
 import Error from '../Error';
@@ -23,7 +24,7 @@ const TrackComponent = () => {
     setLoading(true);
 
     api
-      .loadTrack(userID, trackID)
+      .load<Track>(endpoints.track(userID, trackID))
       .then((track) => setTrack(track))
       .catch(() => setError(true))
       .finally(() => setLoading(false));
