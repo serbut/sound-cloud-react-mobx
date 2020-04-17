@@ -2,7 +2,6 @@ import { Avatar, Button, Typography } from '@material-ui/core';
 import { observer } from 'mobx-react-lite';
 import React, { useContext } from 'react';
 import { AppContext } from '../../app-context';
-
 import { ImageSize } from '../../enums';
 import { User } from '../../models/user';
 import { formatNumber, getImageUrl } from '../../utils';
@@ -24,15 +23,7 @@ const UserHeader = ({ user }: { user: User }) => {
           {user.username}
         </Typography>
         <Typography variant="body1" gutterBottom>
-          {formatNumber(user.followers_count)} followers{' '}
-          <span className="bullet">&bull;</span>
-          {user.followings_count} followings
-          <br />
-          {user.playlist_count} playlists <span className="bullet">&bull;</span>
-          {user.public_favorites_count} likes{' '}
-          <span className="bullet">&bull;</span>
-          {user.reposts_count} reposts <span className="bullet">&bull;</span>
-          {user.track_count} tracks
+          {formatNumber(user.followers_count)} followers
         </Typography>
         {sessionStore.isAuthedUser(user) ? null : sessionStore.isFollowing(
             user

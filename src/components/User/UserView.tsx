@@ -1,39 +1,57 @@
-import { Tab, Tabs } from '@material-ui/core';
 import { observer } from 'mobx-react-lite';
 import React, { useEffect, useState } from 'react';
-import { Route, useHistory, useLocation } from 'react-router-dom';
+import {
+  Redirect,
+  Route,
+  Switch,
+  useHistory,
+  useLocation,
+  useRouteMatch,
+} from 'react-router-dom';
 import { User } from '../../models/user';
 import UserAbout from './UserAbout';
 import UserFollowings from './UserFollowings';
 import UserHeader from './UserHeader';
 import UserLikes from './UserLikes';
 import UserPlaylists from './UserPlaylists';
+import { UserTabs } from './UserTabs';
 import UserTracks from './UserTracks';
 import './UserView.css';
 
-// TODO: move tabs to UserTabs component
+export type UserTab = { value: string; label: string };
+
 const UserView = ({ user }: { user: User }) => {
   const history = useHistory();
   const location = useLocation();
-  const [tabs, setTabs] = useState<string[]>([]);
+  const { path, url } = useRouteMatch();
+  const [tabs, setTabs] = useState<UserTab[]>([]);
 
   useEffect(() => {
-    const tabs = [];
+    const tabs: UserTab[] = [];
 
     if (user.track_count > 0) {
-      tabs.push('tracks');
+      tabs.push({ value: '/tracks', label: `${user.track_count} tracks` });
     }
     if (user.playlist_count > 0) {
-      tabs.push('playlists');
+      tabs.push({
+        value: '/playlists',
+        label: `${user.playlist_count} playlists`,
+      });
     }
     if (user.public_favorites_count > 0) {
-      tabs.push('likes');
+      tabs.push({
+        value: '/likes',
+        label: `${user.public_favorites_count} likes`,
+      });
     }
     if (user.followings_count > 0) {
-      tabs.push('followings');
+      tabs.push({
+        value: '/followings',
+        label: `${user.followings_count} followings`,
+      });
     }
     if (user.description) {
-      tabs.push('about');
+      tabs.push({ value: '/about', label: 'About' });
     }
 
     setTabs(tabs);
@@ -45,30 +63,12 @@ const UserView = ({ user }: { user: User }) => {
     user.description,
   ]);
 
-  useEffect(() => {
-    if (tabs.length === 0) {
-      return;
-    }
-
-    if (
-      /^.*\/(tracks|playlists|likes|followings|about)$/.test(location.pathname)
-    ) {
-      return;
-    }
-
-    history.replace(`/users/${user.permalink}/${tabs[0]}`);
-  }, [tabs, history, location.pathname, user.permalink]);
-
   const handleTabChange = (event: React.ChangeEvent<{}>, index: number) => {
-    const tab = tabs && tabs[index];
-
-    if (tab) {
-      tab && history.push(`/users/${user.permalink}/${tab}`);
-    }
+    history.push(url + tabs[index].value);
   };
 
   const selectedTabIndex = tabs.findIndex((tab) =>
-    location.pathname.includes(tab)
+    new RegExp(`^${url}${tab.value}$`).test(location.pathname)
   );
 
   return (
@@ -77,37 +77,38 @@ const UserView = ({ user }: { user: User }) => {
         <div className="container">
           <UserHeader user={user} />
 
-          {selectedTabIndex !== -1 && (
-            <Tabs value={selectedTabIndex} onChange={handleTabChange}>
-              {tabs.map((el, i) => (
-                <Tab key={i} label={el} />
-              ))}
-            </Tabs>
-          )}
+          <UserTabs
+            tabs={tabs}
+            selectedTabIndex={selectedTabIndex}
+            handleTabChange={handleTabChange}
+          />
         </div>
       </div>
 
       <div className="container">
-        <Route
-          path="/users/:user/tracks"
-          render={() => <UserTracks user={user} />}
-        />
-        <Route
-          path="/users/:user/playlists"
-          render={() => <UserPlaylists user={user} />}
-        />
-        <Route
-          path="/users/:user/likes"
-          render={() => <UserLikes user={user} />}
-        />
-        <Route
-          path="/users/:user/followings"
-          render={() => <UserFollowings user={user} />}
-        />
-        <Route
-          path="/users/:user/about"
-          component={() => <UserAbout user={user} />}
-        />
+        <Switch>
+          <Route
+            path={`${path}/tracks`}
+            render={() => <UserTracks user={user} />}
+          />
+          <Route
+            path={`${path}/playlists`}
+            render={() => <UserPlaylists user={user} />}
+          />
+          <Route
+            path={`${path}/likes`}
+            render={() => <UserLikes user={user} />}
+          />
+          <Route
+            path={`${path}/followings`}
+            render={() => <UserFollowings user={user} />}
+          />
+          <Route
+            path={`${path}/about`}
+            component={() => <UserAbout user={user} />}
+          />
+          {tabs[0] && <Redirect from={path} to={path + tabs[0].value} />}
+        </Switch>
       </div>
     </div>
   );
