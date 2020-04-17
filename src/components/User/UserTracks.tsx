@@ -1,20 +1,18 @@
 import React, { useContext } from 'react';
-
 import { AppContext } from '../../app-context';
+import useDataLoader from '../../hooks/use-data-loader';
+import { Track } from '../../models/track';
 import { User } from '../../models/user';
 import DataGrid from '../DataGrid';
-import DataLoader from '../DataLoader';
 
 const UserTracks = ({ user }: { user: User }) => {
   const { api } = useContext(AppContext);
-
-  return (
-    <DataLoader
-      url={api.endpoints.userTracks(user.id)}
-      params={api.paginationParams}
-      render={(props: any) => <DataGrid {...props} />}
-    />
+  const dataLoaderProps = useDataLoader<Track[]>(
+    api.endpoints.userTracks(user.id),
+    api.paginationParams
   );
+
+  return <DataGrid {...dataLoaderProps} />;
 };
 
 export default UserTracks;

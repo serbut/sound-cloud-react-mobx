@@ -57,7 +57,7 @@ const DataGrid = ({
   error,
   loadMore = () => {},
 }: {
-  data: Array<Track | User | Playlist> | null;
+  data: Array<Track | User | Playlist> | null | undefined;
   isLoading?: boolean;
   isLastPage: boolean;
   error: boolean;

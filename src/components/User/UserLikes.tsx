@@ -1,36 +1,18 @@
 import React, { useContext } from 'react';
-
 import { AppContext } from '../../app-context';
+import useDataLoader from '../../hooks/use-data-loader';
+import { Track } from '../../models/track';
 import { User } from '../../models/user';
 import DataGrid from '../DataGrid';
-import DataLoader from '../DataLoader';
 
 const UserLikes = ({ user }: { user: User }) => {
-  const { sessionStore, api } = useContext(AppContext);
-
-  const filterData = (data: any[]) => {
-    if (
-      data &&
-      sessionStore.user &&
-      user.id === sessionStore.user.id &&
-      sessionStore.userLikesIds.length
-    ) {
-      return data.filter((el) => sessionStore.userLikesIds.includes(el.id));
-    } else {
-      return data;
-    }
-  };
-
-  return (
-    <DataLoader
-      url={api.endpoints.userLikes(user.id)}
-      params={api.paginationParams}
-      render={({ data, ...props }: { data: any[]; props: any }) => (
-        // @ts-ignore
-        <DataGrid data={filterData(data)} {...props} />
-      )}
-    />
+  const { api } = useContext(AppContext);
+  const dataLoaderProps = useDataLoader<Track[]>(
+    api.endpoints.userLikes(user.id),
+    api.paginationParams
   );
+
+  return <DataGrid {...dataLoaderProps} />;
 };
 
 export default UserLikes;

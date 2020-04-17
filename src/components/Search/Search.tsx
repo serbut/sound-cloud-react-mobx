@@ -3,8 +3,10 @@ import { observer } from 'mobx-react-lite';
 import React, { useContext } from 'react';
 import { useLocation } from 'react-router-dom';
 import { AppContext } from '../../app-context';
+import useDataLoader from '../../hooks/use-data-loader';
+import { Track } from '../../models/track';
+import { User } from '../../models/user';
 import DataGrid from '../DataGrid';
-import DataLoader from '../DataLoader';
 
 const Search = () => {
   const {
@@ -17,17 +19,18 @@ const Search = () => {
   const searchTag = query?.charAt(0) === '#';
   const searchUser = !searchTag && where === 'users';
   const searchTrack = !searchTag && where === 'tracks';
-  const request: any = searchTag
+  const request = searchTag
     ? { url: endpoints.tracks, params: { tags: query.slice(1) } }
     : searchUser
     ? { url: endpoints.users, params: { q: query } }
     : searchTrack
     ? { url: endpoints.tracks, params: { q: query } }
-    : null;
+    : {};
 
-  if (!request) {
-    return null;
-  }
+  const dataLoaderProps = useDataLoader<(Track | User)[]>(request.url, {
+    ...paginationParams,
+    ...request.params,
+  });
 
   return (
     <div className="container">
@@ -38,11 +41,7 @@ const Search = () => {
         {searchTrack && ' in tracks:'}
       </Typography>
 
-      <DataLoader
-        url={request.url}
-        params={{ ...paginationParams, ...request.params }}
-        render={(props: any) => <DataGrid {...props} />}
-      />
+      <DataGrid {...dataLoaderProps} />
     </div>
   );
 };

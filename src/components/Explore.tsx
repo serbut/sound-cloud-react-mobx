@@ -3,9 +3,9 @@ import { observer } from 'mobx-react-lite';
 import React, { useContext, useEffect } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
 import { AppContext } from '../app-context';
+import useDataLoader from '../hooks/use-data-loader';
+import { Track } from '../models/track';
 import DataGrid from './DataGrid';
-
-import DataLoader from './DataLoader';
 
 export const GENRES_MAP: {
   [key: string]: string;
@@ -33,6 +33,10 @@ const Explore = () => {
   const location = useLocation();
   const { api } = useContext(AppContext);
   const genre = new URLSearchParams(location.search).get('genre');
+  const dataLoaderProps = useDataLoader<Track[]>(api.endpoints.tracks, {
+    ...api.paginationParams,
+    tags: genre,
+  });
 
   useEffect(() => {
     // TODO: somehow improve this maybe?
@@ -81,14 +85,7 @@ const Explore = () => {
       )}
 
       <div className="container" style={{ paddingTop: 48 + 48 }}>
-        <DataLoader
-          url={api.endpoints.tracks}
-          params={{
-            ...api.paginationParams,
-            tags: genre,
-          }}
-          render={(props: any) => <DataGrid {...props} />}
-        />
+        <DataGrid {...dataLoaderProps} />
       </div>
     </div>
   );

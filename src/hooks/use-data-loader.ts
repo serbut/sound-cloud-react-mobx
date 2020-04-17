@@ -14,8 +14,8 @@ function isCollection<T>(response: any): response is Collection<T> {
 }
 
 const useDataLoader = <T>(
-  url: string,
-  params: { [key: string]: string | number | boolean } = {}
+  url?: string,
+  params: { [key: string]: any } = {}
 ) => {
   const { api } = useContext(AppContext);
   const [
