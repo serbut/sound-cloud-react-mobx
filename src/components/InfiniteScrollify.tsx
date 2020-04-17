@@ -1,5 +1,6 @@
 import { FunctionComponent, ReactElement, useEffect } from 'react';
 
+// TODO: use external library
 const InfiniteScrollComponent: FunctionComponent<{ load: Function }> = ({
   children,
   load,

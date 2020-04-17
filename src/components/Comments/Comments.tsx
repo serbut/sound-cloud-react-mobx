@@ -1,16 +1,23 @@
-import { Typography } from '@material-ui/core';
+import { Box, Typography } from '@material-ui/core';
 import { observer } from 'mobx-react-lite';
 import React, { useContext } from 'react';
 import { AppContext } from '../../app-context';
 import useDataLoader from '../../hooks/use-data-loader';
 import { Comment } from '../../models/comment';
+import { formatNumber } from '../../utils';
 import Error from '../Error';
 import InfiniteScroll from '../InfiniteScrollify';
 import { Spinner } from '../Spinner';
 import CommentForm from './CommentForm';
 import { CommentsList } from './CommentsList';
 
-const Comments = ({ trackId }: { trackId: number }) => {
+const Comments = ({
+  trackId,
+  commentsCount,
+}: {
+  trackId: number;
+  commentsCount: number;
+}) => {
   const { playerStore, sessionStore, api } = useContext(AppContext);
   const {
     data: comments,
@@ -49,8 +56,10 @@ const Comments = ({ trackId }: { trackId: number }) => {
   };
 
   return (
-    <div>
-      <Typography variant="h5">Leave a comment</Typography>
+    <Box py={2}>
+      <Typography variant="h5" gutterBottom>
+        {formatNumber(commentsCount)} comments
+      </Typography>
       <CommentForm addComment={addComment} />
       <br />
 
@@ -63,7 +72,7 @@ const Comments = ({ trackId }: { trackId: number }) => {
 
         {error && <Error>{'Failed to load comments'}</Error>}
       </div>
-    </div>
+    </Box>
   );
 };
 

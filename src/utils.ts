@@ -47,10 +47,10 @@ export function formatDuration(ms: number) {
 
 export function formatNumber(value: number) {
   if (!value) return '0';
-  if (value / 1000 < 1) return value.toLocaleString();
-  if (value / 1000000 < 1) return Math.round((value / 1000) * 10) / 10 + 'K';
+  if (value / 10000 < 1) return value.toLocaleString();
+  if (value / 1000000 < 1) return Math.round(value / 1000) + 'K';
 
-  return Math.round((value / 1000000) * 100) / 100 + 'M';
+  return Math.round((value / 1000000) * 10) / 10 + 'M';
 }
 
 export function fromNow(createdAt: string) {
