@@ -24,6 +24,7 @@ const UserLikes = ({ user }: { user: User }) => {
   return (
     <DataLoader
       url={api.endpoints.userLikes(user.id)}
+      params={api.paginationParams}
       render={({ data, ...props }: { data: any[]; props: any }) => (
         // @ts-ignore
         <DataGrid data={filterData(data)} {...props} />

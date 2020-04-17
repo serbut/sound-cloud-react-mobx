@@ -21,6 +21,7 @@ const Stream = () => {
     <div className="container" style={{ paddingTop: 48 }}>
       <DataLoader
         url={api.endpoints.stream}
+        params={api.paginationParams}
         render={({ data, ...other }: { data: any; other: any }) => (
           // @ts-ignore
           <DataGrid data={formatData(data)} {...other} />

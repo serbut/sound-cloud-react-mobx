@@ -8,7 +8,7 @@ import DataLoader from '../DataLoader';
 
 const Search = () => {
   const {
-    api: { endpoints },
+    api: { endpoints, paginationParams },
   } = useContext(AppContext);
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
@@ -40,7 +40,7 @@ const Search = () => {
 
       <DataLoader
         url={request.url}
-        params={request.params}
+        params={{ ...paginationParams, ...request.params }}
         render={(props: any) => <DataGrid {...props} />}
       />
     </div>

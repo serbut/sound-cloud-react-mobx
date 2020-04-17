@@ -19,6 +19,10 @@ export * from './endpoints';
 export const API_URL = 'https://api.soundcloud.com';
 export const PAGE_SIZE = 50;
 export const RESOLVE_URL = '/resolve?url=http://soundcloud.com';
+export const paginationParams = {
+  limit: PAGE_SIZE,
+  linked_partitioning: 1,
+};
 
 let _nextHref: string | undefined; // TODO: remove this
 

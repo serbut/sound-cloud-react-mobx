@@ -18,7 +18,10 @@ const Comments = ({ trackId }: { trackId: number }) => {
     loadMore,
     error,
     setData: setComments,
-  } = useDataLoader<Comment[]>(api.endpoints.trackComments(trackId));
+  } = useDataLoader<Comment[]>(
+    api.endpoints.trackComments(trackId),
+    api.paginationParams
+  );
 
   const addComment = (commentBody: string) => {
     const timestamp =

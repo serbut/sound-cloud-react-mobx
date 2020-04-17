@@ -11,6 +11,7 @@ const UserFollowings = ({ user }: { user: User }) => {
   return (
     <DataLoader
       url={api.endpoints.userFollowings(user.id)}
+      params={api.paginationParams}
       render={(props: any) => <DataGrid {...props} />}
     />
   );

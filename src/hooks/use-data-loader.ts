@@ -1,5 +1,4 @@
 import { useCallback, useContext, useEffect, useReducer } from 'react';
-import { PAGE_SIZE } from '../api';
 import { AppContext } from '../app-context';
 import { Collection } from '../models/api';
 import {
@@ -57,11 +56,7 @@ const useDataLoader = <T>(
     dispatch({ type: ActionType.Load });
 
     api
-      .load<unknown>(url, {
-        limit: PAGE_SIZE,
-        linked_partitioning: 1,
-        ...JSON.parse(paramsAsJSON),
-      })
+      .load<unknown>(url, JSON.parse(paramsAsJSON))
       .then((data) => !skip && onSuccess(data))
       .catch(() => !skip && onError());
 

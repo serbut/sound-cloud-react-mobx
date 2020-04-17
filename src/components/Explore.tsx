@@ -84,6 +84,7 @@ const Explore = () => {
         <DataLoader
           url={api.endpoints.tracks}
           params={{
+            ...api.paginationParams,
             tags: genre,
           }}
           render={(props: any) => <DataGrid {...props} />}

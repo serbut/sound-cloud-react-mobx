@@ -11,6 +11,7 @@ const UserTracks = ({ user }: { user: User }) => {
   return (
     <DataLoader
       url={api.endpoints.userTracks(user.id)}
+      params={api.paginationParams}
       render={(props: any) => <DataGrid {...props} />}
     />
   );

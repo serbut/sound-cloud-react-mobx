@@ -11,7 +11,7 @@ const UserPlaylists = ({ user }: { user: User }) => {
   return (
     <DataLoader
       url={api.endpoints.userPlaylists(user.id)}
-      params={{ representation: 'compact' }}
+      params={{ ...api.paginationParams, representation: 'compact' }}
       render={(props: any) => <DataGrid {...props} />}
     />
   );
