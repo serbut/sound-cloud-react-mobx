@@ -2,7 +2,7 @@ import { Tab, Tabs } from '@material-ui/core';
 import { observer } from 'mobx-react-lite';
 import React, { useEffect, useState } from 'react';
 import { Route, useHistory, useLocation } from 'react-router-dom';
-import { UserWithWebProfiles } from './User';
+import { User } from '../../models/user';
 import UserAbout from './UserAbout';
 import UserFollowings from './UserFollowings';
 import UserHeader from './UserHeader';
@@ -12,7 +12,7 @@ import UserTracks from './UserTracks';
 import './UserView.css';
 
 // TODO: move tabs to UserTabs component
-const UserView = ({ user }: { user: UserWithWebProfiles }) => {
+const UserView = ({ user }: { user: User }) => {
   const history = useHistory();
   const location = useLocation();
   const [tabs, setTabs] = useState<string[]>([]);
@@ -32,7 +32,7 @@ const UserView = ({ user }: { user: UserWithWebProfiles }) => {
     if (user.followings_count > 0) {
       tabs.push('followings');
     }
-    if (user.description || user.webProfiles.length > 0) {
+    if (user.description) {
       tabs.push('about');
     }
 
@@ -43,7 +43,6 @@ const UserView = ({ user }: { user: UserWithWebProfiles }) => {
     user.public_favorites_count,
     user.followings_count,
     user.description,
-    user.webProfiles.length,
   ]);
 
   useEffect(() => {

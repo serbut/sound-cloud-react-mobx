@@ -1,8 +1,8 @@
 import { observer } from 'mobx-react-lite';
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext } from 'react';
 import { useParams } from 'react-router-dom';
-import { endpoints } from '../../api';
 import { AppContext } from '../../app-context';
+import useDataLoader from '../../hooks/use-data-loader';
 import { Track } from '../../models/track';
 import Error from '../Error';
 import { Spinner } from '../Spinner';
@@ -10,25 +10,10 @@ import TrackView from '../Track/TrackView';
 
 const TrackComponent = () => {
   const { api } = useContext(AppContext);
-  const { user: userID, track: trackID } = useParams();
-  const [track, setTrack] = useState<Track | undefined>();
-  const [isLoading, setLoading] = useState<boolean>();
-  const [error, setError] = useState<boolean>();
-
-  useEffect(() => {
-    if (!userID || !trackID) {
-      return;
-    }
-
-    setError(false);
-    setLoading(true);
-
-    api
-      .load<Track>(endpoints.track(userID, trackID))
-      .then((track) => setTrack(track))
-      .catch(() => setError(true))
-      .finally(() => setLoading(false));
-  }, [userID, trackID, api]);
+  const { user: userId, track: trackId } = useParams();
+  const { data: track, isLoading, error } = useDataLoader<Track>(
+    userId && trackId && api.endpoints.track(userId, trackId)
+  );
 
   if (isLoading) {
     return <Spinner />;
