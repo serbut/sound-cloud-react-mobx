@@ -15,7 +15,7 @@ const PlaylistComponent = () => {
   const { api } = useContext(AppContext);
   const [playlist, setPlaylist] = useState<Playlist | undefined>();
   const [isLoading, setLoading] = useState<boolean>();
-  const [error, setError] = useState<boolean>();
+  const [error, setError] = useState<boolean>(false);
 
   useEffect(() => {
     if (!userID || !playlistID) {
@@ -49,7 +49,7 @@ const PlaylistComponent = () => {
       <PlaylistHeader playlist={playlist} />
 
       <div className="container">
-        <DataGrid data={playlist.tracks} isLastPage={true} />
+        <DataGrid data={playlist.tracks} isLastPage={true} error={error} />
       </div>
     </div>
   );

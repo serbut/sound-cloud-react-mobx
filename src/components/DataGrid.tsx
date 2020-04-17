@@ -1,4 +1,4 @@
-import { CircularProgress, Typography } from '@material-ui/core';
+import { Typography } from '@material-ui/core';
 import { observer } from 'mobx-react-lite';
 import React from 'react';
 import {
@@ -39,13 +39,6 @@ const listStyle = {
   outline: 'none',
 };
 
-const loaderContainerStyle = {
-  width: '100%',
-  display: 'flex',
-  justifyContent: 'center',
-  alignItems: 'center',
-};
-
 const renderCard = (item: Track | User | Playlist, data: any[]) => {
   switch (item.kind) {
     case 'track':
@@ -64,10 +57,10 @@ const DataGrid = ({
   error,
   loadMore = () => {},
 }: {
-  data: Array<Track | User | Playlist>;
+  data: Array<Track | User | Playlist> | null;
   isLoading?: boolean;
   isLastPage: boolean;
-  error?: string | null;
+  error: boolean;
   loadMore?: Function;
 }) => {
   if (!data && isLoading) {
@@ -79,7 +72,7 @@ const DataGrid = ({
   }
 
   if (error) {
-    return <Error>{error}</Error>;
+    return <Error>Can't load data</Error>;
   }
 
   if (!data) {
@@ -98,8 +91,8 @@ const DataGrid = ({
 
     if (rowData.length === 0) {
       return (
-        <div key={key} style={{ ...style, ...loaderContainerStyle }}>
-          <CircularProgress />
+        <div key={key} style={style}>
+          <Spinner />
         </div>
       );
     }
