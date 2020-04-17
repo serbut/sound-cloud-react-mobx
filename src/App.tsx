@@ -14,6 +14,7 @@ import Explore from './components/Explore';
 import PageNotFound from './components/PageNotFound';
 import Player from './components/Player/Player';
 import Playlist from './components/Playlist/Playlist';
+import { PrivateRoute } from './components/PrivateRoute';
 import ScrollToTopBtn from './components/ScrollToTopBtn';
 import Search from './components/Search/Search';
 import Stream from './components/Stream';
@@ -47,9 +48,9 @@ const App = () => {
             <Route path="/callback">
               <Callback />
             </Route>
-            <Route path="/stream">
+            <PrivateRoute path="/stream">
               <Stream />
-            </Route>
+            </PrivateRoute>
             <Route path="/explore">
               <Explore />
             </Route>

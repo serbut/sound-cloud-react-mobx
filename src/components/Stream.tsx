@@ -6,7 +6,6 @@ import { CollectionItem } from '../models/api';
 import { Playlist } from '../models/playlist';
 import { Track } from '../models/track';
 import DataGrid from './DataGrid';
-import RequireAuth from './RequireAuth';
 
 const Stream = () => {
   const { api } = useContext(AppContext);
@@ -30,4 +29,4 @@ const Stream = () => {
   );
 };
 
-export default RequireAuth(observer(Stream));
+export default observer(Stream);
