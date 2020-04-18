@@ -1,3 +1,4 @@
+import { Box, Container } from '@material-ui/core';
 import { observer } from 'mobx-react-lite';
 import qs from 'qs';
 import React, { useContext } from 'react';
@@ -74,9 +75,11 @@ const Explore = () => {
         handleChange={handleChange}
       />
 
-      <div className="container" style={{ paddingTop: 48 + 48 }}>
-        <DataGrid {...dataLoaderProps} />
-      </div>
+      <Container>
+        <Box py={3}>
+          <DataGrid {...dataLoaderProps} />
+        </Box>
+      </Container>
     </div>
   );
 };

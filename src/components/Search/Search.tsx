@@ -1,4 +1,4 @@
-import { Typography } from '@material-ui/core';
+import { Container, Typography } from '@material-ui/core';
 import { observer } from 'mobx-react-lite';
 import React, { useContext } from 'react';
 import { useLocation } from 'react-router-dom';
@@ -33,7 +33,7 @@ const Search = () => {
   });
 
   return (
-    <div className="container">
+    <Container>
       <Typography variant="h3" style={{ margin: '70px 0 20px 0' }}>
         Results for <span style={{ color: '#3f51b5' }}>{query}</span>
         {searchTag && ' tag:'}
@@ -42,7 +42,7 @@ const Search = () => {
       </Typography>
 
       <DataGrid {...dataLoaderProps} />
-    </div>
+    </Container>
   );
 };
 

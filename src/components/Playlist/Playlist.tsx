@@ -1,3 +1,4 @@
+import { Container } from '@material-ui/core';
 import { observer } from 'mobx-react-lite';
 import React, { useContext } from 'react';
 import { useParams } from 'react-router-dom';
@@ -32,9 +33,9 @@ const PlaylistComponent = () => {
     <div>
       <PlaylistHeader playlist={playlist} />
 
-      <div className="container">
+      <Container>
         <DataGrid data={playlist.tracks} isLastPage={true} error={error} />
-      </div>
+      </Container>
     </div>
   );
 };

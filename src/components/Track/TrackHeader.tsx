@@ -10,6 +10,7 @@ import { observer } from 'mobx-react-lite';
 import React, { useContext } from 'react';
 import { Link } from 'react-router-dom';
 import { AppContext } from '../../app-context';
+import { Bullet } from '../../Bullet';
 import { Track } from '../../models/track';
 import { formatDuration, formatNumber, fromNow } from '../../utils';
 import TrackCard from './TrackCard';
@@ -49,11 +50,11 @@ const TrackHeader = ({ track }: { track: Track }) => {
             </Link>
             <Typography variant="body2" gutterBottom>
               added {fromNow(track.created_at)}
-              <span className="bullet">&bull;</span>
+              <Bullet />
               {formatDuration(track.duration)}
-              <span className="bullet">&bull;</span>
+              <Bullet />
               {formatNumber(track.playback_count)} plays
-              <span className="bullet">&bull;</span>
+              <Bullet />
               {formatNumber(track.favoritings_count)} likes
               {/*<span className="bullet">&bull;</span>*/}
               {/*{formatNumber(track.reposts_count)} reposts{' '}*/}

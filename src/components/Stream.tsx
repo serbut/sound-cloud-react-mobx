@@ -1,3 +1,4 @@
+import { Box, Container } from '@material-ui/core';
 import { observer } from 'mobx-react-lite';
 import React, { useContext } from 'react';
 import { AppContext } from '../app-context';
@@ -23,9 +24,11 @@ const Stream = () => {
   };
 
   return (
-    <div className="container" style={{ paddingTop: 48 }}>
-      <DataGrid data={formatData(data)} {...otherProps} />
-    </div>
+    <Container>
+      <Box py={3}>
+        <DataGrid data={formatData(data)} {...otherProps} />
+      </Box>
+    </Container>
   );
 };
 

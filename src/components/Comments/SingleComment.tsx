@@ -12,6 +12,7 @@ import { observer } from 'mobx-react-lite';
 import React, { useContext } from 'react';
 import { Link } from 'react-router-dom';
 import { AppContext } from '../../app-context';
+import { Bullet } from '../../Bullet';
 
 import { ImageSize } from '../../enums';
 import { Comment } from '../../models/comment';
@@ -46,7 +47,7 @@ const CommentComponent = ({
               {' '}
               at {formatDuration(comment.timestamp)}
             </Typography>
-            <span className="bullet">&bull;</span>
+            <Bullet />
             <Typography variant="caption">
               {fromNow(comment.created_at)}
             </Typography>

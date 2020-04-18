@@ -1,6 +1,7 @@
-import { Typography } from '@material-ui/core';
+import { Container, Typography } from '@material-ui/core';
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { Bullet } from '../../Bullet';
 
 import { ImageSize } from '../../enums';
 import { Playlist } from '../../models/playlist';
@@ -12,7 +13,7 @@ const PlaylistHeader = ({ playlist }: { playlist: Playlist }) => {
 
   return (
     <div className="PlaylistHeader">
-      <div className="container PlaylistHeader-row">
+      <Container className="PlaylistHeader-row">
         <img
           src={getImageUrl(playlist.artwork_url, ImageSize.t500x500)}
           alt="playlsit.title"
@@ -33,13 +34,13 @@ const PlaylistHeader = ({ playlist }: { playlist: Playlist }) => {
             </Link>
           </Typography>
           <Typography variant="body1">
-            {fromNow(playlist.created_at)}{' '}
-            <span className="bullet">&bull;</span>
+            {fromNow(playlist.created_at)}
+            <Bullet />
             {playlist.track_count} tracks, &nbsp;
             {formatDuration(playlist.duration)}
           </Typography>
         </div>
-      </div>
+      </Container>
     </div>
   );
 };

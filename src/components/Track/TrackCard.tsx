@@ -10,6 +10,7 @@ import { observer } from 'mobx-react-lite';
 import React, { useContext } from 'react';
 import { Link } from 'react-router-dom';
 import { AppContext } from '../../app-context';
+import { Bullet } from '../../Bullet';
 
 import { ImageSize } from '../../enums';
 import { Track } from '../../models/track';
@@ -81,7 +82,7 @@ const TrackCard = ({
           </Typography>
           <Typography variant="caption">
             {formatNumber(track.favoritings_count) + ' likes'}
-            <span className="bullet">&bull;</span>
+            <Bullet />
             {fromNow(track.created_at)}
           </Typography>
         </CardContent>
