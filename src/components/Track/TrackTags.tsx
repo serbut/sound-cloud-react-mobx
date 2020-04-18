@@ -15,7 +15,7 @@ export const TrackTags = ({
 
   return (
     <Box py={2}>
-      <Typography variant="h5" gutterBottom>
+      <Typography variant="h6" gutterBottom>
         Tags
       </Typography>
 

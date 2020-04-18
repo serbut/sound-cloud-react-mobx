@@ -20,19 +20,19 @@ const TrackHeader = ({ track }: { track: Track }) => {
           </Grid>
 
           <Grid item xs={9}>
-            <Typography variant="h5">Single</Typography>
-            <Typography variant="h4" gutterBottom>
+            <Typography variant="subtitle1">Single</Typography>
+            <Typography variant="h5" gutterBottom>
               {track.title}
             </Typography>
             <Typography variant="subtitle1">
               by{' '}
               <Link to={`/users/${user.permalink}`}>
-                <Typography color="primary" display="inline">
+                <Typography variant="body1" color="primary" display="inline">
                   {user.username}
                 </Typography>
               </Link>
             </Typography>
-            <Typography variant="body1" paragraph>
+            <Typography variant="body2" paragraph>
               added {fromNow(track.created_at)}{' '}
               <span className="bullet">&bull;</span>
               {formatDuration(track.duration)}

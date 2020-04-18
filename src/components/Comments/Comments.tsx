@@ -57,7 +57,7 @@ const Comments = ({
 
   return (
     <Box py={2}>
-      <Typography variant="h5" gutterBottom>
+      <Typography variant="h6" gutterBottom>
         {formatNumber(commentsCount)} comments
       </Typography>
       <CommentForm addComment={addComment} />

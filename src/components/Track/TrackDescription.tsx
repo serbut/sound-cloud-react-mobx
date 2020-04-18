@@ -10,7 +10,7 @@ export const TrackDescription = ({ body }: { body: string | null }) => {
 
   return (
     <Box py={2}>
-      <Typography variant="h5" gutterBottom>
+      <Typography variant="h6" gutterBottom>
         Description
       </Typography>
 
