@@ -1,3 +1,5 @@
+import { Box } from '@material-ui/core';
+import Container from '@material-ui/core/Container';
 import { observer } from 'mobx-react-lite';
 import React, { useEffect, useState } from 'react';
 import {
@@ -16,7 +18,6 @@ import UserLikes from './UserLikes';
 import UserPlaylists from './UserPlaylists';
 import { UserTabs } from './UserTabs';
 import UserTracks from './UserTracks';
-import './UserView.css';
 
 export type UserTab = { value: string; label: string };
 
@@ -72,20 +73,19 @@ const UserView = ({ user }: { user: User }) => {
   );
 
   return (
-    <div className="User animated fadeIn">
-      <div className="User-header">
-        <div className="container">
+    <div className="animated fadeIn">
+      <Box mb={3} style={{ backgroundColor: '#eeeeee99' }}>
+        <Container>
           <UserHeader user={user} />
-
           <UserTabs
             tabs={tabs}
             selectedTabIndex={selectedTabIndex}
             handleTabChange={handleTabChange}
           />
-        </div>
-      </div>
+        </Container>
+      </Box>
 
-      <div className="container">
+      <Container>
         <Switch>
           <Route
             path={`${path}/tracks`}
@@ -109,7 +109,7 @@ const UserView = ({ user }: { user: User }) => {
           />
           {tabs[0] && <Redirect from={path} to={path + tabs[0].value} />}
         </Switch>
-      </div>
+      </Container>
     </div>
   );
 };

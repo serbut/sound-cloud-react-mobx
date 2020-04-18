@@ -1,7 +1,6 @@
 import { Typography } from '@material-ui/core';
 import React from 'react';
 import { User } from '../../models/user';
-import './UserAbout.css';
 
 // TODO: Create new component
 // const renderLinks = (links: { url: string; title: string }[]) => {
