@@ -1,45 +1,36 @@
-import { Typography } from '@material-ui/core';
-import { observer } from 'mobx-react-lite';
+import { Box, Grid, Typography } from '@material-ui/core';
 import React from 'react';
 import {
+  AutoSizer,
   Index,
   InfiniteLoader,
   List,
   ListRowProps,
   WindowScroller,
 } from 'react-virtualized';
-
-import overscanIndicesGetter from '../defaultOverscanIndicesGetter';
 import { Playlist } from '../models/playlist';
 import { Track } from '../models/track';
 import { User } from '../models/user';
+import overscanIndicesGetter from '../overscanIndicesGetter';
 import Error from './Error';
 import PlaylistCard from './Playlist/PlaylistCard';
 import { Spinner } from './Spinner';
 import TrackCard from './Track/TrackCard';
 import UserCard from './User/UserCard';
 
-const CELL_HEIGHT = 316;
-const CELL_WIDTH = 216;
-const CELLS_IN_ROW = 5;
-const WIDTH = CELL_WIDTH * CELLS_IN_ROW;
+const MAX_CONTAINER_WIDTH = 1280;
+const CONTAINER_PADDING = 24;
+const MIN_CELL_WIDTH = 216;
+const CELLS_PER_ROW = Math.floor(
+  (Math.min(window.innerWidth, MAX_CONTAINER_WIDTH) - CONTAINER_PADDING * 2) /
+    MIN_CELL_WIDTH
+);
 
-const cellStyle = {
-  flex: '0 0 auto',
-  boxSizing: 'border-box' as 'border-box',
-  padding: 8,
-  width: CELL_WIDTH,
-};
+const renderCard = (item: Track | User | Playlist | null, data: any[]) => {
+  if (!item) {
+    return <div>Loading...</div>;
+  }
 
-const rowStyle = {
-  display: 'flex',
-};
-
-const listStyle = {
-  outline: 'none',
-};
-
-const renderCard = (item: Track | User | Playlist, data: any[]) => {
   switch (item.kind) {
     case 'track':
       return <TrackCard track={item} tracks={data} />;
@@ -47,6 +38,8 @@ const renderCard = (item: Track | User | Playlist, data: any[]) => {
       return <UserCard user={item} />;
     case 'playlist':
       return <PlaylistCard playlist={item} />;
+    default:
+      return null;
   }
 };
 
@@ -79,64 +72,78 @@ const DataGrid = ({
     return null;
   }
 
-  const loadedRowCount = Math.ceil(data.length / CELLS_IN_ROW);
+  const calculateHeight = (width: number) => {
+    return width / CELLS_PER_ROW + 102;
+  };
+
+  const loadedRowCount = Math.ceil(data.length / CELLS_PER_ROW);
   const rowCount = isLastPage ? loadedRowCount : loadedRowCount + 1;
 
   const isRowLoaded = ({ index }: Index) => loadedRowCount > index;
 
   const rowRenderer = ({ key, index, style }: ListRowProps) => {
-    const from = index * CELLS_IN_ROW;
-    const to = from + CELLS_IN_ROW;
-    const rowData = data.slice(from, to);
+    const from = index * CELLS_PER_ROW;
+    const to = from + CELLS_PER_ROW;
+    const rowData: (Track | User | Playlist | null)[] = data.slice(from, to);
 
-    if (rowData.length === 0) {
-      return (
-        <div key={key} style={style}>
-          <Spinner />
-        </div>
-      );
+    while (rowData.length < CELLS_PER_ROW) {
+      rowData.push(null);
     }
 
     return (
-      <div key={key} style={{ ...style, ...rowStyle }}>
-        {rowData.map((item) => (
-          <div key={item.id} className="animated fadeIn" style={cellStyle}>
-            {renderCard(item, data)}
-          </div>
-        ))}
+      <div key={key} style={style}>
+        <Box px={1}>
+          <Grid container spacing={2}>
+            {rowData.map((item, index) => (
+              <Grid
+                item
+                xs
+                key={index}
+                zeroMinWidth
+                className="animated fadeIn"
+              >
+                {renderCard(item, data)}
+              </Grid>
+            ))}
+          </Grid>
+        </Box>
       </div>
     );
   };
 
   return (
-    <WindowScroller>
-      {({ height, scrollTop }) => (
-        <InfiniteLoader
-          isRowLoaded={isRowLoaded}
-          loadMoreRows={() => loadMore()}
-          rowCount={rowCount}
-          threshold={0}
-        >
-          {({ onRowsRendered, registerChild }) => (
-            <List
-              ref={registerChild}
-              onRowsRendered={onRowsRendered}
-              autoHeight
-              height={height}
-              rowCount={rowCount}
-              rowHeight={CELL_HEIGHT}
-              rowRenderer={rowRenderer}
-              scrollTop={scrollTop}
-              width={WIDTH}
-              overscanRowCount={10}
-              overscanIndicesGetter={overscanIndicesGetter}
-              style={listStyle}
-            />
+    <InfiniteLoader
+      isRowLoaded={isRowLoaded}
+      loadMoreRows={() => loadMore()}
+      rowCount={rowCount}
+    >
+      {({ onRowsRendered, registerChild }) => (
+        <WindowScroller>
+          {({ height, scrollTop }) => (
+            <AutoSizer disableHeight>
+              {({ width }) => (
+                <List
+                  onRowsRendered={onRowsRendered}
+                  ref={registerChild}
+                  autoHeight
+                  height={height}
+                  width={width}
+                  rowCount={rowCount}
+                  rowHeight={calculateHeight(width)}
+                  rowRenderer={rowRenderer}
+                  scrollTop={scrollTop}
+                  overscanIndicesGetter={overscanIndicesGetter}
+                  style={{
+                    outline: 'none',
+                  }}
+                />
+              )}
+            </AutoSizer>
           )}
-        </InfiniteLoader>
+        </WindowScroller>
       )}
-    </WindowScroller>
+    </InfiniteLoader>
   );
 };
 
-export default observer(DataGrid);
+export default DataGrid;
