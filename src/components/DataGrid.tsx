@@ -1,5 +1,5 @@
 import { Box, Grid, Typography } from '@material-ui/core';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   AutoSizer,
   Index,
@@ -21,16 +21,9 @@ import UserCard from './User/UserCard';
 const MAX_CONTAINER_WIDTH = 1280;
 const CONTAINER_PADDING = 24;
 const MIN_CELL_WIDTH = 216;
-const CELLS_PER_ROW = Math.floor(
-  (Math.min(window.innerWidth, MAX_CONTAINER_WIDTH) - CONTAINER_PADDING * 2) /
-    MIN_CELL_WIDTH
-);
+const CARD_CONTENT_HEIGHT = 102;
 
-const renderCard = (item: Track | User | Playlist | null, data: any[]) => {
-  if (!item) {
-    return <div>Loading...</div>;
-  }
-
+const renderCard = (item: Track | User | Playlist, data: any[]) => {
   switch (item.kind) {
     case 'track':
       return <TrackCard track={item} tracks={data} />;
@@ -56,6 +49,28 @@ const DataGrid = ({
   error: boolean;
   loadMore?: Function;
 }) => {
+  const [resizing, setResizing] = useState<boolean>(false);
+
+  useEffect(() => {
+    let timeoutId: number;
+
+    const onResize = () => {
+      setResizing(true);
+      clearTimeout(timeoutId);
+      timeoutId = window.setTimeout(() => setResizing(false), 500);
+    };
+
+    window.addEventListener('resize', onResize);
+
+    return () => {
+      window.removeEventListener('resize', onResize);
+    };
+  }, []);
+
+  if (resizing) {
+    return <div>Resizing...</div>;
+  }
+
   if (!data && isLoading) {
     return <Spinner />;
   }
@@ -72,21 +87,27 @@ const DataGrid = ({
     return null;
   }
 
-  const calculateHeight = (width: number) => {
-    return width / CELLS_PER_ROW + 102;
-  };
+  const perRow = Math.floor(
+    (Math.min(window.innerWidth, MAX_CONTAINER_WIDTH) - CONTAINER_PADDING * 2) /
+      MIN_CELL_WIDTH
+  );
 
-  const loadedRowCount = Math.ceil(data.length / CELLS_PER_ROW);
+  const loadedRowCount = Math.ceil(data.length / perRow);
+
   const rowCount = isLastPage ? loadedRowCount : loadedRowCount + 1;
+
+  const calculateHeight = (width: number) => {
+    return width / perRow + CARD_CONTENT_HEIGHT;
+  };
 
   const isRowLoaded = ({ index }: Index) => loadedRowCount > index;
 
   const rowRenderer = ({ key, index, style }: ListRowProps) => {
-    const from = index * CELLS_PER_ROW;
-    const to = from + CELLS_PER_ROW;
+    const from = index * perRow;
+    const to = from + perRow;
     const rowData: (Track | User | Playlist | null)[] = data.slice(from, to);
 
-    while (rowData.length < CELLS_PER_ROW) {
+    while (rowData.length < perRow) {
       rowData.push(null);
     }
 
@@ -102,7 +123,7 @@ const DataGrid = ({
                 zeroMinWidth
                 className="animated fadeIn"
               >
-                {renderCard(item, data)}
+                {item ? renderCard(item, data) : <div>Loading...</div>}
               </Grid>
             ))}
           </Grid>
