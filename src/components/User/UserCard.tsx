@@ -1,8 +1,6 @@
 import { Avatar, Typography } from '@material-ui/core';
-import { observer } from 'mobx-react-lite';
-import React from 'react';
+import React, { memo } from 'react';
 import { Link } from 'react-router-dom';
-
 import { ImageSize } from '../../enums';
 import { User } from '../../models/user';
 import { formatNumber, getImageUrl } from '../../utils';
@@ -34,4 +32,4 @@ const UserCard = ({ user }: { user: User }) => {
   );
 };
 
-export default observer(UserCard);
+export default memo(UserCard);
