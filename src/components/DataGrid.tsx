@@ -57,7 +57,7 @@ const DataGrid = ({
     const onResize = () => {
       setResizing(true);
       clearTimeout(timeoutId);
-      timeoutId = window.setTimeout(() => setResizing(false), 500);
+      timeoutId = window.setTimeout(() => setResizing(false), 200);
     };
 
     window.addEventListener('resize', onResize);
