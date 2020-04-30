@@ -1,57 +1,35 @@
-import { IconButton } from '@material-ui/core';
-import { makeStyles } from '@material-ui/core/styles';
+import { Fab, useScrollTrigger, Zoom } from '@material-ui/core';
+import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import { KeyboardArrowUp } from '@material-ui/icons';
-import debounce from 'debounce';
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 
-const useStyles = makeStyles((theme) => ({
-  container: {
-    position: 'fixed',
-    bottom: 100,
-    right: 64,
-    zIndex: 1000,
-  },
-  button: {
-    border: `1px solid ${theme.palette.secondary.main}`,
-  },
-}));
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    root: {
+      position: 'fixed',
+      bottom: theme.spacing(4),
+      right: theme.spacing(4),
+    },
+  })
+);
 
 const ScrollToTopBtn = () => {
-  const [isVisible, setVisible] = useState<boolean>(false);
   const classes = useStyles();
+  const trigger = useScrollTrigger();
 
-  useEffect(() => {
-    const handleScroll = debounce(() => {
-      if (window.pageYOffset > window.innerHeight * 2) {
-        setVisible(true);
-      } else {
-        setVisible(false);
-      }
-    }, 400);
-
-    window.addEventListener('scroll', handleScroll);
-
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-
-  const handleScrollToTopClick = () => {
+  const handleClick = (event: React.MouseEvent<HTMLDivElement>) => {
     window.scrollTo(0, 0);
   };
 
-  if (isVisible)
-    return (
-      <div className={classes.container}>
-        <IconButton
-          color="secondary"
-          className={classes.button}
-          onClick={handleScrollToTopClick}
-        >
-          <KeyboardArrowUp fontSize="large" />
-        </IconButton>
+  return (
+    <Zoom in={trigger}>
+      <div onClick={handleClick} role="presentation" className={classes.root}>
+        <Fab color="secondary" size="small" aria-label="scroll back to top">
+          <KeyboardArrowUp />
+        </Fab>
       </div>
-    );
-
-  return null;
+    </Zoom>
+  );
 };
 
 export default ScrollToTopBtn;
