@@ -13,7 +13,7 @@ const PlaylistHeader = ({ playlist }: { playlist: Playlist }) => {
     <Box py={3} mb={3} style={{ backgroundColor: '#eeeeee99' }}>
       <Container>
         <Grid container alignItems="center" spacing={3}>
-          <Hidden smDown>
+          <Hidden xsDown>
             <Grid item sm={3}>
               <img
                 src={getImageUrl(playlist.artwork_url, ImageSize.t500x500)}

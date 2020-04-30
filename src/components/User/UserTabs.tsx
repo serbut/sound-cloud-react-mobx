@@ -15,7 +15,12 @@ export const UserTabs = ({
     return null;
   }
   return (
-    <Tabs value={selectedTabIndex} onChange={handleTabChange}>
+    <Tabs
+      value={selectedTabIndex}
+      onChange={handleTabChange}
+      variant="scrollable"
+      scrollButtons="auto"
+    >
       {tabs.map((tab, i) => (
         <Tab key={i} label={tab.label} />
       ))}

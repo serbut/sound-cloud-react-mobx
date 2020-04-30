@@ -21,7 +21,7 @@ const UserHeader = ({ user }: { user: User }) => {
   return (
     <Box py={3}>
       <Grid container alignItems="center" spacing={3}>
-        <Hidden smDown>
+        <Hidden xsDown>
           <Grid item sm={3}>
             <Avatar
               alt={user.username}

@@ -24,7 +24,7 @@ const TrackHeader = ({ track }: { track: Track }) => {
     <Box py={3} mb={3} style={{ backgroundColor: '#eeeeee99' }}>
       <Container>
         <Grid container alignItems="center" spacing={3}>
-          <Hidden smDown>
+          <Hidden xsDown>
             <Grid item sm={3}>
               <TrackCard track={track} compact />
             </Grid>
