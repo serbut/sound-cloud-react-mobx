@@ -3,7 +3,7 @@ import { observer } from 'mobx-react-lite';
 import React, { useContext } from 'react';
 import { useLocation } from 'react-router-dom';
 import { AppContext } from '../../app-context';
-import useDataLoader from '../../hooks/use-data-loader';
+import useCollectionDataLoader from '../../hooks/use-collection-data-loader';
 import { Track } from '../../models/track';
 import { User } from '../../models/user';
 import DataGrid from '../DataGrid';
@@ -27,7 +27,7 @@ const Search = () => {
     ? { url: endpoints.tracks, params: { q: query } }
     : {};
 
-  const dataLoaderProps = useDataLoader<(Track | User)[]>(request.url, {
+  const dataLoaderProps = useCollectionDataLoader<Track | User>(request.url, {
     ...paginationParams,
     ...request.params,
   });

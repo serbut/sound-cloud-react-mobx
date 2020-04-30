@@ -2,7 +2,7 @@ import { Box, Typography } from '@material-ui/core';
 import { observer } from 'mobx-react-lite';
 import React, { useContext } from 'react';
 import { AppContext } from '../../app-context';
-import useDataLoader from '../../hooks/use-data-loader';
+import useCollectionDataLoader from '../../hooks/use-collection-data-loader';
 import { Comment } from '../../models/comment';
 import { formatNumber } from '../../utils';
 import Error from '../Error';
@@ -25,7 +25,7 @@ const Comments = ({
     error,
     setData: setComments,
     isLastPage,
-  } = useDataLoader<Comment[]>(
+  } = useCollectionDataLoader<Comment>(
     api.endpoints.trackComments(trackId),
     api.paginationParams
   );

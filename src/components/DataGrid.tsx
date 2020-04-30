@@ -22,8 +22,8 @@ const DataGrid = ({
   error,
   loadMore = () => {},
 }: {
-  data: Array<Track | User | Playlist> | null | undefined;
-  isLoading?: boolean;
+  data: (Track | User | Playlist)[];
+  isLoading: boolean;
   isLastPage: boolean;
   error: boolean;
   loadMore?: Function;
@@ -34,7 +34,7 @@ const DataGrid = ({
     return <div>Resizing...</div>;
   }
 
-  if (!data && isLoading) {
+  if (!data.length && isLoading) {
     return <Spinner />;
   }
 
@@ -44,10 +44,6 @@ const DataGrid = ({
 
   if (error) {
     return <Error>Can't load data</Error>;
-  }
-
-  if (!data) {
-    return null;
   }
 
   const containerWidth =

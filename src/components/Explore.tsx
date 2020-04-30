@@ -9,7 +9,7 @@ import {
   useRouteMatch,
 } from 'react-router-dom';
 import { AppContext } from '../app-context';
-import useDataLoader from '../hooks/use-data-loader';
+import useCollectionDataLoader from '../hooks/use-collection-data-loader';
 import { Track } from '../models/track';
 import DataGrid from './DataGrid';
 import { ExploreTabs } from './ExploreTabs';
@@ -38,7 +38,7 @@ const Explore = () => {
   const { path } = useRouteMatch();
   const { api } = useContext(AppContext);
   const genre = new URLSearchParams(location.search).get('genre');
-  const dataLoaderProps = useDataLoader<Track[]>(api.endpoints.tracks, {
+  const dataLoaderProps = useCollectionDataLoader<Track>(api.endpoints.tracks, {
     ...api.paginationParams,
     tags: genre,
   });

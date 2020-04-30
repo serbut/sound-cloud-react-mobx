@@ -34,7 +34,12 @@ const PlaylistComponent = () => {
       <PlaylistHeader playlist={playlist} />
 
       <Container>
-        <DataGrid data={playlist.tracks} isLastPage={true} error={error} />
+        <DataGrid
+          data={playlist.tracks}
+          isLastPage={true}
+          isLoading={false}
+          error={error}
+        />
       </Container>
     </div>
   );
