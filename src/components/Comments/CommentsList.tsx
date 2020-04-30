@@ -1,16 +1,12 @@
 import React from 'react';
 import {
-  AutoSizer,
   CellMeasurer,
   CellMeasurerCache,
   Index,
-  InfiniteLoader,
-  List,
   ListRowProps,
-  WindowScroller,
 } from 'react-virtualized';
 import { Comment } from '../../models/comment';
-import overscanIndicesGetter from '../../overscanIndicesGetter';
+import { VirtualList } from '../VirtualList';
 import CommentComponent from './SingleComment';
 
 const cache = new CellMeasurerCache({
@@ -59,37 +55,13 @@ export const CommentsList = ({
   };
 
   return (
-    <InfiniteLoader
+    <VirtualList
       isRowLoaded={isRowLoaded}
-      loadMoreRows={() => loadMore()}
+      loadMore={loadMore}
       rowCount={rowCount}
-    >
-      {({ onRowsRendered, registerChild }) => (
-        <WindowScroller>
-          {({ height, scrollTop }) => (
-            <AutoSizer disableHeight>
-              {({ width }) => (
-                <List
-                  onRowsRendered={onRowsRendered}
-                  ref={registerChild}
-                  autoHeight
-                  height={height}
-                  width={width}
-                  rowCount={rowCount}
-                  rowHeight={cache.rowHeight}
-                  rowRenderer={rowRenderer}
-                  scrollTop={scrollTop}
-                  overscanIndicesGetter={overscanIndicesGetter}
-                  deferredMeasurementCache={cache}
-                  style={{
-                    outline: 'none',
-                  }}
-                />
-              )}
-            </AutoSizer>
-          )}
-        </WindowScroller>
-      )}
-    </InfiniteLoader>
+      rowHeight={cache.rowHeight}
+      rowRenderer={rowRenderer}
+      deferredMeasurementCache={cache}
+    />
   );
 };
