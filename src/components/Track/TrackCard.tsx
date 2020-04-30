@@ -21,7 +21,7 @@ import './TrackCard.css';
 const TrackCard = ({
   track,
   compact = false,
-  tracks = [track],
+  tracks = [track], // TODO: TrackCard should nщt know about other tracks
 }: {
   track: Track;
   compact?: boolean;

@@ -1,8 +1,7 @@
 import { Card, CardContent, CardMedia, Typography } from '@material-ui/core';
 import { PlaylistPlay } from '@material-ui/icons';
-import React from 'react';
+import React, { memo } from 'react';
 import { Link } from 'react-router-dom';
-
 import { ImageSize } from '../../enums';
 import { Playlist } from '../../models/playlist';
 import { getImageUrl } from '../../utils';
@@ -40,4 +39,4 @@ const PlaylistCard = ({ playlist }: { playlist: Playlist }) => {
   );
 };
 
-export default PlaylistCard;
+export default memo(PlaylistCard);

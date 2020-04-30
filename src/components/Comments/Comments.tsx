@@ -6,7 +6,6 @@ import useDataLoader from '../../hooks/use-data-loader';
 import { Comment } from '../../models/comment';
 import { formatNumber } from '../../utils';
 import Error from '../Error';
-import InfiniteScroll from '../InfiniteScrollify';
 import { Spinner } from '../Spinner';
 import CommentForm from './CommentForm';
 import { CommentsList } from './CommentsList';
@@ -25,6 +24,7 @@ const Comments = ({
     loadMore,
     error,
     setData: setComments,
+    isLastPage,
   } = useDataLoader<Comment[]>(
     api.endpoints.trackComments(trackId),
     api.paginationParams
@@ -64,9 +64,12 @@ const Comments = ({
       <br />
 
       <div>
-        <InfiniteScroll load={loadMore}>
-          <CommentsList comments={comments} removeComment={removeComment} />
-        </InfiniteScroll>
+        <CommentsList
+          comments={comments}
+          removeComment={removeComment}
+          loadMore={loadMore}
+          isLastPage={isLastPage}
+        />
 
         {isLoading && <Spinner />}
 
