@@ -19,9 +19,10 @@ export class Queue {
   }
 
   @computed get items() {
-    if (this.player.skipPreviews)
+    if (this.player.skipPreviews) {
       return this.originItems.filter((el) => !isPreview(el));
-    else return this.originItems;
+    }
+    return this.originItems;
   }
 
   @computed get trackIndex() {
@@ -64,6 +65,10 @@ export class Queue {
         this.isLoading = false;
       })
     );
+  }
+
+  @action clearItems() {
+    this.originItems = [];
   }
 
   private static filterData(data: (Track | CollectionItem)[]) {

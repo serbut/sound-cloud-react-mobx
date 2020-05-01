@@ -6,14 +6,6 @@ export class ViewState {
 
   private timeoutID: number | undefined;
 
-  constructor() {
-    window.addEventListener('click', () => {
-      if (this.playlistOpen) {
-        this.playlistOpen = false;
-      }
-    });
-  }
-
   togglePlaylist() {
     this.playlistOpen = !this.playlistOpen;
   }

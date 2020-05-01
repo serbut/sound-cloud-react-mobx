@@ -18,10 +18,8 @@ import { observer } from 'mobx-react-lite';
 import React, { useContext } from 'react';
 import { Link } from 'react-router-dom';
 import { AppContext } from '../../app-context';
-
 import { getImageUrl } from '../../utils';
 import './Player.css';
-import PlayerQueue from './PlayerQueue';
 import VolumeControl from './VolumeControl';
 
 const Player = () => {
@@ -31,11 +29,6 @@ const Player = () => {
     playerStore: store,
     playerStore: { track },
   } = useContext(AppContext);
-
-  const onQueueClick = (event: React.MouseEvent<HTMLElement>) => {
-    event.stopPropagation();
-    viewStore.togglePlaylist();
-  };
 
   if (!track) {
     return null;
@@ -140,12 +133,10 @@ const Player = () => {
 
           <IconButton
             color={viewStore.playlistOpen ? 'primary' : 'default'}
-            onClick={onQueueClick}
+            onClick={() => viewStore.togglePlaylist()}
           >
             <QueueMusic />
           </IconButton>
-
-          <PlayerQueue />
         </div>
       </div>
     </div>

@@ -11,6 +11,7 @@ import Callback from './components/Callback';
 import Explore from './components/Explore';
 import PageNotFound from './components/PageNotFound';
 import Player from './components/Player/Player';
+import PlayerQueue from './components/Player/PlayerQueue';
 import Playlist from './components/Playlist/Playlist';
 import { PrivateRoute } from './components/PrivateRoute';
 import ScrollToTopBtn from './components/ScrollToTopBtn';
@@ -56,6 +57,7 @@ const App = () => {
         </Route>
       </Switch>
       <Player />
+      <PlayerQueue />
       <ScrollToTopBtn />
     </Router>
   );
