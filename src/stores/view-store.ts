@@ -1,22 +1,10 @@
-import { observable } from 'mobx';
+import { action, observable } from 'mobx';
 
 export class ViewState {
   @observable playlistOpen = false;
-  @observable volumeControlOpen = false;
 
-  private timeoutID: number | undefined;
-
-  togglePlaylist() {
+  @action togglePlaylist() {
     this.playlistOpen = !this.playlistOpen;
-  }
-
-  temporarilyShowVolumeControl() {
-    this.volumeControlOpen = true;
-    clearTimeout(this.timeoutID);
-    this.timeoutID = window.setTimeout(
-      () => (this.volumeControlOpen = false),
-      1000
-    );
   }
 }
 

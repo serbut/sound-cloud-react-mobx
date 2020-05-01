@@ -16,16 +16,13 @@ const useKeyboardShortcuts = () => {
     key('shift+left', () => playerStore.playPrev());
     key('shift+up', () => {
       playerStore.increaseVolume();
-      viewStore.temporarilyShowVolumeControl();
     });
     key('shift+down', () => {
       playerStore.decreaseVolume();
-      viewStore.temporarilyShowVolumeControl();
     });
     key('shift+l', () => playerStore.toggleLoop());
     key('m', () => {
       playerStore.toggleMuted();
-      viewStore.temporarilyShowVolumeControl();
     });
     key('s', () => playerStore.toggleShuffle());
     key(
