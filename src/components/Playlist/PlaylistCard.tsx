@@ -4,7 +4,7 @@ import React, { memo } from 'react';
 import { Link } from 'react-router-dom';
 import { ImageSize } from '../../enums';
 import { Playlist } from '../../models/playlist';
-import { getImageUrl } from '../../utils';
+import { fromNow, getImageUrl } from '../../utils';
 import './PlaylistCard.css';
 
 const PlaylistCard = ({ playlist }: { playlist: Playlist }) => {
@@ -31,8 +31,16 @@ const PlaylistCard = ({ playlist }: { playlist: Playlist }) => {
         </Link>
       </CardMedia>
       <CardContent>
-        <Typography variant="subtitle1" noWrap title={playlist.title}>
+        <Typography variant="subtitle2" noWrap title={playlist.title}>
           <Link to={link}>{playlist.title}</Link>
+        </Typography>
+        <Typography variant="body2" noWrap>
+          <Link to={`/users/${playlist.user.permalink}`}>
+            {playlist.user.username}
+          </Link>
+        </Typography>
+        <Typography variant="caption">
+          {fromNow(playlist.created_at)}
         </Typography>
       </CardContent>
     </Card>

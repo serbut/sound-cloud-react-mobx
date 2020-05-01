@@ -30,7 +30,7 @@ export const DataGridRow = ({
       <Grid container spacing={2}>
         {data.map((item, index) => (
           <Grid item xs key={index} zeroMinWidth className="animated fadeIn">
-            {item ? renderCard(item, data) : <div>Loading...</div>}
+            {item && renderCard(item, data)}
           </Grid>
         ))}
       </Grid>
