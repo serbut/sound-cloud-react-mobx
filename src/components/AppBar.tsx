@@ -13,7 +13,6 @@ import { observer } from 'mobx-react-lite';
 import React, { useContext } from 'react';
 import { Link, useHistory, useLocation } from 'react-router-dom';
 import { AppContext } from '../app-context';
-
 import { APP_TITLE } from '../config';
 import { useStyles } from './AppBarStyles';
 
