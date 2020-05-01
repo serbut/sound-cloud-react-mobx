@@ -1,14 +1,11 @@
 import key from 'keymaster';
-import { PlayerStore } from '../stores/player-store';
-import { SessionStore } from '../stores/session-store';
-import { ViewState } from '../stores/view-store';
+import { useContext, useEffect } from 'react';
+import { AppContext } from '../app-context';
 
-export default class KeyboardShortcutsService {
-  constructor(
-    playerStore: PlayerStore,
-    viewStore: ViewState,
-    sessionStore: SessionStore
-  ) {
+const useKeyboardShortcuts = () => {
+  const { playerStore, viewStore, sessionStore } = useContext(AppContext);
+
+  useEffect(() => {
     key('space', (e) => {
       e.preventDefault();
       playerStore.playTrack();
@@ -36,5 +33,7 @@ export default class KeyboardShortcutsService {
       () => playerStore.track && sessionStore.toggleLike(playerStore.track)
     );
     key('p', () => viewStore.togglePlaylist());
-  }
-}
+  }, [playerStore, sessionStore, viewStore]);
+};
+
+export default useKeyboardShortcuts;

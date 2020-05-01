@@ -6,8 +6,6 @@ import {
   Route,
   Switch,
 } from 'react-router-dom';
-import * as api from './api';
-import { AppContext } from './app-context';
 import AppBar from './components/AppBar';
 import Callback from './components/Callback';
 import Explore from './components/Explore';
@@ -20,62 +18,46 @@ import Search from './components/Search/Search';
 import Stream from './components/Stream';
 import Track from './components/Track/Track';
 import User from './components/User/User';
-import AudioService from './services/AudioService';
-import KeyboardShortcutsService from './services/KeyboardShortcutsService';
-import playerStore from './stores/player-store';
-import sessionStore from './stores/session-store';
-import viewStore from './stores/view-store';
-
-new AudioService(playerStore);
-new KeyboardShortcutsService(playerStore, viewStore, sessionStore);
-
-const context = {
-  playerStore,
-  viewStore,
-  sessionStore,
-  api,
-};
+import useAudio from './hooks/use-audio';
+import useKeyboardShortcuts from './hooks/use-keyboard-shortcuts';
 
 const App = () => {
+  useAudio();
+  useKeyboardShortcuts();
+
   return (
-    <AppContext.Provider value={context}>
-      <Router>
-        <div style={{ paddingBottom: playerStore.track ? 64 : 0 }}>
-          <AppBar />
-
-          <Route exact path="/" render={() => <Redirect to="/explore" />} />
-          <Switch>
-            <Route path="/callback">
-              <Callback />
-            </Route>
-            <PrivateRoute path="/stream">
-              <Stream />
-            </PrivateRoute>
-            <Route path="/explore">
-              <Explore />
-            </Route>
-            <Route path="/search">
-              <Search />
-            </Route>
-            <Route path="/users/:user/tracks/:track">
-              <Track />
-            </Route>
-            <Route path="/users/:user/playlists/:playlist">
-              <Playlist />
-            </Route>
-            <Route path="/users/:user">
-              <User />
-            </Route>
-            <Route path="*">
-              <PageNotFound />
-            </Route>
-          </Switch>
-
-          <Player />
-          <ScrollToTopBtn />
-        </div>
-      </Router>
-    </AppContext.Provider>
+    <Router>
+      <AppBar />
+      <Route exact path="/" render={() => <Redirect to="/explore" />} />
+      <Switch>
+        <Route path="/callback">
+          <Callback />
+        </Route>
+        <PrivateRoute path="/stream">
+          <Stream />
+        </PrivateRoute>
+        <Route path="/explore">
+          <Explore />
+        </Route>
+        <Route path="/search">
+          <Search />
+        </Route>
+        <Route path="/users/:user/tracks/:track">
+          <Track />
+        </Route>
+        <Route path="/users/:user/playlists/:playlist">
+          <Playlist />
+        </Route>
+        <Route path="/users/:user">
+          <User />
+        </Route>
+        <Route path="*">
+          <PageNotFound />
+        </Route>
+      </Switch>
+      <Player />
+      <ScrollToTopBtn />
+    </Router>
   );
 };
 
