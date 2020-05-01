@@ -1,10 +1,10 @@
 import { Box, Container, Grid, Hidden, Typography } from '@material-ui/core';
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Bullet } from '../../Bullet';
 import { ImageSize } from '../../enums';
 import { Playlist } from '../../models/playlist';
 import { formatDuration, fromNow, getImageUrl } from '../../utils';
+import { Bullet } from '../Bullet';
 
 const PlaylistHeader = ({ playlist }: { playlist: Playlist }) => {
   const { user } = playlist;

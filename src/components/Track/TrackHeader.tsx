@@ -10,9 +10,9 @@ import { observer } from 'mobx-react-lite';
 import React, { useContext } from 'react';
 import { Link } from 'react-router-dom';
 import { AppContext } from '../../app-context';
-import { Bullet } from '../../Bullet';
 import { Track } from '../../models/track';
 import { formatDuration, formatNumber, fromNow } from '../../utils';
+import { Bullet } from '../Bullet';
 import TrackCard from './TrackCard';
 
 const TrackHeader = ({ track }: { track: Track }) => {

@@ -10,11 +10,10 @@ import { observer } from 'mobx-react-lite';
 import React, { useContext } from 'react';
 import { Link } from 'react-router-dom';
 import { AppContext } from '../../app-context';
-import { Bullet } from '../../Bullet';
-
 import { ImageSize } from '../../enums';
 import { Track } from '../../models/track';
 import { formatNumber, fromNow, getImageUrl, isPreview } from '../../utils';
+import { Bullet } from '../Bullet';
 import './TrackCard.css';
 
 // TODO: split into 2 components: TrackCard & TrackCardContent

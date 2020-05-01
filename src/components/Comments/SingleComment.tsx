@@ -12,11 +12,10 @@ import { observer } from 'mobx-react-lite';
 import React, { useContext } from 'react';
 import { Link } from 'react-router-dom';
 import { AppContext } from '../../app-context';
-import { Bullet } from '../../Bullet';
-
 import { ImageSize } from '../../enums';
 import { Comment } from '../../models/comment';
 import { formatDuration, fromNow, getImageUrl } from '../../utils';
+import { Bullet } from '../Bullet';
 
 const CommentComponent = ({
   comment,
