@@ -8,10 +8,13 @@ const useAudio = () => {
 
   useEffect(() => {
     const audioEl = document.createElement('audio');
+    let updatingCurrentTime = false;
+    let timeoutId: number;
 
     const onLoadStart = () => playerStore.setIsLoading(true);
     const onCanPlayTrough = () => playerStore.setIsLoading(false);
     const onTimeUpdate = (event: Event) =>
+      !updatingCurrentTime &&
       playerStore.setProgress(
         Math.round((event.target as HTMLMediaElement).currentTime)
       );
@@ -41,7 +44,12 @@ const useAudio = () => {
       if (
         Math.abs(Math.round(audioEl.currentTime) - playerStore.progress) > 1
       ) {
-        audioEl.currentTime = playerStore.progress;
+        updatingCurrentTime = true;
+        clearTimeout(timeoutId);
+        timeoutId = window.setTimeout(() => {
+          updatingCurrentTime = false;
+          audioEl.currentTime = playerStore.progress;
+        }, 300);
       }
 
       const playPromise = playerStore.isPlaying
