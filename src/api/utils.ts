@@ -1,7 +1,9 @@
-import { CLIENT_ID, TOKEN_KEY } from '../config';
+import { CLIENT_ID } from '../config';
+import { StorageKey } from '../enums';
 import { RESOLVE_URL } from './index';
 
-export const getToken = () => localStorage.getItem(TOKEN_KEY) || undefined;
+export const getToken = () =>
+  localStorage.getItem(StorageKey.Token) || undefined;
 
 export const resolve = (url: string) => RESOLVE_URL + url;
 

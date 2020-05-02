@@ -11,7 +11,7 @@ import {
   removeLike,
   stopFollowingUser,
 } from '../api';
-import { TOKEN_KEY, USER_KEY } from '../config';
+import { StorageKey } from '../enums';
 import { Track } from '../models/track';
 import { User } from '../models/user';
 
@@ -21,8 +21,10 @@ export class SessionStore {
   @observable userFollowingsIds: number[] = observable.array();
 
   constructor() {
-    if (localStorage.getItem(TOKEN_KEY)) {
-      this.user = JSON.parse(window.localStorage.getItem(USER_KEY) || 'null');
+    if (localStorage.getItem(StorageKey.Token)) {
+      this.user = JSON.parse(
+        window.localStorage.getItem(StorageKey.User) || 'null'
+      );
       this.getMe();
     }
   }
@@ -46,7 +48,7 @@ export class SessionStore {
   login() {
     return login()
       .then((token) => {
-        localStorage.setItem(TOKEN_KEY, token);
+        localStorage.setItem(StorageKey.Token, token);
         return this.getMe();
       })
       .catch(() => {
@@ -55,8 +57,8 @@ export class SessionStore {
   }
 
   logout() {
-    localStorage.removeItem(TOKEN_KEY);
-    localStorage.removeItem(USER_KEY);
+    localStorage.removeItem(StorageKey.Token);
+    localStorage.removeItem(StorageKey.User);
     this.user = null;
   }
 
@@ -64,7 +66,7 @@ export class SessionStore {
     return load<User>(endpoints.me)
       .then((user) => {
         this.user = user;
-        localStorage.setItem(USER_KEY, JSON.stringify(user));
+        localStorage.setItem(StorageKey.User, JSON.stringify(user));
       })
       .then(() => getMyLikesIds())
       .then((userLikesIds) => (this.userLikesIds = userLikesIds))

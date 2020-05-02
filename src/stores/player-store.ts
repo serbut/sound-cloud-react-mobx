@@ -2,25 +2,32 @@ import { action, observable } from 'mobx';
 import { createTransformer } from 'mobx-utils';
 
 import { getNextHref } from '../api';
+import { StorageKey } from '../enums';
 import { Track } from '../models/track';
 import { Queue } from './player-queue';
 
 const TIME_STEP = 15;
 const VOLUME_STEP = 0.25;
 
+const storageSet = (key: StorageKey, value: any) =>
+  localStorage.setItem(key, JSON.stringify(value));
+
+const storageGet = (key: StorageKey, defaultValue: any) =>
+  JSON.parse(localStorage.getItem(key) || JSON.stringify(defaultValue));
+
 export class PlayerStore {
   queue = new Queue(this);
 
-  @observable track: Track | null = null;
+  @observable track: Track | null = storageGet(StorageKey.Track, null);
   @observable isLoading = false;
   @observable isPlaying = false;
-  @observable progress = 0;
+  @observable progress = storageGet(StorageKey.Progress, 0);
   @observable buffered = 0;
-  @observable volume = 1;
-  @observable muted = false;
-  @observable loop = false;
-  @observable shuffle = false;
-  @observable skipPreviews = true;
+  @observable volume = storageGet(StorageKey.Volume, 1);
+  @observable muted = storageGet(StorageKey.Muted, false);
+  @observable loop = storageGet(StorageKey.Loop, false);
+  @observable shuffle = storageGet(StorageKey.Shuffle, false);
+  @observable skipPreviews = true; // TODO: move to config store
 
   private volumeBeforeMuted = 0;
 
@@ -41,6 +48,8 @@ export class PlayerStore {
     this.track = track;
     this.progress = 0;
     this.isPlaying = true;
+
+    storageSet(StorageKey.Track, track);
 
     if (queue) {
       this.queue.originItems = queue;
@@ -71,6 +80,7 @@ export class PlayerStore {
 
   setProgress(value: number) {
     this.progress = value;
+    storageSet(StorageKey.Progress, value);
   }
 
   setBuffered(value: number) {
@@ -82,24 +92,29 @@ export class PlayerStore {
       this.volumeBeforeMuted = this.volume;
       this.volume = 0;
       this.muted = true;
+      storageSet(StorageKey.Muted, true);
       return;
     }
 
     this.volume = this.volumeBeforeMuted;
     this.muted = false;
+    storageSet(StorageKey.Muted, false);
   }
 
   toggleShuffle() {
     this.shuffle = !this.shuffle;
+    storageSet(StorageKey.Shuffle, this.shuffle);
   }
 
   toggleLoop() {
     this.loop = !this.loop;
+    storageSet(StorageKey.Loop, this.loop);
   }
 
   setVolume(value: number) {
     this.muted = false;
     this.volume = value;
+    storageSet(StorageKey.Volume, value);
   }
 
   stepForward(offset = TIME_STEP) {
