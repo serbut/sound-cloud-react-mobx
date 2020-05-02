@@ -12,9 +12,9 @@ import { TransitionProps } from '@material-ui/core/transitions/transition';
 import { Close as CloseIcon } from '@material-ui/icons';
 import { observer } from 'mobx-react-lite';
 import React, { useContext } from 'react';
-import { AppContext } from '../../app-context';
-import { isElementInViewport } from '../../utils';
-import TracksList from '../Track/TracksList';
+import { AppContext } from '../app-context';
+import { isElementInViewport } from '../utils';
+import TracksList from './Track/TracksList';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -35,7 +35,7 @@ const Transition = React.forwardRef(function Transition(
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-const PlayerQueue = () => {
+const PlayQueue = () => {
   const { viewStore, playerStore } = useContext(AppContext);
   const classes = useStyles();
   const { track, queue } = playerStore;
@@ -91,4 +91,4 @@ const PlayerQueue = () => {
 //  label="Skip Previews"
 // />
 
-export default observer(PlayerQueue);
+export default observer(PlayQueue);
