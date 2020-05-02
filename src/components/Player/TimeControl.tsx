@@ -17,7 +17,7 @@ const TimeControl = () => {
   const duration = playerStore.track?.duration || 0;
 
   const progressPercent = Math.trunc(
-    ((playerStore.progress * 1000) / duration) * 100
+    ((playerStore.currentTime * 1000) / duration) * 100
   );
 
   const onProgressChange = (event: any, newValue: number | number[]) => {
@@ -29,7 +29,7 @@ const TimeControl = () => {
     <Grid container item xs={12} alignItems="center" spacing={2}>
       <Grid item>
         <Typography variant="body2">
-          {formatDuration(playerStore.progress * 1000)}
+          {formatDuration(playerStore.currentTime * 1000)}
         </Typography>
       </Grid>
       <Grid item xs>

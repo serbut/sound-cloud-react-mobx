@@ -1,6 +1,5 @@
 import { action, observable } from 'mobx';
 import { createTransformer } from 'mobx-utils';
-
 import { getNextHref } from '../api';
 import { StorageKey } from '../enums';
 import { Track } from '../models/track';
@@ -21,8 +20,7 @@ export class PlayerStore {
   @observable track: Track | null = storageGet(StorageKey.Track, null);
   @observable isLoading = false;
   @observable isPlaying = false;
-  @observable progress = storageGet(StorageKey.Progress, 0);
-  @observable buffered = 0;
+  @observable currentTime = storageGet(StorageKey.CurrentTime, 0);
   @observable volume = storageGet(StorageKey.Volume, 1);
   @observable muted = storageGet(StorageKey.Muted, false);
   @observable loop = storageGet(StorageKey.Loop, false);
@@ -39,14 +37,16 @@ export class PlayerStore {
   );
 
   @action playTrack(track = this.track, queue?: Track[]) {
-    if (!track) return;
+    if (!track) {
+      return;
+    }
 
     if (this.track && this.track.id === track.id) {
       return (this.isPlaying = !this.isPlaying);
     }
 
     this.track = track;
-    this.progress = 0;
+    this.currentTime = 0;
     this.isPlaying = true;
 
     storageSet(StorageKey.Track, track);
@@ -59,8 +59,9 @@ export class PlayerStore {
     if (
       this.queue.trackIndex &&
       this.queue.trackIndex + 5 >= this.queue.items.length
-    )
+    ) {
       this.queue.loadMore();
+    }
   }
 
   playPrev() {
@@ -74,20 +75,16 @@ export class PlayerStore {
     this.playTrack(nextTrack);
   }
 
-  setIsLoading(value: boolean) {
+  @action setIsLoading(value: boolean) {
     this.isLoading = value;
   }
 
-  setProgress(value: number) {
-    this.progress = value;
-    storageSet(StorageKey.Progress, value);
+  @action setProgress(value: number) {
+    this.currentTime = value;
+    storageSet(StorageKey.CurrentTime, value);
   }
 
-  setBuffered(value: number) {
-    this.buffered = value;
-  }
-
-  toggleMuted() {
+  @action toggleMuted() {
     if (!this.muted) {
       this.volumeBeforeMuted = this.volume;
       this.volume = 0;
@@ -101,46 +98,55 @@ export class PlayerStore {
     storageSet(StorageKey.Muted, false);
   }
 
-  toggleShuffle() {
+  @action toggleShuffle() {
     this.shuffle = !this.shuffle;
     storageSet(StorageKey.Shuffle, this.shuffle);
   }
 
-  toggleLoop() {
+  @action toggleLoop() {
     this.loop = !this.loop;
     storageSet(StorageKey.Loop, this.loop);
   }
 
-  setVolume(value: number) {
+  @action setVolume(value: number) {
     this.muted = false;
     this.volume = value;
     storageSet(StorageKey.Volume, value);
   }
 
-  stepForward(offset = TIME_STEP) {
+  @action stepForward(offset = TIME_STEP) {
     if (!this.track) {
       return;
     }
 
-    const timeLeft = this.track.duration / 1000 - this.progress;
+    const timeLeft = this.track.duration / 1000 - this.currentTime;
 
-    if (!this.isPlaying) return;
+    if (!this.isPlaying) {
+      return;
+    }
 
-    if (offset < timeLeft) this.progress += offset;
-    else this.playNext();
+    if (offset < timeLeft) {
+      this.currentTime += offset;
+    } else this.playNext();
   }
 
-  stepBackward(offset = TIME_STEP) {
-    if (this.isPlaying) this.progress -= Math.min(offset, this.progress);
+  @action stepBackward(offset = TIME_STEP) {
+    if (this.isPlaying) {
+      this.currentTime -= Math.min(offset, this.currentTime);
+    }
   }
 
   increaseVolume(offset = VOLUME_STEP) {
-    if (this.muted) this.toggleMuted();
+    if (this.muted) {
+      this.toggleMuted();
+    }
     this.setVolume(Math.min(this.volume + offset, 1));
   }
 
   decreaseVolume(offset = VOLUME_STEP) {
-    if (this.muted) this.toggleMuted();
+    if (this.muted) {
+      this.toggleMuted();
+    }
     this.setVolume(Math.max(this.volume - offset, 0));
   }
 

@@ -44,7 +44,7 @@ export enum StorageKey {
   User = 'user',
   Volume = 'volume',
   Track = 'track',
-  Progress = 'progress',
+  CurrentTime = 'currentTime',
   Muted = 'muted',
   Loop = 'loop',
   Shuffle = 'shuffle',

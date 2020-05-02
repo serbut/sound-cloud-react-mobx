@@ -42,13 +42,13 @@ const useAudio = () => {
       }
 
       if (
-        Math.abs(Math.round(audioEl.currentTime) - playerStore.progress) > 1
+        Math.abs(Math.round(audioEl.currentTime) - playerStore.currentTime) > 1
       ) {
         updatingCurrentTime = true;
         clearTimeout(timeoutId);
         timeoutId = window.setTimeout(() => {
           updatingCurrentTime = false;
-          audioEl.currentTime = playerStore.progress;
+          audioEl.currentTime = playerStore.currentTime;
         }, 300);
       }
 
