@@ -33,6 +33,15 @@ export class Queue {
         JSON.stringify(stateSnapshot)
       );
     });
+
+    autorun(() => {
+      if (
+        typeof this.trackIndex === 'number' &&
+        this.trackIndex + 5 >= this.items.length
+      ) {
+        this.loadMore();
+      }
+    });
   }
 
   @computed get items() {
@@ -67,8 +76,18 @@ export class Queue {
     return this.items[this.trackIndex + 1];
   }
 
-  loadMore() {
-    if (this.isLoading || !this.nextHref) return;
+  @action clearItems() {
+    this.originItems = [];
+  }
+
+  @action toggleShuffle() {
+    this.shuffle = !this.shuffle;
+  }
+
+  private loadMore() {
+    if (this.isLoading || !this.nextHref) {
+      return;
+    }
 
     this.isLoading = true;
     load<Collection<Track | CollectionItem>>(this.nextHref).then(
@@ -80,14 +99,6 @@ export class Queue {
         this.isLoading = false;
       })
     );
-  }
-
-  @action clearItems() {
-    this.originItems = [];
-  }
-
-  @action toggleShuffle() {
-    this.shuffle = !this.shuffle;
   }
 
   private static filterData(data: (Track | CollectionItem)[]) {

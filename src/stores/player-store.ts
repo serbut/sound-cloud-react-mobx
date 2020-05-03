@@ -74,13 +74,6 @@ export class PlayerStore {
       this.queue.originItems = queue;
       this.queue.nextHref = getNextHref();
     }
-
-    if (
-      typeof this.queue.trackIndex === 'number' &&
-      this.queue.trackIndex + 5 >= this.queue.items.length
-    ) {
-      this.queue.loadMore();
-    }
   }
 
   @action setIsLoading(value: boolean) {
