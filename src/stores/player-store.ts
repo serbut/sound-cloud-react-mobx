@@ -27,7 +27,6 @@ export class PlayerStore {
   @observable volume: number = prevState.volume || 1;
   @observable muted: boolean = prevState.muted || false;
   @observable repeat: boolean = prevState.repeat || false;
-  @observable skipPreviews = true; // TODO: move to config store
 
   private volumeBeforeMuted = 0;
 
@@ -140,10 +139,6 @@ export class PlayerStore {
       this.toggleMuted();
     }
     this.setVolume(Math.max(this.volume - offset, 0));
-  }
-
-  toggleSkipPreviews() {
-    this.skipPreviews = !this.skipPreviews;
   }
 }
 

@@ -19,6 +19,7 @@ export class Queue {
   public nextHref: string | null | undefined;
 
   private player: PlayerStore;
+  private skipPreviews = true;
 
   constructor(player: PlayerStore) {
     this.player = player;
@@ -35,7 +36,7 @@ export class Queue {
   }
 
   @computed get items() {
-    if (this.player.skipPreviews) {
+    if (this.skipPreviews) {
       return this.originItems.filter((el) => !isPreview(el));
     }
     return this.originItems;
