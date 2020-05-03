@@ -42,7 +42,7 @@ const VolumeContol = () => {
     <div className={classes.root}>
       <Grid container spacing={2}>
         <Grid item>
-          <IconButton size="small" onClick={() => playerStore.toggleMuted()}>
+          <IconButton size="small" onClick={() => playerStore.mute()}>
             {getVolumeIcon(muted, volume)}
           </IconButton>
         </Grid>

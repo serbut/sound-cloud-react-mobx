@@ -24,7 +24,7 @@ const useKeyboardShortcuts = () => {
     });
     key('shift+l', () => playerStore.toggleRepeat());
     key('m', () => {
-      playerStore.toggleMuted();
+      playerStore.mute();
     });
     key('s', () => playerStore.queue.toggleShuffle());
     key(
