@@ -76,7 +76,7 @@ export class PlayerStore {
     }
 
     if (
-      this.queue.trackIndex &&
+      typeof this.queue.trackIndex === 'number' &&
       this.queue.trackIndex + 5 >= this.queue.items.length
     ) {
       this.queue.loadMore();

@@ -6,14 +6,14 @@ import { Track } from '../models/track';
 import { isPreview } from '../utils';
 import { PlayerStore } from './player-store';
 
-type StorageState = Pick<Queue, 'shuffle'>;
+type StorageState = Pick<Queue, 'shuffle' | 'originItems'>;
 
 const prevState: StorageState = JSON.parse(
   localStorage.getItem(StorageKey.PlayQueueState) || '{}'
 );
 
 export class Queue {
-  @observable originItems: Track[] = [];
+  @observable originItems: Track[] = prevState.originItems || [];
   @observable isLoading = false;
   @observable shuffle: boolean = prevState.shuffle || false;
   public nextHref: string | null | undefined;
@@ -25,11 +25,11 @@ export class Queue {
     this.player = player;
 
     autorun(() => {
-      const { shuffle } = this;
-      const stateSnapshot = { shuffle };
+      const { shuffle, originItems } = this;
+      const stateSnapshot = { shuffle, originItems };
 
       localStorage.setItem(
-        StorageKey.PlaybackState,
+        StorageKey.PlayQueueState,
         JSON.stringify(stateSnapshot)
       );
     });
@@ -44,22 +44,19 @@ export class Queue {
 
   @computed get trackIndex() {
     if (this.player.track) {
-      // TODO
-      // @ts-ignore
-      return this.items.findIndex((i) => i.id === this.player.track.id);
+      const index = this.items.findIndex((i) => i.id === this.player.track?.id);
+      return index >= 0 ? index : null;
     }
-    return null;
   }
 
   @computed get prevTrack() {
-    if (!this.trackIndex) {
-      return null;
+    if (typeof this.trackIndex === 'number') {
+      return this.items[this.trackIndex - 1];
     }
-    return this.items[this.trackIndex - 1];
   }
 
   @computed get nextTrack() {
-    if (!this.trackIndex) {
+    if (typeof this.trackIndex !== 'number') {
       return null;
     }
 

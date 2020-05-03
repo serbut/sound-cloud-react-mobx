@@ -70,7 +70,7 @@ const DataGrid = ({
 
     return (
       <div key={key} style={style}>
-        <DataGridRow data={rowData} />
+        <DataGridRow data={rowData} allData={data} />
       </div>
     );
   };

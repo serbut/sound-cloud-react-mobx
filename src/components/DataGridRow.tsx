@@ -22,15 +22,17 @@ const renderCard = (item: Track | User | Playlist, data: any[]) => {
 
 export const DataGridRow = ({
   data,
+  allData,
 }: {
   data: (Track | User | Playlist | null)[];
+  allData: (Track | User | Playlist | null)[];
 }) => {
   return (
     <Box px={1}>
       <Grid container spacing={2}>
         {data.map((item, index) => (
           <Grid item xs key={index} zeroMinWidth className="animated fadeIn">
-            {item && renderCard(item, data)}
+            {item && renderCard(item, allData)}
           </Grid>
         ))}
       </Grid>
