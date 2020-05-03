@@ -16,13 +16,11 @@ const TimeControl = () => {
   const { playerStore } = useContext(AppContext);
   const duration = playerStore.track?.duration || 0;
 
-  const progressPercent = Math.trunc(
-    ((playerStore.currentTime * 1000) / duration) * 100
-  );
+  const value = Math.trunc(((playerStore.currentTime * 1000) / duration) * 100);
 
-  const onProgressChange = (event: any, newValue: number | number[]) => {
+  const onChange = (event: any, newValue: number | number[]) => {
     const newProgress = ((duration / 100) * (newValue as number)) / 1000;
-    playerStore.setProgress(newProgress);
+    playerStore.setCurrentTime(newProgress);
   };
 
   return (
@@ -34,8 +32,8 @@ const TimeControl = () => {
       </Grid>
       <Grid item xs>
         <Slider
-          value={progressPercent}
-          onChange={onProgressChange}
+          value={value}
+          onChange={onChange}
           aria-labelledby="progress"
           className={classes.slider}
         />

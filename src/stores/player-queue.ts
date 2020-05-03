@@ -1,5 +1,4 @@
 import { action, computed, observable } from 'mobx';
-
 import { load } from '../api';
 import { CollectionItemType } from '../enums';
 import { Collection, CollectionItem } from '../models/api';
@@ -45,11 +44,12 @@ export class Queue {
     if (!this.trackIndex) {
       return null;
     }
-    return this.items[this.trackIndex + 1];
-  }
 
-  @computed get randomTrack() {
-    return this.items[Math.floor(Math.random() * this.items.length)];
+    if (this.player.shuffle) {
+      return this.items[Math.floor(Math.random() * this.items.length)];
+    }
+
+    return this.items[this.trackIndex + 1];
   }
 
   loadMore() {

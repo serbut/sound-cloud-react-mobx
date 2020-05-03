@@ -23,7 +23,7 @@ export class PlayerStore {
   @observable currentTime = storageGet(StorageKey.CurrentTime, 0);
   @observable volume = storageGet(StorageKey.Volume, 1);
   @observable muted = storageGet(StorageKey.Muted, false);
-  @observable loop = storageGet(StorageKey.Loop, false);
+  @observable repeat = storageGet(StorageKey.Loop, false);
   @observable shuffle = storageGet(StorageKey.Shuffle, false);
   @observable skipPreviews = true; // TODO: move to config store
 
@@ -41,7 +41,7 @@ export class PlayerStore {
       return;
     }
 
-    if (this.track && this.track.id === track.id) {
+    if (this.track?.id === track.id) {
       return (this.isPlaying = !this.isPlaying);
     }
 
@@ -64,22 +64,11 @@ export class PlayerStore {
     }
   }
 
-  playPrev() {
-    this.playTrack(this.queue.prevTrack);
-  }
-
-  playNext() {
-    const nextTrack = this.shuffle
-      ? this.queue.randomTrack
-      : this.queue.nextTrack;
-    this.playTrack(nextTrack);
-  }
-
   @action setIsLoading(value: boolean) {
     this.isLoading = value;
   }
 
-  @action setProgress(value: number) {
+  @action setCurrentTime(value: number) {
     this.currentTime = value;
     storageSet(StorageKey.CurrentTime, value);
   }
@@ -103,9 +92,9 @@ export class PlayerStore {
     storageSet(StorageKey.Shuffle, this.shuffle);
   }
 
-  @action toggleLoop() {
-    this.loop = !this.loop;
-    storageSet(StorageKey.Loop, this.loop);
+  @action toggleRepeat() {
+    this.repeat = !this.repeat;
+    storageSet(StorageKey.Loop, this.repeat);
   }
 
   @action setVolume(value: number) {
@@ -114,26 +103,21 @@ export class PlayerStore {
     storageSet(StorageKey.Volume, value);
   }
 
-  @action stepForward(offset = TIME_STEP) {
+  @action seekForward(offset = TIME_STEP) {
     if (!this.track) {
       return;
     }
-
-    const timeLeft = this.track.duration / 1000 - this.currentTime;
-
-    if (!this.isPlaying) {
-      return;
-    }
-
-    if (offset < timeLeft) {
-      this.currentTime += offset;
-    } else this.playNext();
+    this.currentTime = Math.min(
+      this.currentTime + offset,
+      this.track.duration / 1000
+    );
   }
 
-  @action stepBackward(offset = TIME_STEP) {
-    if (this.isPlaying) {
-      this.currentTime -= Math.min(offset, this.currentTime);
+  @action seekBackward(offset = TIME_STEP) {
+    if (!this.track) {
+      return;
     }
+    this.currentTime = Math.max(this.currentTime - offset, 0);
   }
 
   increaseVolume(offset = VOLUME_STEP) {

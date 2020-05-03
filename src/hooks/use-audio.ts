@@ -15,10 +15,10 @@ const useAudio = () => {
     const onCanPlayTrough = () => playerStore.setIsLoading(false);
     const onTimeUpdate = (event: Event) =>
       !updatingCurrentTime &&
-      playerStore.setProgress(
+      playerStore.setCurrentTime(
         Math.round((event.target as HTMLMediaElement).currentTime)
       );
-    const onEnded = () => playerStore.playNext();
+    const onEnded = () => playerStore.playTrack(playerStore.queue.nextTrack);
     const onError = (event: Event) => {
       playerStore.isLoading = false;
       console.error((event.target as HTMLMediaElement).error);
@@ -60,7 +60,7 @@ const useAudio = () => {
       }
 
       audioEl.muted = playerStore.muted;
-      audioEl.loop = playerStore.loop;
+      audioEl.loop = playerStore.repeat;
       audioEl.volume = playerStore.volume;
     });
 

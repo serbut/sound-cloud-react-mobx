@@ -13,7 +13,7 @@ import { AppContext } from '../../app-context';
 
 const PlaybackControls = () => {
   const { playerStore } = useContext(AppContext);
-  const { shuffle, queue, track, isPlaying, loop } = playerStore;
+  const { shuffle, queue, track, isPlaying, repeat } = playerStore;
 
   return (
     <Grid
@@ -37,7 +37,7 @@ const PlaybackControls = () => {
         <IconButton
           size="small"
           disabled={!queue.prevTrack}
-          onClick={() => playerStore.playPrev()}
+          onClick={() => playerStore.playTrack(queue.prevTrack)}
         >
           <SkipPrevious />
         </IconButton>
@@ -56,7 +56,7 @@ const PlaybackControls = () => {
         <IconButton
           size="small"
           disabled={!queue.nextTrack}
-          onClick={() => playerStore.playNext()}
+          onClick={() => playerStore.playTrack(queue.nextTrack)}
         >
           <SkipNext />
         </IconButton>
@@ -64,8 +64,8 @@ const PlaybackControls = () => {
       <Grid item>
         <IconButton
           size="small"
-          color={loop ? 'primary' : 'default'}
-          onClick={() => playerStore.toggleLoop()}
+          color={repeat ? 'primary' : 'default'}
+          onClick={() => playerStore.toggleRepeat()}
         >
           <Repeat />
         </IconButton>

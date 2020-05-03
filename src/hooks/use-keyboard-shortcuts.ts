@@ -10,17 +10,19 @@ const useKeyboardShortcuts = () => {
       e.preventDefault();
       playerStore.playTrack();
     });
-    key('right', () => playerStore.stepForward());
-    key('left', () => playerStore.stepBackward());
-    key('shift+right', () => playerStore.playNext());
-    key('shift+left', () => playerStore.playPrev());
+    key('right', () => playerStore.seekForward());
+    key('left', () => playerStore.seekBackward());
+    key('shift+right', () =>
+      playerStore.playTrack(playerStore.queue.nextTrack)
+    );
+    key('shift+left', () => playerStore.playTrack(playerStore.queue.prevTrack));
     key('shift+up', () => {
       playerStore.increaseVolume();
     });
     key('shift+down', () => {
       playerStore.decreaseVolume();
     });
-    key('shift+l', () => playerStore.toggleLoop());
+    key('shift+l', () => playerStore.toggleRepeat());
     key('m', () => {
       playerStore.toggleMuted();
     });
