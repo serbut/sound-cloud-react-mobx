@@ -43,4 +43,5 @@ export enum StorageKey {
   Token = 'accessToken',
   User = 'user',
   PlaybackState = 'playbackState',
+  PlayQueueState = 'PlayQueueState',
 }

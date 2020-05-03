@@ -13,7 +13,8 @@ import { AppContext } from '../../app-context';
 
 const PlaybackControls = () => {
   const { playerStore } = useContext(AppContext);
-  const { shuffle, queue, track, isPlaying, repeat } = playerStore;
+  const { queue, track, isPlaying, repeat } = playerStore;
+  const { shuffle } = queue;
 
   return (
     <Grid
@@ -28,7 +29,7 @@ const PlaybackControls = () => {
         <IconButton
           size="small"
           color={shuffle ? 'primary' : 'default'}
-          onClick={() => playerStore.toggleShuffle()}
+          onClick={() => playerStore.queue.toggleShuffle()}
         >
           <Shuffle />
         </IconButton>

@@ -1,20 +1,37 @@
-import { action, computed, observable } from 'mobx';
+import { action, autorun, computed, observable } from 'mobx';
 import { load } from '../api';
-import { CollectionItemType } from '../enums';
+import { CollectionItemType, StorageKey } from '../enums';
 import { Collection, CollectionItem } from '../models/api';
 import { Track } from '../models/track';
 import { isPreview } from '../utils';
 import { PlayerStore } from './player-store';
 
+type StorageState = Pick<Queue, 'shuffle'>;
+
+const prevState: StorageState = JSON.parse(
+  localStorage.getItem(StorageKey.PlayQueueState) || '{}'
+);
+
 export class Queue {
   @observable originItems: Track[] = [];
   @observable isLoading = false;
+  @observable shuffle: boolean = prevState.shuffle || false;
   public nextHref: string | null | undefined;
 
   private player: PlayerStore;
 
   constructor(player: PlayerStore) {
     this.player = player;
+
+    autorun(() => {
+      const { shuffle } = this;
+      const stateSnapshot = { shuffle };
+
+      localStorage.setItem(
+        StorageKey.PlaybackState,
+        JSON.stringify(stateSnapshot)
+      );
+    });
   }
 
   @computed get items() {
@@ -45,7 +62,7 @@ export class Queue {
       return null;
     }
 
-    if (this.player.shuffle) {
+    if (this.shuffle) {
       return this.items[Math.floor(Math.random() * this.items.length)];
     }
 
@@ -69,6 +86,10 @@ export class Queue {
 
   @action clearItems() {
     this.originItems = [];
+  }
+
+  @action toggleShuffle() {
+    this.shuffle = !this.shuffle;
   }
 
   private static filterData(data: (Track | CollectionItem)[]) {

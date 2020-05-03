@@ -26,7 +26,7 @@ const useKeyboardShortcuts = () => {
     key('m', () => {
       playerStore.toggleMuted();
     });
-    key('s', () => playerStore.toggleShuffle());
+    key('s', () => playerStore.queue.toggleShuffle());
     key(
       'l',
       () => playerStore.track && sessionStore.toggleLike(playerStore.track)

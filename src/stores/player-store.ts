@@ -10,7 +10,7 @@ const VOLUME_STEP = 0.25;
 
 type StorageState = Pick<
   PlayerStore,
-  'track' | 'currentTime' | 'volume' | 'muted' | 'repeat' | 'shuffle'
+  'track' | 'currentTime' | 'volume' | 'muted' | 'repeat'
 >;
 
 const prevState: StorageState = JSON.parse(
@@ -27,7 +27,6 @@ export class PlayerStore {
   @observable volume: number = prevState.volume || 1;
   @observable muted: boolean = prevState.muted || false;
   @observable repeat: boolean = prevState.repeat || false;
-  @observable shuffle: boolean = prevState.shuffle || false;
   @observable skipPreviews = true; // TODO: move to config store
 
   private volumeBeforeMuted = 0;
@@ -41,14 +40,13 @@ export class PlayerStore {
 
   constructor() {
     autorun(() => {
-      const { track, currentTime, volume, muted, repeat, shuffle } = this;
+      const { track, currentTime, volume, muted, repeat } = this;
       const stateSnapshot: StorageState = {
         track,
         currentTime,
         volume,
         muted,
         repeat,
-        shuffle,
       };
 
       localStorage.setItem(
@@ -102,10 +100,6 @@ export class PlayerStore {
 
     this.volume = this.volumeBeforeMuted;
     this.muted = false;
-  }
-
-  @action toggleShuffle() {
-    this.shuffle = !this.shuffle;
   }
 
   @action toggleRepeat() {
