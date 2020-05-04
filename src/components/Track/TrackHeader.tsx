@@ -13,7 +13,7 @@ import { AppContext } from '../../app-context';
 import { Track } from '../../models/track';
 import { formatDuration, formatNumber, fromNow } from '../../utils';
 import { Bullet } from '../Bullet';
-import TrackCard from './TrackCard';
+import TrackImage from './TrackImage';
 
 const TrackHeader = ({ track }: { track: Track }) => {
   const { sessionStore } = useContext(AppContext);
@@ -26,7 +26,7 @@ const TrackHeader = ({ track }: { track: Track }) => {
         <Grid container alignItems="center" spacing={3}>
           <Hidden xsDown>
             <Grid item sm={3}>
-              <TrackCard track={track} compact />
+              <TrackImage track={track} />
             </Grid>
           </Hidden>
 
