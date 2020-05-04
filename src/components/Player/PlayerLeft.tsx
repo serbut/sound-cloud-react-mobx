@@ -6,6 +6,7 @@ import { Link } from 'react-router-dom';
 import { AppContext } from '../../app-context';
 import { getImageUrl } from '../../utils';
 
+// TODO: create Overlay component
 const useStyles = makeStyles({
   img: {
     display: 'block',
