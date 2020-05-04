@@ -1,5 +1,5 @@
 import { makeStyles } from '@material-ui/core/styles';
-import React from 'react';
+import React, { useState } from 'react';
 
 const useStyles = makeStyles({
   container: {
@@ -18,11 +18,18 @@ const useStyles = makeStyles({
   },
 });
 
-const Overlay = ({ children, overlayContent, shown }: any) => {
+const Overlay = ({ children, overlayContent, shown, showOnMouseIn }: any) => {
   const classes = useStyles();
+  const [mouseIn, setMouseIn] = useState<boolean>(false);
+
+  shown = shown || (showOnMouseIn && mouseIn);
 
   return (
-    <div className={classes.container}>
+    <div
+      className={classes.container}
+      onMouseEnter={() => setMouseIn(true)}
+      onMouseLeave={() => setMouseIn(false)}
+    >
       {children}
       {shown && <div className={classes.overlay}>{overlayContent}</div>}
     </div>
