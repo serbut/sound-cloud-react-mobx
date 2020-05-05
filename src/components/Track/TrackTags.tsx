@@ -1,6 +1,13 @@
 import { Box, Chip, Typography } from '@material-ui/core';
+import { makeStyles } from '@material-ui/core/styles';
 import React from 'react';
 import { getTags } from '../../utils';
+
+const useStyles = makeStyles((theme) => ({
+  chip: {
+    margin: theme.spacing(1),
+  },
+}));
 
 export const TrackTags = ({
   tags,
@@ -9,6 +16,7 @@ export const TrackTags = ({
   tags: string;
   handleTagClick: (event: string) => void;
 }) => {
+  const classes = useStyles();
   if (!tags) {
     return null;
   }
@@ -23,7 +31,7 @@ export const TrackTags = ({
         <Chip
           key={i}
           label={tag}
-          style={{ margin: 4 }}
+          className={classes.chip}
           onClick={() => handleTagClick(tag)}
         />
       ))}

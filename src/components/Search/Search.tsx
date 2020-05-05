@@ -1,4 +1,4 @@
-import { Container, Typography } from '@material-ui/core';
+import { Box, Container, Typography } from '@material-ui/core';
 import { observer } from 'mobx-react-lite';
 import React, { useContext } from 'react';
 import { useLocation } from 'react-router-dom';
@@ -34,14 +34,19 @@ const Search = () => {
 
   return (
     <Container>
-      <Typography variant="h3" style={{ margin: '70px 0 20px 0' }}>
-        Results for <span style={{ color: '#3f51b5' }}>{query}</span>
-        {searchTag && ' tag:'}
-        {searchUser && ' in users:'}
-        {searchTrack && ' in tracks:'}
-      </Typography>
+      <Box py={6}>
+        <Typography variant="h2" gutterBottom>
+          Results for{' '}
+          <Typography variant="h2" color="primary" display="inline">
+            {query}
+          </Typography>
+          {searchTag && ' tag:'}
+          {searchUser && ' in users:'}
+          {searchTrack && ' in tracks:'}
+        </Typography>
 
-      <DataGrid {...dataLoaderProps} />
+        <DataGrid {...dataLoaderProps} />
+      </Box>
     </Container>
   );
 };

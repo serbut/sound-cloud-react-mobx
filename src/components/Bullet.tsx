@@ -1,7 +1,15 @@
+import { makeStyles } from '@material-ui/core/styles';
 import React from 'react';
 
+const useStyles = makeStyles({
+  root: {
+    display: 'inline-block',
+    margin: '0 5px',
+  },
+});
+
 export const Bullet = () => {
-  return (
-    <span style={{ display: 'inline-block', margin: '0 5px' }}>&bull;</span>
-  );
+  const classes = useStyles();
+
+  return <span className={classes.root}>&bull;</span>;
 };

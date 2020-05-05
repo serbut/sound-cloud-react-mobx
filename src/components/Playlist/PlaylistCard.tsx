@@ -1,4 +1,5 @@
 import { Card, CardContent, CardMedia, Typography } from '@material-ui/core';
+import { makeStyles } from '@material-ui/core/styles';
 import { PlaylistPlay } from '@material-ui/icons';
 import React, { memo } from 'react';
 import { Link } from 'react-router-dom';
@@ -7,7 +8,14 @@ import { Playlist } from '../../models/playlist';
 import { fromNow, getImageUrl } from '../../utils';
 import './PlaylistCard.css';
 
+const useStyles = makeStyles((theme) => ({
+  trackCount: {
+    marginRight: theme.spacing(1),
+  },
+}));
+
 const PlaylistCard = ({ playlist }: { playlist: Playlist }) => {
+  const classes = useStyles();
   const link = `/users/${playlist.user.permalink}/playlists/${playlist.permalink}`;
 
   return (
@@ -22,7 +30,7 @@ const PlaylistCard = ({ playlist }: { playlist: Playlist }) => {
             <Typography
               variant="subtitle1"
               color="inherit"
-              style={{ marginRight: 4 }}
+              className={classes.trackCount}
             >
               {playlist.track_count}
             </Typography>

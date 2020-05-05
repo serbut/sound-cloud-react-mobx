@@ -1,4 +1,6 @@
 import { Box, Container, Grid, Hidden, Typography } from '@material-ui/core';
+import grey from '@material-ui/core/colors/grey';
+import { makeStyles } from '@material-ui/core/styles';
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { ImageSize } from '../../enums';
@@ -6,22 +8,30 @@ import { Playlist } from '../../models/playlist';
 import { formatDuration, fromNow, getImageUrl } from '../../utils';
 import { Bullet } from '../Bullet';
 
+const useStyles = makeStyles((theme) => ({
+  root: {
+    background: grey[100],
+  },
+  img: {
+    maxHeight: '100%',
+    maxWidth: '100%',
+  },
+}));
+
 const PlaylistHeader = ({ playlist }: { playlist: Playlist }) => {
+  const classes = useStyles();
   const { user } = playlist;
 
   return (
-    <Box py={3} mb={3} style={{ backgroundColor: '#eeeeee99' }}>
+    <Box py={3} mb={3} className={classes.root}>
       <Container>
         <Grid container alignItems="center" spacing={3}>
           <Hidden xsDown>
             <Grid item sm={3}>
               <img
                 src={getImageUrl(playlist.artwork_url, ImageSize.t500x500)}
-                alt="playlsit.title"
-                style={{
-                  maxWidth: '100%',
-                  maxHeight: '100%',
-                }}
+                alt={playlist.title}
+                className={classes.img}
               />
             </Grid>
           </Hidden>

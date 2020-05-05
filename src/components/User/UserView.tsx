@@ -1,4 +1,3 @@
-import { Box } from '@material-ui/core';
 import Container from '@material-ui/core/Container';
 import { observer } from 'mobx-react-lite';
 import React, { useEffect, useState } from 'react';
@@ -74,16 +73,13 @@ const UserView = ({ user }: { user: User }) => {
 
   return (
     <div className="animated fadeIn">
-      <Box mb={3} style={{ backgroundColor: '#eeeeee99' }}>
-        <Container>
-          <UserHeader user={user} />
-          <UserTabs
-            tabs={tabs}
-            selectedTabIndex={selectedTabIndex}
-            handleTabChange={handleTabChange}
-          />
-        </Container>
-      </Box>
+      <UserHeader user={user}>
+        <UserTabs
+          tabs={tabs}
+          selectedTabIndex={selectedTabIndex}
+          handleTabChange={handleTabChange}
+        />
+      </UserHeader>
 
       <Container>
         <Switch>

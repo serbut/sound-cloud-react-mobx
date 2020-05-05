@@ -6,6 +6,8 @@ import {
   Hidden,
   Typography,
 } from '@material-ui/core';
+import grey from '@material-ui/core/colors/grey';
+import { makeStyles } from '@material-ui/core/styles';
 import { observer } from 'mobx-react-lite';
 import React, { useContext } from 'react';
 import { Link } from 'react-router-dom';
@@ -15,13 +17,20 @@ import { formatDuration, formatNumber, fromNow } from '../../utils';
 import { Bullet } from '../Bullet';
 import TrackImage from './TrackImage';
 
+const useStyles = makeStyles((theme) => ({
+  root: {
+    background: grey[100],
+  },
+}));
+
 const TrackHeader = ({ track }: { track: Track }) => {
+  const classes = useStyles();
   const { sessionStore } = useContext(AppContext);
   const { user } = track;
   const isLiked = sessionStore.isLiked(track);
 
   return (
-    <Box py={3} mb={3} style={{ backgroundColor: '#eeeeee99' }}>
+    <Box py={3} mb={3} className={classes.root}>
       <Container>
         <Grid container alignItems="center" spacing={3}>
           <Hidden xsDown>
