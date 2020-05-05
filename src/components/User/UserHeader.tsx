@@ -1,12 +1,4 @@
-import {
-  Avatar,
-  Box,
-  Button,
-  Grid,
-  Hidden,
-  Typography,
-} from '@material-ui/core';
-import grey from '@material-ui/core/colors/grey';
+import { Avatar, Box, Button, Typography } from '@material-ui/core';
 import Container from '@material-ui/core/Container';
 import { makeStyles } from '@material-ui/core/styles';
 import { observer } from 'mobx-react-lite';
@@ -18,11 +10,21 @@ import { formatNumber, getImageUrl } from '../../utils';
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    background: grey[100],
+    background: theme.palette.primary.main,
+    color: theme.palette.primary.contrastText,
+    textAlign: 'center',
   },
-  img: {
-    width: '100%',
-    height: '100%',
+  avatar: {
+    width: theme.spacing(30),
+    height: theme.spacing(30),
+    margin: '0 auto',
+    marginBottom: theme.spacing(4),
+    boxShadow: `0px 3px 1px -2px rgba(0,0,0,0.2), 
+    0px 2px 2px 0px rgba(0,0,0,0.14), 
+    0px 1px 5px 0px rgba(0,0,0,0.12)`,
+  },
+  followers: {
+    marginBottom: theme.spacing(2),
   },
 }));
 
@@ -42,36 +44,27 @@ const UserHeader = ({
     <Box mb={3} className={classes.root}>
       <Container>
         <Box py={3}>
-          <Grid container alignItems="center" spacing={3}>
-            <Hidden xsDown>
-              <Grid item sm={3}>
-                <Avatar
-                  alt={user.username}
-                  src={getImageUrl(user.avatar_url, ImageSize.t500x500)}
-                  className={classes.img}
-                />
-              </Grid>
-            </Hidden>
+          <Avatar
+            alt={user.username}
+            src={getImageUrl(user.avatar_url, ImageSize.t500x500)}
+            className={classes.avatar}
+          />
 
-            <Grid item xs>
-              <Typography variant="h5">Artist</Typography>
-              <Typography variant="h4" gutterBottom>
-                {user.username}
-              </Typography>
-              <Typography variant="body1" gutterBottom>
-                {formatNumber(user.followers_count)} followers
-              </Typography>
-              {!isLoggedInUser && (
-                <Button
-                  variant="contained"
-                  color={isFollowing ? 'default' : 'primary'}
-                  onClick={() => sessionStore.toggleFollowing(user)}
-                >
-                  {isFollowing ? 'Unfollow' : 'Follow'}
-                </Button>
-              )}
-            </Grid>
-          </Grid>
+          <Typography variant="h4" gutterBottom>
+            {user.username}
+          </Typography>
+          <Typography variant="body1" className={classes.followers}>
+            {formatNumber(user.followers_count)} followers
+          </Typography>
+          {!isLoggedInUser && (
+            <Button
+              variant="contained"
+              color={isFollowing ? 'default' : 'secondary'}
+              onClick={() => sessionStore.toggleFollowing(user)}
+            >
+              {isFollowing ? 'Unfollow' : 'Follow'}
+            </Button>
+          )}
         </Box>
         {children}
       </Container>

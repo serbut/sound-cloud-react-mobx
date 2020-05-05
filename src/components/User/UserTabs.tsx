@@ -18,8 +18,10 @@ export const UserTabs = ({
     <Tabs
       value={selectedTabIndex}
       onChange={handleTabChange}
-      variant="scrollable"
-      scrollButtons="auto"
+      // variant="scrollable"
+      // scrollButtons="auto"
+      // TODO: can't use both: scrollabale & centered
+      centered
     >
       {tabs.map((tab, i) => (
         <Tab key={i} label={tab.label} />
