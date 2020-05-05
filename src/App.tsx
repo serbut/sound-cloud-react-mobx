@@ -1,3 +1,4 @@
+import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
 import { observer } from 'mobx-react-lite';
 import React from 'react';
 import {
@@ -22,44 +23,54 @@ import User from './components/User/User';
 import useAudio from './hooks/use-audio';
 import useKeyboardShortcuts from './hooks/use-keyboard-shortcuts';
 
+const theme = createMuiTheme({
+  palette: {
+    primary: {
+      main: '#00838f',
+    },
+  },
+});
+
 const App = () => {
   useAudio();
   useKeyboardShortcuts();
 
   return (
-    <Router>
-      <AppBar />
-      <Route exact path="/" render={() => <Redirect to="/explore" />} />
-      <Switch>
-        <Route path="/callback">
-          <Callback />
-        </Route>
-        <PrivateRoute path="/stream">
-          <Stream />
-        </PrivateRoute>
-        <Route path="/explore">
-          <Explore />
-        </Route>
-        <Route path="/search">
-          <Search />
-        </Route>
-        <Route path="/users/:user/tracks/:track">
-          <Track />
-        </Route>
-        <Route path="/users/:user/playlists/:playlist">
-          <Playlist />
-        </Route>
-        <Route path="/users/:user">
-          <User />
-        </Route>
-        <Route path="*">
-          <PageNotFound />
-        </Route>
-      </Switch>
-      <Player />
-      <PlayerQueue />
-      <ScrollToTopBtn />
-    </Router>
+    <ThemeProvider theme={theme}>
+      <Router>
+        <AppBar />
+        <Route exact path="/" render={() => <Redirect to="/explore" />} />
+        <Switch>
+          <Route path="/callback">
+            <Callback />
+          </Route>
+          <PrivateRoute path="/stream">
+            <Stream />
+          </PrivateRoute>
+          <Route path="/explore">
+            <Explore />
+          </Route>
+          <Route path="/search">
+            <Search />
+          </Route>
+          <Route path="/users/:user/tracks/:track">
+            <Track />
+          </Route>
+          <Route path="/users/:user/playlists/:playlist">
+            <Playlist />
+          </Route>
+          <Route path="/users/:user">
+            <User />
+          </Route>
+          <Route path="*">
+            <PageNotFound />
+          </Route>
+        </Switch>
+        <Player />
+        <PlayerQueue />
+        <ScrollToTopBtn />
+      </Router>
+    </ThemeProvider>
   );
 };
 
