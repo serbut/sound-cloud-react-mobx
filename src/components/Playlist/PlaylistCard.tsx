@@ -6,9 +6,31 @@ import { Link } from 'react-router-dom';
 import { ImageSize } from '../../enums';
 import { Playlist } from '../../models/playlist';
 import { fromNow, getImageUrl } from '../../utils';
-import './PlaylistCard.css';
 
 const useStyles = makeStyles((theme) => ({
+  media: {
+    position: 'relative',
+    paddingTop: '100%',
+    '& img': {
+      position: 'absolute',
+      top: '0',
+      display: 'block',
+      maxWidth: '100%',
+      height: 'auto',
+    },
+  },
+  overlay: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    padding: '16px',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    color: 'rgba(255, 255, 255, 0.8)',
+    background: 'hsla(0, 0%, 6.7%, 0.8)',
+  },
   trackCount: {
     marginRight: theme.spacing(1),
   },
@@ -19,14 +41,14 @@ const PlaylistCard = ({ playlist }: { playlist: Playlist }) => {
   const link = `/users/${playlist.user.permalink}/playlists/${playlist.permalink}`;
 
   return (
-    <Card className="PlaylistCard">
-      <CardMedia className="PlaylistCard-media">
+    <Card>
+      <CardMedia className={classes.media}>
         <Link to={link}>
           <img
             src={getImageUrl(playlist.artwork_url, ImageSize.t500x500)}
             alt={playlist.title}
           />
-          <div className="PlaylistCard-overlay">
+          <div className={classes.overlay}>
             <Typography
               variant="subtitle1"
               color="inherit"
