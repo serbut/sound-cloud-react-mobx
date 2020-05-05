@@ -1,12 +1,4 @@
-import {
-  Box,
-  Button,
-  Container,
-  Grid,
-  Hidden,
-  Typography,
-} from '@material-ui/core';
-import grey from '@material-ui/core/colors/grey';
+import { Box, Button, Container, Paper, Typography } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { observer } from 'mobx-react-lite';
 import React, { useContext } from 'react';
@@ -19,7 +11,17 @@ import TrackImage from './TrackImage';
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    background: grey[100],
+    background: theme.palette.primary.main,
+    color: theme.palette.primary.contrastText,
+  },
+  img: {
+    width: theme.spacing(40),
+    height: theme.spacing(40),
+    margin: '0 auto',
+    marginBottom: theme.spacing(4),
+  },
+  likes: {
+    marginBottom: theme.spacing(2),
   },
 }));
 
@@ -30,53 +32,38 @@ const TrackHeader = ({ track }: { track: Track }) => {
   const isLiked = sessionStore.isLiked(track);
 
   return (
-    <Box py={3} mb={3} className={classes.root}>
+    <Box py={3} mb={3} textAlign="center" className={classes.root}>
       <Container>
-        <Grid container alignItems="center" spacing={3}>
-          <Hidden xsDown>
-            <Grid item sm={3}>
-              <TrackImage track={track} />
-            </Grid>
-          </Hidden>
+        <Paper elevation={3} className={classes.img}>
+          <TrackImage track={track} />
+        </Paper>
 
-          <Grid item xs>
-            <Typography variant="h5">Single</Typography>
-            <Typography variant="h4" gutterBottom>
-              {track.title}
-            </Typography>
-            <Typography variant="body1" display="inline">
-              by{' '}
-            </Typography>
-            <Link to={`/users/${user.permalink}`}>
-              <Typography
-                variant="body1"
-                color="primary"
-                display="inline"
-                gutterBottom
-              >
-                {user.username}
-              </Typography>
-            </Link>
-            <Typography variant="body2" gutterBottom>
-              added {fromNow(track.created_at)}
-              <Bullet />
-              {formatDuration(track.duration)}
-              <Bullet />
-              {formatNumber(track.playback_count)} plays
-              <Bullet />
-              {formatNumber(track.favoritings_count)} likes
-              {/*<span className="bullet">&bull;</span>*/}
-              {/*{formatNumber(track.reposts_count)} reposts{' '}*/}
-            </Typography>
-            <Button
-              variant="contained"
-              color={isLiked ? 'default' : 'primary'}
-              onClick={() => sessionStore.toggleLike(track)}
-            >
-              {isLiked ? 'Unlike' : 'Like'}
-            </Button>
-          </Grid>
-        </Grid>
+        <Typography variant="h4" gutterBottom>
+          {track.title}
+        </Typography>
+        <Typography variant="body1" display="inline">
+          by{' '}
+        </Typography>
+        <Link to={`/users/${user.permalink}`}>
+          <Typography variant="h6" display="inline" gutterBottom>
+            {user.username}
+          </Typography>
+        </Link>
+        <Typography variant="body2" gutterBottom>
+          added {fromNow(track.created_at)}
+          <Bullet />
+          {formatDuration(track.duration)}
+        </Typography>
+        <Typography variant="body1" className={classes.likes}>
+          {formatNumber(track.favoritings_count)} likes
+        </Typography>
+        <Button
+          variant="contained"
+          color={isLiked ? 'default' : 'secondary'}
+          onClick={() => sessionStore.toggleLike(track)}
+        >
+          {isLiked ? 'Unlike' : 'Like'}
+        </Button>
       </Container>
     </Box>
   );
