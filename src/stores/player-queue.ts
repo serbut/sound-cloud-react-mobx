@@ -16,13 +16,13 @@ export class Queue {
   @observable originItems: Track[] = prevState.originItems || [];
   @observable isLoading = false;
   @observable shuffle: boolean = prevState.shuffle || false;
-  public nextHref: string | null | undefined;
 
-  private player: PlayerStore;
+  private nextHref: string | null | undefined;
+  private playerStore: PlayerStore;
   private skipPreviews = true;
 
-  constructor(player: PlayerStore) {
-    this.player = player;
+  constructor(playerStore: PlayerStore) {
+    this.playerStore = playerStore;
 
     autorun(() => {
       const { shuffle, originItems } = this;
@@ -52,16 +52,23 @@ export class Queue {
   }
 
   @computed get trackIndex() {
-    if (this.player.track) {
-      const index = this.items.findIndex((i) => i.id === this.player.track?.id);
-      return index >= 0 ? index : null;
+    if (!this.playerStore.track) {
+      return null;
     }
+
+    const index = this.items.findIndex(
+      (i) => i.id === this.playerStore.track?.id
+    );
+
+    return index >= 0 ? index : null;
   }
 
   @computed get prevTrack() {
-    if (typeof this.trackIndex === 'number') {
-      return this.items[this.trackIndex - 1];
+    if (typeof this.trackIndex !== 'number') {
+      return null;
     }
+
+    return this.items[this.trackIndex - 1];
   }
 
   @computed get nextTrack() {
@@ -74,6 +81,10 @@ export class Queue {
     }
 
     return this.items[this.trackIndex + 1];
+  }
+
+  @action addItems(data: Track[], nextHref?: string) {
+    this.originItems = data;
   }
 
   @action clearItems() {

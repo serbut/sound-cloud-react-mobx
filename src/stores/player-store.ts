@@ -1,6 +1,5 @@
 import { action, autorun, computed, observable } from 'mobx';
 import { createTransformer } from 'mobx-utils';
-import { getNextHref } from '../api';
 import { StorageKey } from '../enums';
 import { Track } from '../models/track';
 import { Queue } from './player-queue';
@@ -57,7 +56,7 @@ export class PlayerStore {
     });
   }
 
-  @action playTrack(track = this.track, queue?: Track[]) {
+  @action playTrack(track = this.track) {
     if (!track) {
       return;
     }
@@ -69,11 +68,6 @@ export class PlayerStore {
     this.track = track;
     this.currentTime = 0;
     this.isPlaying = true;
-
-    if (queue) {
-      this.queue.originItems = queue;
-      this.queue.nextHref = getNextHref();
-    }
   }
 
   @action setIsLoading(value: boolean) {

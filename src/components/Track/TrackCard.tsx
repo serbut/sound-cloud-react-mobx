@@ -3,6 +3,7 @@ import { Pause, PlayArrow } from '@material-ui/icons';
 import { observer } from 'mobx-react-lite';
 import React, { useContext } from 'react';
 import { Link } from 'react-router-dom';
+import { getNextHref } from '../../api';
 import { AppContext } from '../../app-context';
 import { Track } from '../../models/track';
 import { formatNumber, fromNow } from '../../utils';
@@ -20,7 +21,8 @@ const TrackCard = ({
   const { playerStore } = useContext(AppContext);
 
   const handlePlayClick = () => {
-    playerStore.playTrack(track, tracks.slice());
+    playerStore.playTrack(track);
+    playerStore.queue.addItems(tracks.slice(), getNextHref());
   };
 
   const isCurrentTrack = !!playerStore.isSelected(track);
