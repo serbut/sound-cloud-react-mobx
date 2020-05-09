@@ -60,7 +60,7 @@ const TrackHeader = ({ track }: { track: Track }) => {
             <IconButton
               color="inherit"
               edge="start"
-              onClick={() => playerStore.playTrack(track, [])}
+              onClick={() => playerStore.playTrack(track, [track])}
             >
               {isPlaying ? <Pause /> : <PlayArrow />}
             </IconButton>
