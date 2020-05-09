@@ -2,7 +2,7 @@ import { action, autorun, computed, observable } from 'mobx';
 import { createTransformer } from 'mobx-utils';
 import { StorageKey } from '../enums';
 import { Track } from '../models/track';
-import { Queue } from './player-queue';
+import { RootStore } from './root-store';
 
 const TIME_STEP = 15;
 const VOLUME_STEP = 0.25;
@@ -17,8 +17,6 @@ const prevState: StorageState = JSON.parse(
 );
 
 export class PlayerStore {
-  queue = new Queue(this);
-
   @observable track: Track | null | undefined = prevState.track;
   @observable isLoading = false;
   @observable isPlaying = false;
@@ -39,7 +37,7 @@ export class PlayerStore {
       (this.isPlaying ? 'isPlaying' : 'isPaused')
   );
 
-  constructor() {
+  constructor(private rootStore: RootStore) {
     autorun(() => {
       const { track, currentTime, volume, repeat } = this;
       const stateSnapshot: StorageState = {
@@ -123,5 +121,3 @@ export class PlayerStore {
     this.volume = Math.max(this.volume - offset, 0);
   }
 }
-
-export default new PlayerStore();

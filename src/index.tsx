@@ -8,14 +8,12 @@ import App from './App';
 import { AppContext } from './app-context';
 import './index.css';
 import * as serviceWorker from './serviceWorker';
-import playerStore from './stores/player-store';
-import sessionStore from './stores/session-store';
-import viewStore from './stores/view-store';
+import { RootStore } from './stores/root-store';
+
+const rootStore = new RootStore();
 
 const context = {
-  playerStore,
-  viewStore,
-  sessionStore,
+  ...rootStore,
   api,
 };
 

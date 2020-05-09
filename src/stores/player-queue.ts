@@ -4,26 +4,23 @@ import { CollectionItemType, StorageKey } from '../enums';
 import { Collection, CollectionItem } from '../models/api';
 import { Track } from '../models/track';
 import { isPreview } from '../utils';
-import { PlayerStore } from './player-store';
+import { RootStore } from './root-store';
 
-type StorageState = Pick<Queue, 'shuffle' | 'originItems'>;
+type StorageState = Pick<PlayQueueStore, 'shuffle' | 'originItems'>;
 
 const prevState: StorageState = JSON.parse(
   localStorage.getItem(StorageKey.PlayQueueState) || '{}'
 );
 
-export class Queue {
+export class PlayQueueStore {
   @observable originItems: Track[] = prevState.originItems || [];
   @observable isLoading = false;
   @observable shuffle: boolean = prevState.shuffle || false;
 
   private nextHref: string | null | undefined;
-  private playerStore: PlayerStore;
   private skipPreviews = true;
 
-  constructor(playerStore: PlayerStore) {
-    this.playerStore = playerStore;
-
+  constructor(private rootStore: RootStore) {
     autorun(() => {
       const { shuffle, originItems } = this;
       const stateSnapshot = { shuffle, originItems };
@@ -52,12 +49,12 @@ export class Queue {
   }
 
   @computed get trackIndex() {
-    if (!this.playerStore.track) {
+    if (!this.rootStore.playerStore.track) {
       return null;
     }
 
     const index = this.items.findIndex(
-      (i) => i.id === this.playerStore.track?.id
+      (i) => i.id === this.rootStore.playerStore.track?.id
     );
 
     return index >= 0 ? index : null;
@@ -103,7 +100,7 @@ export class Queue {
     this.isLoading = true;
     load<Collection<Track | CollectionItem>>(this.nextHref).then(
       action((data) => {
-        Queue.filterData(data.collection).forEach((track: Track) =>
+        PlayQueueStore.filterData(data.collection).forEach((track: Track) =>
           this.originItems.push(track)
         );
         this.nextHref = data.next_href;

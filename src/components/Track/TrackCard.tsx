@@ -18,11 +18,11 @@ const TrackCard = ({
   track: Track;
   tracks: Track[];
 }) => {
-  const { playerStore } = useContext(AppContext);
+  const { playerStore, playQueueStore } = useContext(AppContext);
 
   const handlePlayClick = () => {
     playerStore.playTrack(track);
-    playerStore.queue.addItems(tracks.slice(), getNextHref());
+    playQueueStore.addItems(tracks.slice(), getNextHref());
   };
 
   const isCurrentTrack = !!playerStore.isSelected(track);

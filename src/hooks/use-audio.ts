@@ -4,7 +4,7 @@ import { formatStreamUrl } from '../api/utils';
 import { AppContext } from '../app-context';
 
 const useAudio = () => {
-  const { playerStore } = useContext(AppContext);
+  const { playerStore, playQueueStore } = useContext(AppContext);
 
   useEffect(() => {
     const audioEl = document.createElement('audio');
@@ -18,7 +18,7 @@ const useAudio = () => {
       playerStore.setCurrentTime(
         Math.round((event.target as HTMLMediaElement).currentTime)
       );
-    const onEnded = () => playerStore.playTrack(playerStore.queue.nextTrack);
+    const onEnded = () => playerStore.playTrack(playQueueStore.nextTrack);
     const onError = (event: Event) => {
       playerStore.isLoading = false;
       console.error((event.target as HTMLMediaElement).error);
@@ -73,7 +73,7 @@ const useAudio = () => {
 
       dispose();
     };
-  }, [playerStore]);
+  }, [playerStore, playQueueStore]);
 };
 
 export default useAudio;

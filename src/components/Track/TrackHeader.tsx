@@ -28,14 +28,14 @@ const useStyles = makeStyles((theme) => ({
 
 const TrackHeader = ({ track }: { track: Track }) => {
   const classes = useStyles();
-  const { sessionStore, playerStore } = useContext(AppContext);
+  const { sessionStore, playerStore, playQueueStore } = useContext(AppContext);
   const { user } = track;
   const isLiked = sessionStore.isLiked(track);
   const isPlaying = playerStore.isSelected(track) === 'isPlaying';
 
   const onPlayClick = () => {
     playerStore.playTrack(track);
-    playerStore.queue.addItems([track]);
+    playQueueStore.addItems([track]);
   };
 
   return (

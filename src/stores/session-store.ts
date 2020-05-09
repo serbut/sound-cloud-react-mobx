@@ -14,13 +14,14 @@ import {
 import { StorageKey } from '../enums';
 import { Track } from '../models/track';
 import { User } from '../models/user';
+import { RootStore } from './root-store';
 
 export class SessionStore {
   @observable user: User | null = null;
   @observable userLikesIds: number[] = observable.array();
   @observable userFollowingsIds: number[] = observable.array();
 
-  constructor() {
+  constructor(private rootStore: RootStore) {
     if (localStorage.getItem(StorageKey.Token)) {
       this.user = JSON.parse(
         window.localStorage.getItem(StorageKey.User) || 'null'
@@ -119,5 +120,3 @@ export class SessionStore {
     }
   }
 }
-
-export default new SessionStore();
