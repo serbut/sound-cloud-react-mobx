@@ -2,7 +2,9 @@ import { Box, Button, Collapse, Typography } from '@material-ui/core';
 import React, { useState } from 'react';
 
 export const TrackDescription = ({ body }: { body: string | null }) => {
-  const [open, setOpen] = useState<boolean>(false);
+  const [open, setOpen] = useState<boolean>(
+    (body && body.length <= 500) || false
+  );
 
   if (!body) {
     return null;
