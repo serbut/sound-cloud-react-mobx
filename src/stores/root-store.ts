@@ -1,4 +1,4 @@
-import { PlayQueueStore } from './player-queue';
+import { PlayQueueStore } from './play-queue-store';
 import { PlayerStore } from './player-store';
 import { SessionStore } from './session-store';
 import { ViewStore } from './view-store';
