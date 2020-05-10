@@ -36,9 +36,9 @@ const Transition = React.forwardRef(function Transition(
 });
 
 const PlayQueue = () => {
-  const { viewStore, playerStore } = useContext(AppContext);
+  const { viewStore, playerStore, playQueueStore } = useContext(AppContext);
   const classes = useStyles();
-  const { track, queue } = playerStore;
+  const { track } = playerStore;
 
   const onEntered = () => {
     const el = document.querySelector(`[data-track-id='${track?.id}']`);
@@ -50,7 +50,7 @@ const PlayQueue = () => {
   };
 
   const onClear = () => {
-    playerStore.queue.clearItems();
+    playQueueStore.clearItems();
   };
 
   return (
@@ -79,7 +79,7 @@ const PlayQueue = () => {
           </Button>
         </Toolbar>
       </AppBar>
-      <TracksList tracks={queue.items} />
+      <TracksList tracks={playQueueStore.items} />
     </Dialog>
   );
 };

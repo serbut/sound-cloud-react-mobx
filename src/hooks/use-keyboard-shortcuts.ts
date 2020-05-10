@@ -3,34 +3,36 @@ import { useContext, useEffect } from 'react';
 import { AppContext } from '../app-context';
 
 const useKeyboardShortcuts = () => {
-  const { playerStore, viewStore, sessionStore } = useContext(AppContext);
+  const { playerStore, playQueueStore, viewStore, sessionStore } = useContext(
+    AppContext
+  );
 
   useEffect(() => {
     key('space', (e) => {
       e.preventDefault();
       playerStore.playTrack();
     });
-    key('right', () => playerStore.stepForward());
-    key('left', () => playerStore.stepBackward());
-    key('shift+right', () => playerStore.playNext());
-    key('shift+left', () => playerStore.playPrev());
+    key('right', () => playerStore.seekForward());
+    key('left', () => playerStore.seekBackward());
+    key('shift+right', () => playerStore.playTrack(playQueueStore.nextTrack));
+    key('shift+left', () => playerStore.playTrack(playQueueStore.prevTrack));
     key('shift+up', () => {
       playerStore.increaseVolume();
     });
     key('shift+down', () => {
       playerStore.decreaseVolume();
     });
-    key('shift+l', () => playerStore.toggleLoop());
+    key('shift+l', () => playerStore.toggleRepeat());
     key('m', () => {
-      playerStore.toggleMuted();
+      playerStore.mute();
     });
-    key('s', () => playerStore.toggleShuffle());
+    key('s', () => playQueueStore.toggleShuffle());
     key(
       'l',
       () => playerStore.track && sessionStore.toggleLike(playerStore.track)
     );
     key('p', () => viewStore.togglePlaylist());
-  }, [playerStore, sessionStore, viewStore]);
+  }, [playerStore, playQueueStore, sessionStore, viewStore]);
 };
 
 export default useKeyboardShortcuts;

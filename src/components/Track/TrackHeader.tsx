@@ -28,10 +28,15 @@ const useStyles = makeStyles((theme) => ({
 
 const TrackHeader = ({ track }: { track: Track }) => {
   const classes = useStyles();
-  const { sessionStore, playerStore } = useContext(AppContext);
+  const { sessionStore, playerStore, playQueueStore } = useContext(AppContext);
   const { user } = track;
   const isLiked = sessionStore.isLiked(track);
   const isPlaying = playerStore.isSelected(track) === 'isPlaying';
+
+  const onPlayClick = () => {
+    playerStore.playTrack(track);
+    playQueueStore.addItems([track]);
+  };
 
   return (
     <Box py={3} mb={3} className={classes.root}>
@@ -57,11 +62,7 @@ const TrackHeader = ({ track }: { track: Track }) => {
             <Typography variant="subtitle1" className={classes.likes}>
               {formatNumber(track.favoritings_count)} likes
             </Typography>
-            <IconButton
-              color="inherit"
-              edge="start"
-              onClick={() => playerStore.playTrack(track, [])}
-            >
+            <IconButton color="inherit" edge="start" onClick={onPlayClick}>
               {isPlaying ? <Pause /> : <PlayArrow />}
             </IconButton>
             <IconButton

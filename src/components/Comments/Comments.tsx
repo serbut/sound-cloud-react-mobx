@@ -33,7 +33,7 @@ const Comments = ({
   const addComment = (commentBody: string) => {
     const timestamp =
       playerStore.track && playerStore.track.id === trackId
-        ? playerStore.progress * 1000
+        ? playerStore.currentTime * 1000
         : null;
 
     (sessionStore.isLoggedIn ? Promise.resolve() : sessionStore.login()).then(

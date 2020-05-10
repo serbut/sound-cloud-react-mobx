@@ -42,10 +42,6 @@ export enum ImageSize {
 export enum StorageKey {
   Token = 'accessToken',
   User = 'user',
-  Volume = 'volume',
-  Track = 'track',
-  Progress = 'progress',
-  Muted = 'muted',
-  Loop = 'loop',
-  Shuffle = 'shuffle',
+  PlaybackState = 'playbackState',
+  PlayQueueState = 'playQueueState',
 }

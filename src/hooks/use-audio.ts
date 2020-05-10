@@ -4,7 +4,7 @@ import { formatStreamUrl } from '../api/utils';
 import { AppContext } from '../app-context';
 
 const useAudio = () => {
-  const { playerStore } = useContext(AppContext);
+  const { playerStore, playQueueStore } = useContext(AppContext);
 
   useEffect(() => {
     const audioEl = document.createElement('audio');
@@ -15,10 +15,10 @@ const useAudio = () => {
     const onCanPlayTrough = () => playerStore.setIsLoading(false);
     const onTimeUpdate = (event: Event) =>
       !updatingCurrentTime &&
-      playerStore.setProgress(
+      playerStore.setCurrentTime(
         Math.round((event.target as HTMLMediaElement).currentTime)
       );
-    const onEnded = () => playerStore.playNext();
+    const onEnded = () => playerStore.playTrack(playQueueStore.nextTrack);
     const onError = (event: Event) => {
       playerStore.isLoading = false;
       console.error((event.target as HTMLMediaElement).error);
@@ -42,13 +42,13 @@ const useAudio = () => {
       }
 
       if (
-        Math.abs(Math.round(audioEl.currentTime) - playerStore.progress) > 1
+        Math.abs(Math.round(audioEl.currentTime) - playerStore.currentTime) > 1
       ) {
         updatingCurrentTime = true;
         clearTimeout(timeoutId);
         timeoutId = window.setTimeout(() => {
           updatingCurrentTime = false;
-          audioEl.currentTime = playerStore.progress;
+          audioEl.currentTime = playerStore.currentTime;
         }, 300);
       }
 
@@ -60,7 +60,7 @@ const useAudio = () => {
       }
 
       audioEl.muted = playerStore.muted;
-      audioEl.loop = playerStore.loop;
+      audioEl.loop = playerStore.repeat;
       audioEl.volume = playerStore.volume;
     });
 
@@ -73,7 +73,7 @@ const useAudio = () => {
 
       dispose();
     };
-  }, [playerStore]);
+  }, [playerStore, playQueueStore]);
 };
 
 export default useAudio;
