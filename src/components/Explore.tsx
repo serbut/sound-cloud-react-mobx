@@ -1,5 +1,4 @@
 import { Box, Container } from '@material-ui/core';
-import { observer } from 'mobx-react-lite';
 import qs from 'qs';
 import React, { useContext } from 'react';
 import {
@@ -84,4 +83,4 @@ const Explore = () => {
   );
 };
 
-export default observer(Explore);
+export default Explore;

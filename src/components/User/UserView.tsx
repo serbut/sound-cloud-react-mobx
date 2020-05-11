@@ -1,5 +1,4 @@
 import Container from '@material-ui/core/Container';
-import { observer } from 'mobx-react-lite';
 import React, { useEffect, useState } from 'react';
 import {
   Redirect,
@@ -110,4 +109,4 @@ const UserView = ({ user }: { user: User }) => {
   );
 };
 
-export default observer(UserView);
+export default UserView;

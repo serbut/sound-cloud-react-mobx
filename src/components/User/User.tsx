@@ -1,4 +1,3 @@
-import { observer } from 'mobx-react-lite';
 import React, { useContext } from 'react';
 import { useParams } from 'react-router-dom';
 import { AppContext } from '../../app-context';
@@ -30,4 +29,4 @@ const UserComponent = () => {
   return <UserView user={user} />;
 };
 
-export default observer(UserComponent);
+export default UserComponent;

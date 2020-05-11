@@ -1,5 +1,4 @@
-import { computed, IObservableArray, observable } from 'mobx';
-
+import { action, autorun, computed, IObservableArray, observable } from 'mobx';
 import {
   addLike,
   endpoints,
@@ -17,17 +16,23 @@ import { User } from '../models/user';
 import { RootStore } from './root-store';
 
 export class SessionStore {
-  @observable user: User | null = null;
+  @observable user: User | null = this.getUserFromStorage();
   @observable userLikesIds: number[] = observable.array();
   @observable userFollowingsIds: number[] = observable.array();
 
   constructor(private rootStore: RootStore) {
-    if (localStorage.getItem(StorageKey.Token)) {
-      this.user = JSON.parse(
-        window.localStorage.getItem(StorageKey.User) || 'null'
-      );
+    if (this.isLoggedIn) {
       this.getMe();
     }
+
+    autorun(() => {
+      if (this.user) {
+        localStorage.setItem(StorageKey.User, JSON.stringify(this.user));
+      } else {
+        localStorage.removeItem(StorageKey.User);
+        localStorage.removeItem(StorageKey.Token);
+      }
+    });
   }
 
   @computed get isLoggedIn() {
@@ -52,28 +57,31 @@ export class SessionStore {
         localStorage.setItem(StorageKey.Token, token);
         return this.getMe();
       })
-      .catch(() => {
+      .catch((err) => {
+        console.error(err);
         // TODO: add error handler
       });
   }
 
-  logout() {
-    localStorage.removeItem(StorageKey.Token);
-    localStorage.removeItem(StorageKey.User);
+  @action logout() {
     this.user = null;
   }
 
   getMe() {
-    return load<User>(endpoints.me)
-      .then((user) => {
-        this.user = user;
-        localStorage.setItem(StorageKey.User, JSON.stringify(user));
-      })
-      .then(() => getMyLikesIds())
-      .then((userLikesIds) => (this.userLikesIds = userLikesIds))
-      .then(() => getMyFollowingsIds())
-      .then((userFollowingsIds) => (this.userFollowingsIds = userFollowingsIds))
-      .catch(() => {
+    return Promise.all([
+      load<User>(endpoints.me),
+      getMyLikesIds(),
+      getMyFollowingsIds(),
+    ])
+      .then(
+        action(([user, userLikesIds, userFollowingsIds]) => {
+          this.user = user;
+          this.userLikesIds = userLikesIds;
+          this.userFollowingsIds = userFollowingsIds;
+        })
+      )
+      .catch((err) => {
+        console.error(err);
         // TODO: add error handler
       });
   }
@@ -86,13 +94,15 @@ export class SessionStore {
     if (this.isLiked(track)) {
       return removeLike(track.id)
         .then(() => (this.userLikesIds as IObservableArray).remove(track.id))
-        .catch(() => {
+        .catch((err) => {
+          console.error(err);
           // TODO: add error handling
         });
     } else {
       return addLike(track.id)
         .then(() => this.userLikesIds.unshift(track.id))
-        .catch(() => {
+        .catch((err) => {
+          console.error(err);
           // TODO: add error handling
         });
     }
@@ -108,15 +118,25 @@ export class SessionStore {
         .then(() =>
           (this.userFollowingsIds as IObservableArray).remove(user.id)
         )
-        .catch(() => {
+        .catch((err) => {
+          console.error(err);
           // TODO: add error handling
         });
     } else {
       return followUser(user.id)
         .then(() => this.userFollowingsIds.unshift(user.id))
-        .catch(() => {
+        .catch((err) => {
+          console.error(err);
           // TODO: add error handling
         });
     }
+  }
+
+  private getUserFromStorage(): User | null {
+    const user = localStorage.getItem(StorageKey.User);
+    if (user) {
+      return JSON.parse(user);
+    }
+    return null;
   }
 }

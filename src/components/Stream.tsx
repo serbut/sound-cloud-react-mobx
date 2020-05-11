@@ -1,5 +1,4 @@
 import { Box, Container } from '@material-ui/core';
-import { observer } from 'mobx-react-lite';
 import React, { useContext } from 'react';
 import { AppContext } from '../app-context';
 import useCollectionDataLoader from '../hooks/use-collection-data-loader';
@@ -28,4 +27,4 @@ const Stream = () => {
   );
 };
 
-export default observer(Stream);
+export default Stream;

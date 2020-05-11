@@ -1,5 +1,4 @@
 import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
-import { observer } from 'mobx-react-lite';
 import React from 'react';
 import {
   BrowserRouter as Router,
@@ -74,4 +73,4 @@ const App = () => {
   );
 };
 
-export default observer(App);
+export default App;

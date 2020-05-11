@@ -1,4 +1,6 @@
 import 'animate.css';
+import { configure } from 'mobx';
+import 'mobx-react-lite/batchingForReactDom';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import 'react-virtualized/styles.css';
@@ -9,6 +11,12 @@ import { AppContext } from './app-context';
 import './index.css';
 import * as serviceWorker from './serviceWorker';
 import { RootStore } from './stores/root-store';
+
+configure({
+  enforceActions: 'observed',
+  disableErrorBoundaries: true,
+  reactionRequiresObservable: true,
+});
 
 const rootStore = new RootStore();
 
