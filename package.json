@@ -27,7 +27,7 @@
     "mobx": "^5.15.4",
     "mobx-react-lite": "^2.0.6",
     "mobx-utils": "^5.5.5",
-    "moment": "^2.24.0",
+    "moment": "^2.29.2",
     "prettier": "^2.0.2",
     "qs": "^6.9.3",
     "query-string": "^6.11.1",
